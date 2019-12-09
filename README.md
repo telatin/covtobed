@@ -1,6 +1,6 @@
 # covtobed
 
-Read one (or more) alignment files (sorted BAM) and prints a BED with the coverage.
+Read one (or more) alignment files (sorted BAM) and prints a BED with the coverage. It will join consecutive bases with the same coverage, and can be used to only print a BED file with the regions having a specific coverage range.
 
 Synopsis:
 ```
@@ -24,7 +24,22 @@ Options:
   --format=CHOICE       output format
   
 ```
+## Example
 
+Command:
+```
+covtobed -m 0 -x 5 test/demo.bam
+```
+Output:
+```
+NC_001416.1	1112	1120	4
+NC_001416.1	1120	1999	0
+NC_001416.1	2653	2674	4
+NC_001416.1	2674	2686	3
+NC_001416.1	2686	2762	2
+NC_001416.1	2762	2771	1
+NC_001416.1	2771	2800	0
+```
 ## Install
 
 To install with Miniconda:
