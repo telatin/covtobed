@@ -55,4 +55,6 @@ To manually compile:
 ```
 c++ -std=c++11 *.cpp -I/path/to/bamtools/ -L${HOME}/path/to/lib/ -lbamtools -o covtobed
 ```
+## Authors
 
+Giovanni Birolo (@gbirolo) and Andrea Telatin (@telatin)
