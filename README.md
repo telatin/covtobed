@@ -55,6 +55,10 @@ To manually compile:
 ```
 c++ -std=c++11 *.cpp -I/path/to/bamtools/ -L${HOME}/path/to/lib/ -lbamtools -o covtobed
 ```
+## Acknowledgements
+
+This tools uses [libbamtools](https://github.com/pezmaster31/bamtools) by Derek Barnett, Erik Garrison, Gabor Marth and Michael Stromberg, and [cpp-optparse](https://github.com/weisslj/cpp-optparse) by Johannes Weißl. Both tools and this program are released with MIT license.
+
 ## Authors
 
-Giovanni Birolo (@gbirolo) and Andrea Telatin (@telatin)
+Giovanni Birolo ([@gbirolo](https://github.com/gbirolo)) and Andrea Telatin ([@telatin](https://github.com/telatin))
