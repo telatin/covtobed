@@ -1,6 +1,9 @@
 # covtobed
 
+![covtobed example](img/coverage_bam_to_bed.png)
+
 Read one (or more) alignment files (sorted BAM) and prints a BED with the coverage. It will join consecutive bases with the same coverage, and can be used to only print a BED file with the regions having a specific coverage range.
+
 
 Synopsis:
 ```
