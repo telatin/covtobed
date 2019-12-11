@@ -14,7 +14,7 @@
 	#include <api/BamAlignment.h>
 	#include "OptionParser.h"
 	#include "interval.h"
-	//#include "target.h"
+	
 
 	using namespace BamTools;
 	using namespace std;
@@ -24,6 +24,13 @@
 	typedef size_t CountType;
 
 	const char ref_char = '>';
+	
+	const string VERSION = "%prog 0.3"
+	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
+    "License MIT"
+    ".\n"
+    "This is free software: you are free to change and redistribute it.\n"
+    "There is NO WARRANTY, to the extent permitted by law.";
 
 	#define debug if(false)
 
@@ -46,7 +53,7 @@
 		Alignments(const vector<string> &paths, const int q) : min_mapq(q) {
 			if (paths.empty()) {
 				// no input files, use standard input
-				cerr << "Reading from STDIN..." << endl;
+				cerr << "Reading from STDIN... [try 'covtobed -h' for options]" << endl;
 				if (!input_bams.OpenFile("-"))
 					throw string("cannot read BAM from standard input, are you piping a BAM file?");
 					//throw input_bams.GetErrorString();
@@ -94,7 +101,10 @@
 	class Output {
 		public:
 			enum Format {BED, COUNTS};
-			Output(ostream *o, Format f, bool s=false, int m=0, int x=100000) : out(o), format(f), strands(s), mincov(m), maxcov(x) {}
+
+			// class constructor
+			Output(ostream *o, Format f, bool s=false, int m=0, int x=100000, int l=1) : 
+				out(o), format(f), strands(s), mincov(m), maxcov(x), minlen(l) {}
 
 			// write interval to bed
 			void operator() (const Interval &i, const Coverage &c) {
@@ -123,7 +133,7 @@
 			}
 		private:
 			void write(const Interval &i, const Coverage &c) {
-				if (i and c >= mincov and c < maxcov)  { // interval not empty
+				if (i and c >= mincov and c < maxcov and (i.end - i.start >= minlen) )  { // interval not empty plus user constraints
 					switch(format) {
 						case Format::BED:
 							*out << i.ref << '\t' << i.start << '\t' << i.end << '\t';
@@ -150,18 +160,22 @@
 			const bool strands;
 			const int mincov;
 			const int maxcov;
+			const int minlen;
 			Interval last_interval;
 			Coverage last_coverage;
 	};
 
 	int main(int argc, char *argv[]) {
 		// general options
-		optparse::OptionParser parser = optparse::OptionParser().description("Computes coverage from alignments").usage("%prog [options] [BAM]...");
+
+		optparse::OptionParser parser = optparse::OptionParser().description("Computes coverage from alignments").usage("%prog [options] [BAM]...").version(VERSION);
 		// input options
 		parser.add_option("--physical-coverage").action("store_true").set_default("0").help("compute physical coverage (needs paired alignments in input)");
-		parser.add_option("-q", "--min-mapq").metavar("MIN").type("int").set_default("0").help("skip alignments whose mapping quality is less than MIN (default: %default)");
+		parser.add_option("-q", "--min-mapq").metavar("MINQ").type("int").set_default("0").help("skip alignments whose mapping quality is less than MINQ (default: %default)");
 		parser.add_option("-m", "--min-cov").metavar("MINCOV").type("int").set_default("0").help("print BED feature only if the coverage is bigger than (or equal to) MINCOV (default: %default)");
 		parser.add_option("-x", "--max-cov").metavar("MAXCOV").type("int").set_default("100000").help("print BED feature only if the coverage is lower than MAXCOV (default: %default)");
+		parser.add_option("-l", "--min-len").metavar("MINLEN").type("int").set_default("1").help("print BED feature only if its length is bigger (or equal to) than MINLELN (default: %default)");
+		parser.add_option("-v") .action("version") .help("prints program version");
 		// output options
 		parser.add_option("--output-strands").action("store_true").set_default("0").help("outputs coverage and stats separately for each strand");
 		//parser.add_option("--target").action("store_true").set_default("0").help("outputs coverage and stats separately for each strand");
@@ -174,6 +188,7 @@
 		const bool physical_coverage = options.get("physical_coverage");
 		const int  minimum_coverage  = options.get("min_cov");
 		const int  maximum_coverage  = options.get("max_cov");
+		const int  minimum_length    = options.get("min_len");
 
 		// get format
 		Output::Format f;
@@ -190,10 +205,10 @@
 		// open input and output
 		try {
 
-			Output output(&cout, f, options.get("output_strands"), options.get("min_cov"), options.get("max_cov"));
+			Output output(&cout, f, options.get("output_strands"), minimum_coverage, maximum_coverage, minimum_length);
 			Alignments input(parser.args(), options.get("min_mapq"));
 
-			cout << minimum_coverage << endl;
+			
 			// main alignment parsing loop
 			BamAlignment alignment;
 			bool more_alignments = input.get_next_alignment(alignment);
