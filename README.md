@@ -61,7 +61,7 @@ To install with Miniconda:
 conda install -c bioconda covtobed
 ```
 
-Both **covtobed**, and the legacy program **coverage** are available as a single Docker container:
+Both **covtobed**, and the legacy program [**coverage**](coverage.md) are available as a single Docker container:
 ```
 sudo docker pull andreatelatin/covtobed
 ```
