@@ -14,7 +14,7 @@ Read one (or more) alignment files (sorted BAM) and prints a BED with the covera
 
 Synopsis:
 ```
-Usage: covtobed_mac [options] [BAM]...
+Usage: covtobed [options] [BAM]...
 
 Computes coverage from alignments
 
