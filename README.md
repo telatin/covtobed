@@ -1,9 +1,10 @@
 # covtobed 0.3 - a tool to generate BED coverage tracks from BAM files
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/covtobed/README.html)
-![License](https://anaconda.org/bioconda/covtobed/badges/license.svg)
-![Platforms](https://anaconda.org/bioconda/covtobed/badges/platforms.svg)
-![Downloads](https://anaconda.org/bioconda/covtobed/badges/downloads.svg)
+[![Build Status](https://travis-ci.org/telatin/covtobed.svg?branch=master)](https://travis-ci.org/telatin/covtobed)
+[![Docker build](https://img.shields.io/docker/cloud/build/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed)
+[![License](https://img.shields.io/github/license/telatin/covtobed?color=blue)(https://github.com/telatin/covtobed/blob/master/LICENSE)]
+
 
 Read one (or more) alignment files (sorted BAM) and prints a BED with the coverage. It will join consecutive bases with the same coverage, and can be used to only print a BED file with the regions having a specific coverage range.
 
@@ -59,6 +60,12 @@ To install with Miniconda:
 ```
 conda install -c bioconda covtobed
 ```
+
+Both **covtobed**, and the legacy program **coverage** are available as a single Docker container:
+```
+sudo docker pull andreatelatin/covtobed
+```
+
 ## Requirements and compiling
 
 This tool requires **libbamtools** and **zlib**.
