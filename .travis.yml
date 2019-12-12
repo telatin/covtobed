@@ -15,5 +15,4 @@ install:
 - "[ $CXX = g++ ] && export CXX=g++-6 || true"
 - "[ $CXX = clang++ ] && export CXX=clang++-3.8 || true"
 script:
-  - $CXX -std=c++11 *.cpp -I${HOME}/miniconda3/include/bamtools/ -L${HOME}/miniconda3/lib/   \
-    -o covtobed -lz
+  - $CXX -std=c++11 *.cpp  -o covtobed -lz
