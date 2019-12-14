@@ -4,7 +4,7 @@
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/covtobed/README.html)
 [![TravisCI Build Status](https://travis-ci.org/telatin/covtobed.svg?branch=master)](https://travis-ci.org/telatin/covtobed)
 [![Docker build](https://img.shields.io/docker/cloud/build/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed)
-
+[![Singularity 10.5281/zenodo.1063493](https://img.shields.io/badge/singularity-available-yellow)](https://zenodo.org/record/1063493)
 
 Read one (or more) alignment files (sorted BAM) and prints a BED with the coverage. It will join consecutive bases with the same coverage, and can be used to only print a BED file with the regions having a specific coverage range.
 
@@ -57,16 +57,25 @@ NC_001416.1	2771	2800	0
 ```
 ## Install
 
-To install with Miniconda:
+ * To install with Miniconda:
 
 ```
 conda install -c bioconda covtobed
 ```
 
-Both **covtobed**, and the legacy program [**coverage**](coverage.md) are available as a single Docker container:
+ * Both **covtobed**, and the legacy program [**coverage**](coverage.md) are available as a single Docker container available from Docker Hub [![Docker build](https://img.shields.io/docker/cloud/build/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed)
+:
 ```
 sudo docker pull andreatelatin/covtobed
+sudo docker run --rm -ti andreatelatin/covtobed coverage -h
 ```
+
+ * Download Singularity image from [Zeonodo](https://zenodo.org/record/1063493) ![Zenodo](https://zenodo.org/badge/DOI/10.5281/zenodo.1063493.svg)], then:
+```
+singularity exec covtobed.simg coverage -h
+```
+
+
 
 ## Requirements and compiling
 
