@@ -70,7 +70,7 @@ sudo docker pull andreatelatin/covtobed
 sudo docker run --rm -ti andreatelatin/covtobed coverage -h
 ```
 
- * Download Singularity image from [Zeonodo](https://zenodo.org/record/1063493) ![Zenodo](https://zenodo.org/badge/DOI/10.5281/zenodo.1063493.svg)], then:
+ * Download Singularity image from [Zeonodo](https://zenodo.org/record/1063493) ![Zenodo](https://zenodo.org/badge/DOI/10.5281/zenodo.1063493.svg), then:
 ```
 singularity exec covtobed.simg coverage -h
 ```
