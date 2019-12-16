@@ -2,3 +2,5 @@ build.sh
 a.out
 demo.bam.bai
 mos*
+.DS_Store
+README.md~
