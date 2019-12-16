@@ -11,7 +11,9 @@ Read one (or more) alignment files (sorted BAM) and prints a BED with the covera
 
 ![covtobed example](img/coverage_bam_to_bed.png)
 
+## Usage
 
+:book: The complete documentation is available in the [GitHub wiki](https://github.com/telatin/covtobed/wiki).
 
 Synopsis:
 ```
