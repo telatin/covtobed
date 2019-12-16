@@ -12,3 +12,7 @@ This directories contains files to generate the Docker/Singularity images that p
  sudo docker pull andreatelatin/covtobed
  ```
  
+The Singularity image can be pulled from Docker Hub as well. A snapshot (v. 0.3) is available from [Zenodo](https://zenodo.org/record/1063493):
+```
+singularity pull andreatelatin/covtobed
+```
