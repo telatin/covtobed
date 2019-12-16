@@ -1,4 +1,5 @@
-# covtobed 0.3 - a tool to generate BED coverage tracks from BAM files
+# covtobed
+## a tool to generate BED coverage tracks from BAM files
 
 [![License](https://img.shields.io/github/license/telatin/covtobed?color=blue)](https://github.com/telatin/covtobed/blob/master/LICENSE)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/covtobed/README.html)
