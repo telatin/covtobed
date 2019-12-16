@@ -1,11 +1,11 @@
 # covtobed
-### a tool to generate BED coverage tracks from BAM files
 
 [![License](https://img.shields.io/github/license/telatin/covtobed?color=blue)](https://github.com/telatin/covtobed/blob/master/LICENSE)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/covtobed/README.html)
 [![TravisCI Build Status](https://travis-ci.org/telatin/covtobed.svg?branch=master)](https://travis-ci.org/telatin/covtobed)
 [![Docker build](https://img.shields.io/docker/cloud/build/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed)
 [![Singularity 10.5281/zenodo.1063493](https://img.shields.io/badge/singularity-available-yellow)](https://zenodo.org/record/1063493)
+### a tool to generate BED coverage tracks from BAM files
 
 Read one (or more) alignment files (sorted BAM) and prints a BED with the coverage. It will join consecutive bases with the same coverage, and can be used to only print a BED file with the regions having a specific coverage range.
 
