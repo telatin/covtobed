@@ -1,49 +1,48 @@
-	/*
-	 * TODO:
-	 * check that input bams are sorted
-	 * wiggle output
-	 */
+/*
+ * TODO:
+ * check that input bams are sorted
+ * wiggle output
+ */
+#include <queue>
+#include <vector>
+#include <iostream>
+#include <map>
+#include <cstdlib>
+#include <cassert>
+#include <api/BamMultiReader.h>
+#include <api/BamAlignment.h>
+#include "OptionParser.h"
+#include "interval.h"
 
-	#include <queue>
-	#include <vector>
-	#include <iostream>
-	#include <map>
-	#include <cstdlib>
-	#include <cassert>
-	#include <api/BamMultiReader.h>
-	#include <api/BamAlignment.h>
-	#include "OptionParser.h"
-	#include "interval.h"
-	
 
-	using namespace BamTools;
-	using namespace std;
+using namespace BamTools;
+using namespace std;
 
-	// types
-	typedef uint16_t DepthType;
-	typedef size_t CountType;
+// types
+typedef uint16_t DepthType;
+typedef size_t CountType;
 
-	const char ref_char = '>';
+const char ref_char = '>';
 
-	const string VERSION = "%prog 0.5"
-	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
+const string VERSION = "%prog 0.4"
+    "\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
     "License MIT"
     ".\n"
     "This is free software: you are free to change and redistribute it.\n"
     "There is NO WARRANTY, to the extent permitted by law.";
 
-	#define debug if(true)
+#define debug if(false)
 
-	struct CovEnd {
+struct CovEnd {
 		PositionType end;
 		bool rev;
 		// order for queuing
 		bool operator<(const CovEnd &o) const {
 			return end > o.end;
 		}
-	};
+};
 
-	struct Alignments {
+struct Alignments {
 		BamMultiReader input_bams;
 		//map<int, size_t> mapq_distr;
 		//map<int, map<char, size_t> > cigar_distr;
@@ -68,6 +67,7 @@
 		bool get_next_alignment(BamAlignment & alignment) {
 			bool more_alignments;
 			do {
+				debug cerr << "[M] " << alignment.Name << ":" << alignment.Position << " | Is mapped? " << alignment.IsMapped() << endl;
 				more_alignments = input_bams.GetNextAlignmentCore(alignment);
 				//++mapq_distr[alignment.MapQuality];
 			} while (more_alignments && alignment.MapQuality < min_mapq);
@@ -77,9 +77,9 @@
 		}
 		vector<RefData> get_ref_data() { return input_bams.GetReferenceData(); }
 		int get_ref_id(const string &ref) { return input_bams.GetReferenceID(ref); }
-	};
+};
 
-	struct Coverage {
+struct Coverage {
 		DepthType f = 0, r = 0;
 
 		operator DepthType() const { return f + r; }
@@ -96,9 +96,9 @@
 			else
 				--f;
 		}
-	};
+};
 
-	class Output {
+class Output {
 		public:
 			enum Format {BED, COUNTS};
 
@@ -163,9 +163,9 @@
 			const int minlen;
 			Interval last_interval;
 			Coverage last_coverage;
-	};
+};
 
-	int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 		// general options
 
 		optparse::OptionParser parser = optparse::OptionParser().description("Computes coverage from alignments").usage("%prog [options] [BAM]...").version(VERSION);
@@ -176,7 +176,7 @@
 		parser.add_option("-x", "--max-cov").metavar("MAXCOV").type("int").set_default("100000").help("print BED feature only if the coverage is lower than MAXCOV (default: %default)");
 		parser.add_option("-l", "--min-len").metavar("MINLEN").type("int").set_default("1").help("print BED feature only if its length is bigger (or equal to) than MINLELN (default: %default)");
 		parser.add_option("-f", "--flatten").action("store_true").set_default("0").help("Flatten adjacent BED features (usually when specifying -m/-x)");
-		
+
 		parser.add_option("-v") .action("version") .help("prints program version");
 		// output options
 		parser.add_option("--output-strands").action("store_true").set_default("0").help("outputs coverage and stats separately for each strand");
@@ -210,13 +210,14 @@
 			Output output(&cout, f, options.get("output_strands"), minimum_coverage, maximum_coverage, minimum_length);
 			Alignments input(parser.args(), options.get("min_mapq"));
 
-			
+
 			// main alignment parsing loop
 			BamAlignment alignment;
 			bool more_alignments = input.get_next_alignment(alignment);
 			for (const auto &ref : input.get_ref_data()) { // loop on reference
 				// init new reference data
 				const int ref_id = input.get_ref_id(ref.RefName);
+				debug cerr << "[R] Reference: " << ref_id << endl;
 				PositionType last_pos = 0;
 				priority_queue<CovEnd> coverage_ends;
 				Coverage coverage;
@@ -254,13 +255,17 @@
 					debug cerr << "[<] Coverage is " << coverage << " from " << next_change << endl;
 					last_pos = next_change;
 				} while (last_pos != ref.RefLength);
-
+				debug cerr << "[_] Completed at " << ref.RefName << ":" << last_pos << endl;
 				// reference ended
 				assert(coverage_ends.empty());
+			}
+			while (more_alignments && !(alignment.IsMapped()) ) {
+				debug cerr << "[8] Emtpying trash" << endl;
+				more_alignments = input.get_next_alignment(alignment);
 			}
 			assert(!more_alignments);
 		} catch (string msg) {
 			parser.error(msg);
 		}
 		return 0;
-	}
+}
