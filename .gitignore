@@ -4,3 +4,8 @@ demo.bam.bai
 mos*
 .DS_Store
 README.md~
+exome
+test_local
+*.0.?
+._*
+*.sam
