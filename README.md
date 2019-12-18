@@ -66,7 +66,7 @@ NC_001416.1	2771	2800	0
 conda install -c bioconda covtobed
 ```
 
- * Both **covtobed**, and the legacy program [**coverage**](coverage.md) are available as a single Docker container available from Docker Hub [![Docker build](https://img.shields.io/docker/cloud/build/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed)
+ * Both **covtobed**, and the legacy program [**coverage**](https://github.com/telatin/covtobed/wiki/Using-coverage) are available as a single Docker container available from Docker Hub [![Docker build](https://img.shields.io/docker/cloud/build/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed)
 :
 ```
 sudo docker pull andreatelatin/covtobed
