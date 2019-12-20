@@ -1,5 +1,5 @@
 ---
-title: 'covtobed: a fast and simple tool to extract coverage tracks from BAM files'
+title: 'covtobed: a simple and fast tool to extract coverage tracks from BAM files'
 tags:
   - bedtools
   - bamtools
@@ -36,7 +36,9 @@ The tool is also available as a Docker image downloadable from [Docker Hub](http
 
 # Example application
 
-When performing target enrichment experiments (where the aim is to sequence a set of selected regions of a genome), it's important to detect a lack of coverage or unsufficient coverage (*i.e.* is lower than `THRESHOLD` in the target regions). This can be calculated intersecting (with `bedtools`, [@bedtools]) the target BED file with the output of `covtobed --max-cov THRESHOLD alignment.bam`. The tool has been used, for example, in the setup of a *target enrichment* panel targeting 71 human genes [@poloni], in order to detect uncovered regions.
+When performing target enrichment experiments (where the aim is to sequence a set of selected regions of a genome), it's important to detect a lack of coverage or unsufficient coverage (*i.e.* is lower than `THRESHOLD` in the target regions). This can be calculated intersecting (with `bedtools`, [@bedtools]) the target BED file with the output of `covtobed --max-cov THRESHOLD alignment.bam`. 
+
+The tool has been used, for example, in the setup of a *target enrichment* panel targeting 71 human genes [@poloni], in order to detect uncovered regions.
 
 While a tool exists to perform a comprehensive analysis of the coverage (`mosdepth` [@mosdepth]),  `covtobed` was designed with the ability to quickly extract regions between used defined coverage intervals and, more importantly, with streaming from standard input and to standard output, that Mosdepth doesn't support.
 
