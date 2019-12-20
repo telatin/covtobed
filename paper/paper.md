@@ -5,6 +5,8 @@ tags:
   - bamtools
   - genomics
   - bioinformatics
+  - target enrichment
+  - sequence coverage
 authors:
   - name: Giovanni Birolo
     affiliation: 1
