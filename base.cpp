@@ -24,7 +24,7 @@ typedef size_t CountType;
 
 const char ref_char = '>';
 
-const string VERSION = "%prog 0.4"
+const string VERSION = "%prog 0.6"
     "\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
     "License MIT"
     ".\n"
