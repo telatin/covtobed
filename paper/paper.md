@@ -26,15 +26,34 @@ bibliography: paper.bib
 
 # Summary
 
-A common task in bioinformatics is the alignment of DNA sequencing reads (produced by *next generation sequencing* experiments) against a reference genome. The output of the alignment is commonly encoded in a BAM file [@samformat], and  for several applications of DNA sequencing it is useful to extract the **depth of coverage** [@coverage] at specific positions in the BAM file, encoding the output in the standard BED format [@bedtools].
+A common task in bioinformatics is the mapping of DNA sequencing reads (produced by "next generation sequencing" experiments) against a reference genome. 
+The output of the alignment is commonly encoded in a BAM file [@samformat]. 
+For several applications of DNA sequencing it is useful to extract the **depth of coverage** [@coverage] at specific positions in the BAM file, 
+encoding the output in the standard BED format [@bedtools].
 
-Here we describe `covtobed`, a C++ program designed to extract the depth of coverage per position from a sorted BAM file, eventually specifying a range of coverage of interest and a minimum length for the features printed in the output BED file. The fast parsing of BAM files is performed using `libbamtools` [@bamtools]. The implementation has been inspired by the UNIX programming phylosophy[@phylosophy], and thus `covtobed` performs a limited task and supports input and output streams.
+Here we describe `covtobed`, a C++ program designed to extract the depth of coverage per position from a sorted BAM file, 
+eventually specifying a range of coverage of interest and a minimum length for the features printed in the output BED file. 
+The fast parsing of BAM files is performed using `libbamtools` [@bamtools]. 
+
+The implementation has been inspired by the UNIX programming phylosophy[@phylosophy], and thus `covtobed` performs a limited task and supports input and output streams.
 
 # Availability and Installation
 
-`covtobed` is distributed with MIT licence and available from the [GitHub repository](https://github.com/telatin/covtobed), and can be easily installed via Miniconda from the "bioconda" channel (*i.e.* `conda install -c bioconda covtobed`).
+`covtobed` is distributed with MIT licence and available from the [GitHub repository](https://github.com/telatin/covtobed), 
+and can be easily installed via Miniconda from the "bioconda" channel 
+(*i. e.* `conda install -c bioconda covtobed`).
 
-The tool is also available as a Docker image downloadable from [Docker Hub](https://hub.docker.com/r/andreatelatin/covtobed) or as a Singularity image from [Zenodo](https://zenodo.org/record/1063493).
+The tool is also available as a Docker image downloadable from [Docker Hub](https://hub.docker.com/r/andreatelatin/covtobed) 
+(*i. e.* `docker pull andreatelatin/covtobed`) or as a Singularity image (*i. e.* `singularity pull docker://andreatelatin/covtobed`). 
+Snapshots of Singularity images are stored in [Zenodo](https://zenodo.org/record/1063493).
+
+# Code 
+
+The code of `covtobed` has been designed in an Object Oriented Programming paradigm, 
+with an *Output* class used to print the output lines, and *Coverage* and *Alignments* data structures. This allows a convenient template for adapting the code
+to specific tasks, if needed.
+
+`covtobed` relies on  `libbamtools` [@bamtools] for BAM file parsing, and `cpp-optparse` [@opt] for command line option parsing.
 
 # Example application
 
@@ -48,7 +67,8 @@ While a tool exists to perform a comprehensive analysis of the coverage (`mosdep
 
 The initial development of the tool has been supported by the Seventh Framework Program (600932 MD-Paedigree).
 
-The authors gratefully acknowledge the support of the Biotechnology and Biological Sciences Research Council (BBSRC); this research was partly supported by the BBSRC Institute Strategic Programme Gut Microbes and Health BB/R012490/1 and its constituent project BBS/E/F/000PR10353.
+The authors gratefully acknowledge the support of the Biotechnology and Biological Sciences Research Council (BBSRC); 
+this research was partly supported by the BBSRC Institute Strategic Programme Gut Microbes and Health BB/R012490/1 and its constituent project BBS/E/F/000PR10353.
 
 
 # References

@@ -9,3 +9,4 @@ test_local
 *.0.?
 ._*
 *.sam
+time.*
