@@ -19,4 +19,4 @@ script:
   - ./covtobed -h
   - ./covtobed test/demo.bam > /dev/null
   - ./covtobed --physical-coverage test/mp.bam > /dev/null
-  - [ $(./covtobed -m 15 test/demo.bam  | wc -l) -eq 12 ]
+  - bash test/test.sh
