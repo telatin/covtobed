@@ -60,7 +60,7 @@ When performing target enrichment experiments (where the aim is to sequence a se
 
 The tool has been used, for example, in the setup of a *target enrichment* panel targeting 71 human genes [@poloni], in order to detect uncovered regions.
 
-While a tool exists, called `mosdepth` [@mosdepth], to perform a comprehensive analysis of the coverage, `covtobed` was designed with the ability to quickly extract regions between used defined coverage intervals and, more importantly, with streaming from standard input and to standard output, that Mosdepth doesn't support.
+While a tool exists - called `mosdepth` [@mosdepth] - to perform a comprehensive analysis of the coverage, `covtobed` was designed with the ability to quickly extract regions between used defined coverage intervals and, more importantly, with streaming from standard input and to standard output, that Mosdepth doesn't support.
 
 # Acknowledgements
 
