@@ -35,7 +35,7 @@ Here we describe `covtobed`, a C++ program designed to extract the depth of cove
 eventually specifying a range of coverage of interest and a minimum length for the features printed in the output BED file. 
 The fast parsing of BAM files is performed using `libbamtools` [@bamtools]. 
 
-The implementation has been inspired by the UNIX programming phylosophy[@phylosophy], and thus `covtobed` performs a limited task and supports input and output streams.
+The implementation has been inspired by the UNIX programming phylosophy [@phylosophy], and thus `covtobed` performs a limited task and supports input and output streams.
 
 # Availability and Installation
 
@@ -44,10 +44,9 @@ and can be easily installed via Miniconda from the "bioconda" channel
 (*i. e.* `conda install -c bioconda covtobed`).
 
 The tool is also available as a Docker image downloadable from [Docker Hub](https://hub.docker.com/r/andreatelatin/covtobed) 
-(*i. e.* `docker pull andreatelatin/covtobed`) or as a Singularity image (*i. e.* `singularity pull docker://andreatelatin/covtobed`). 
-Snapshots of Singularity images are stored in [Zenodo](https://zenodo.org/record/1063493).
+(*i. e.* `docker pull andreatelatin/covtobed`) or as a Singularity image (*i. e.* `singularity pull docker://andreatelatin/covtobed`).
 
-# Code 
+# Code (structure and dependencies)
 
 The code of `covtobed` has been designed in an Object Oriented Programming paradigm, 
 with an *Output* class used to print the output lines, and *Coverage* and *Alignments* data structures. This allows a convenient template for adapting the code
@@ -57,11 +56,11 @@ to specific tasks, if needed.
 
 # Example application
 
-When performing target enrichment experiments (where the aim is to sequence a set of selected regions of a genome), it's important to detect a lack of coverage or unsufficient coverage (*i.e.* is lower than `THRESHOLD` in the target regions). This can be calculated intersecting (with `bedtools`, [@bedtools]) the target BED file with the output of `covtobed --max-cov THRESHOLD alignment.bam`. 
+When performing target enrichment experiments (where the aim is to sequence a set of selected regions of a genome), it's important to detect a lack of coverage or unsufficient coverage (*i.e.* is lower than `THRESHOLD` in the target regions). This can be calculated intersecting (with `bedtools`, [@bedtools]) the target BED file with the output of `covtobed`. 
 
 The tool has been used, for example, in the setup of a *target enrichment* panel targeting 71 human genes [@poloni], in order to detect uncovered regions.
 
-While a tool exists to perform a comprehensive analysis of the coverage (`mosdepth` [@mosdepth]),  `covtobed` was designed with the ability to quickly extract regions between used defined coverage intervals and, more importantly, with streaming from standard input and to standard output, that Mosdepth doesn't support.
+While a tool exists – called `mosdepth` [@mosdepth] – to perform a comprehensive analysis of the coverage, `covtobed` was designed with the ability to quickly extract regions between used defined coverage intervals and, more importantly, with streaming from standard input and to standard output, that Mosdepth doesn't support.
 
 # Acknowledgements
 
