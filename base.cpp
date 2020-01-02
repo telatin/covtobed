@@ -238,11 +238,14 @@ int main(int argc, char *argv[]) {
 					// increment coverage with alignments that start here
 					while (more_alignments_for_ref && next_change == alignment.Position) {
 						if (physical_coverage) {
-							if (alignment.InsertSize > 0)
+							if (alignment.InsertSize > 0) {
 								coverage_ends.push({alignment.Position + alignment.InsertSize, alignment.IsReverseStrand()});
-						} else
+								coverage.inc(alignment.IsReverseStrand());
+							}
+						} else {
 							coverage_ends.push({alignment.GetEndPosition(), alignment.IsReverseStrand()});
-						coverage.inc(alignment.IsReverseStrand());
+							coverage.inc(alignment.IsReverseStrand());
+						}
 						more_alignments = input.get_next_alignment(alignment);
 						more_alignments_for_ref = more_alignments && alignment.RefID == ref_id;
 					}
