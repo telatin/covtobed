@@ -44,8 +44,7 @@ and can be easily installed via Miniconda from the "bioconda" channel
 (*i. e.* `conda install -c bioconda covtobed`).
 
 The tool is also available as a Docker image downloadable from [Docker Hub](https://hub.docker.com/r/andreatelatin/covtobed) 
-(*i. e.* `docker pull andreatelatin/covtobed`) or as a Singularity image (*i. e.* `singularity pull docker://andreatelatin/covtobed`). 
-Snapshots of Singularity images are stored in [Zenodo](https://zenodo.org/record/1063493).
+(*i. e.* `docker pull andreatelatin/covtobed`) or as a Singularity image (*i. e.* `singularity pull docker://andreatelatin/covtobed`).
 
 # Code 
 
