@@ -1,6 +1,6 @@
 build.sh
 a.out
-demo.bam.bai
+*.bam.bai
 mos*
 .DS_Store
 README.md~
