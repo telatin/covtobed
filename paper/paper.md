@@ -65,8 +65,6 @@ While a tool exists to perform a comprehensive analysis of the coverage (`mosdep
 
 # Acknowledgements
 
-The initial development of the tool has been supported by the Seventh Framework Program (600932 MD-Paedigree).
-
 The authors gratefully acknowledge the support of the Biotechnology and Biological Sciences Research Council (BBSRC); 
 this research was partly supported by the BBSRC Institute Strategic Programme Gut Microbes and Health BB/R012490/1 and its constituent project BBS/E/F/000PR10353.
 
