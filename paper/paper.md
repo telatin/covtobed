@@ -35,7 +35,7 @@ Here we describe `covtobed`, a C++ program designed to extract the depth of cove
 eventually specifying a range of coverage of interest and a minimum length for the features printed in the output BED file. 
 The fast parsing of BAM files is performed using `libbamtools` [@bamtools]. 
 
-The implementation has been inspired by the UNIX programming phylosophy[@phylosophy], and thus `covtobed` performs a limited task and supports input and output streams.
+The implementation has been inspired by the UNIX programming phylosophy [@phylosophy], and thus `covtobed` performs a limited task and supports input and output streams.
 
 # Availability and Installation
 
@@ -56,11 +56,11 @@ to specific tasks, if needed.
 
 # Example application
 
-When performing target enrichment experiments (where the aim is to sequence a set of selected regions of a genome), it's important to detect a lack of coverage or unsufficient coverage (*i.e.* is lower than `THRESHOLD` in the target regions). This can be calculated intersecting (with `bedtools`, [@bedtools]) the target BED file with the output of `covtobed --max-cov THRESHOLD alignment.bam`. 
+When performing target enrichment experiments (where the aim is to sequence a set of selected regions of a genome), it's important to detect a lack of coverage or unsufficient coverage (*i.e.* is lower than `THRESHOLD` in the target regions). This can be calculated intersecting (with `bedtools`, [@bedtools]) the target BED file with the output of `covtobed`. 
 
 The tool has been used, for example, in the setup of a *target enrichment* panel targeting 71 human genes [@poloni], in order to detect uncovered regions.
 
-While a tool exists - called `mosdepth` [@mosdepth] - to perform a comprehensive analysis of the coverage, `covtobed` was designed with the ability to quickly extract regions between used defined coverage intervals and, more importantly, with streaming from standard input and to standard output, that Mosdepth doesn't support.
+While a tool exists – called `mosdepth` [@mosdepth] – to perform a comprehensive analysis of the coverage, `covtobed` was designed with the ability to quickly extract regions between used defined coverage intervals and, more importantly, with streaming from standard input and to standard output, that Mosdepth doesn't support.
 
 # Acknowledgements
 
