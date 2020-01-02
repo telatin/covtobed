@@ -46,7 +46,7 @@ and can be easily installed via Miniconda from the "bioconda" channel
 The tool is also available as a Docker image downloadable from [Docker Hub](https://hub.docker.com/r/andreatelatin/covtobed) 
 (*i. e.* `docker pull andreatelatin/covtobed`) or as a Singularity image (*i. e.* `singularity pull docker://andreatelatin/covtobed`).
 
-# Code 
+# Code (structure and dependencies)
 
 The code of `covtobed` has been designed in an Object Oriented Programming paradigm, 
 with an *Output* class used to print the output lines, and *Coverage* and *Alignments* data structures. This allows a convenient template for adapting the code
@@ -60,7 +60,7 @@ When performing target enrichment experiments (where the aim is to sequence a se
 
 The tool has been used, for example, in the setup of a *target enrichment* panel targeting 71 human genes [@poloni], in order to detect uncovered regions.
 
-While a tool exists to perform a comprehensive analysis of the coverage (`mosdepth` [@mosdepth]),  `covtobed` was designed with the ability to quickly extract regions between used defined coverage intervals and, more importantly, with streaming from standard input and to standard output, that Mosdepth doesn't support.
+While a tool exists, called `mosdepth` [@mosdepth], to perform a comprehensive analysis of the coverage, `covtobed` was designed with the ability to quickly extract regions between used defined coverage intervals and, more importantly, with streaming from standard input and to standard output, that Mosdepth doesn't support.
 
 # Acknowledgements
 
