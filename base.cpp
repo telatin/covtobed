@@ -24,7 +24,7 @@ typedef size_t CountType;
 
 const char ref_char = '>';
 
-const string VERSION = "%prog 0.6"
+const string VERSION = "%prog 0.61"
     "\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
     "License MIT"
     ".\n"
@@ -175,7 +175,7 @@ int main(int argc, char *argv[]) {
 		parser.add_option("-m", "--min-cov").metavar("MINCOV").type("int").set_default("0").help("print BED feature only if the coverage is bigger than (or equal to) MINCOV (default: %default)");
 		parser.add_option("-x", "--max-cov").metavar("MAXCOV").type("int").set_default("100000").help("print BED feature only if the coverage is lower than MAXCOV (default: %default)");
 		parser.add_option("-l", "--min-len").metavar("MINLEN").type("int").set_default("1").help("print BED feature only if its length is bigger (or equal to) than MINLELN (default: %default)");
-		parser.add_option("-f", "--flatten").action("store_true").set_default("0").help("Flatten adjacent BED features (usually when specifying -m/-x)");
+//		parser.add_option("-f", "--flatten").action("store_true").set_default("0").help("Flatten adjacent BED features (usually when specifying -m/-x)");
 
 		parser.add_option("-v") .action("version") .help("prints program version");
 		// output options
