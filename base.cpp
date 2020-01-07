@@ -16,7 +16,7 @@ using namespace std;
 typedef uint16_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 0.8"
+const string VERSION = "%prog 1.0"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"License MIT"
 	".\n"
@@ -184,7 +184,6 @@ int main(int argc, char *argv[]) {
 
 	// output options
 	parser.add_option("--output-strands").action("store_true").set_default("0").help("outputs coverage and stats separately for each strand");
-	//parser.add_option("--target").action("store_true").set_default("0").help("outputs coverage and stats separately for each strand");
 	vector<string> choices = {"bed", "counts"};
 	parser.add_option("--format").choices(choices.begin(), choices.end()).set_default("bed").help("output format");
 
@@ -199,7 +198,7 @@ int main(int argc, char *argv[]) {
 	try {
 		// open input and output
 		Input input(parser.args(), options.get("min_mapq"));
-		Output output(&cout, 
+		Output output(&cout,
 			static_cast<const char *>(options.get("format")), 
 			static_cast<bool>(options.get("output_strands")), 
 			minimum_coverage, maximum_coverage, minimum_length);
