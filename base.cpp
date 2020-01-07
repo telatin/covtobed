@@ -91,14 +91,14 @@ struct Coverage {
 	}
 };
 
-// Class for input handling: reads and filters alignments from bams
+// Class for output handling: writes coverage in the specified format
 class Output {
 	public:
 		enum Format {BED, COUNTS};
 
 		// class constructor
-		Output(ostream *o, Format f, bool s=false, int m=0, int x=100000, int l=1) : 
-			out(o), format(f), strands(s), mincov(m), maxcov(x), minlen(l) {}
+		Output(ostream *o, const char *f, bool s=false, int m=0, int x=100000, int l=1) : out(o), format(parse_format(f)), strands(s), mincov(m), maxcov(x), minlen(l) {
+		}
 
 		// write interval to bed
 		void operator() (const Interval &i, const Coverage &c) {
@@ -149,6 +149,17 @@ class Output {
 			else
 				*out  << static_cast<DepthType>(c);
 		}
+		static Format parse_format(const char *format_str) {
+			const string s = format_str;
+			if (s == "bed")
+				return Output::BED;
+			if (s == "counts")
+				return Output::COUNTS;
+			else
+				throw string("unkown format specification: \"") + format_str + "\"";
+		}
+
+
 		ostream *out;
 		const Format format;
 		const bool strands;
@@ -186,25 +197,12 @@ int main(int argc, char *argv[]) {
 	const int  minimum_coverage  = options.get("min_cov");
 	const int  maximum_coverage  = options.get("max_cov");
 	const int  minimum_length    = options.get("min_len");
+	const char *format = static_cast<const char *>(options.get("format"));
 
-	// get format
-	Output::Format f;
-	const string format_str = static_cast<const char *>(options.get("format"));
-
-	if (format_str == "bed")
-		f = Output::BED;
-	else if (format_str == "counts")
-		f = Output::COUNTS;
-	else {
-		parser.error("bad output format specification");
-		return 1;
-	}
-
-	// open input and output
 	try {
-
-		Output output(&cout, f, options.get("output_strands"), minimum_coverage, maximum_coverage, minimum_length);
+		// open input and output
 		Input input(parser.args(), options.get("min_mapq"));
+		Output output(&cout, format, options.get("output_strands"), minimum_coverage, maximum_coverage, minimum_length);
 
 
 		// main alignment parsing loop
