@@ -149,15 +149,15 @@ class Output {
 			else
 				*out  << static_cast<DepthType>(c);
 		}
-		// static Format parse_format(const char *format_str) {
-		// 	const string s = format_str;
-		// 	if (s == "bed")
-		// 		return Output::BED;
-		// 	if (s == "counts")
-		// 		return Output::COUNTS;
-		// 	else
-		// 		throw string("unkown format specification: \"") + format_str + "\"";
-		// }
+		static Format parse_format(const char *format_str) {
+			const string s = format_str;
+			if (s == "bed")
+				return Output::BED;
+			if (s == "counts")
+				return Output::COUNTS;
+			else
+				throw string("unkown format specification: \"") + format_str + "\"";
+		}
 
 
 		ostream *out;
@@ -196,20 +196,7 @@ int main(int argc, char *argv[]) {
 	const int  minimum_coverage  = options.get("min_cov");
 	const int  maximum_coverage  = options.get("max_cov");
 	const int  minimum_length    = options.get("min_len");
-	//const char *format = static_cast<const char *>(options.get("format"));
-	// get format
-	Output::Format f;
-	const string format_str = static_cast<const char *>(options.get("format"));
-
-	if (format_str == "bed")
-		f = Output::BED;
-	else if (format_str == "counts")
-		f = Output::COUNTS;
-	else {
-		parser.error("bad output format specification");
-		return 1;
-	}
-
+	const char *format = static_cast<const char *>(options.get("format"));
 
 	try {
 		// open input and output
