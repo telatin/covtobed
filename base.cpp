@@ -155,8 +155,7 @@ class Output {
 				return Output::BED;
 			if (s == "counts")
 				return Output::COUNTS;
-			else
-				throw string("unkown format specification: \"") + format_str + "\"";
+			throw string("unkown format specification: \"") + format_str + "\"";
 		}
 
 
@@ -196,12 +195,14 @@ int main(int argc, char *argv[]) {
 	const int  minimum_coverage  = options.get("min_cov");
 	const int  maximum_coverage  = options.get("max_cov");
 	const int  minimum_length    = options.get("min_len");
-	const char *output_format = static_cast<const char *>(options.get("format"));
 
 	try {
 		// open input and output
 		Input input(parser.args(), options.get("min_mapq"));
-		Output output(&cout, output_format, options.get("output_strands"), minimum_coverage, maximum_coverage, minimum_length);
+		Output output(&cout, 
+			static_cast<const char *>(options.get("format")), 
+			static_cast<bool>(options.get("output_strands")), 
+			minimum_coverage, maximum_coverage, minimum_length);
 
 
 		// main alignment parsing loop
