@@ -36,7 +36,22 @@ then
 fi
 
 # Checking the "counts" output (counting the lines containing a ">")
+echo -n "Testing 'counts' format (printed headers): "
 if [ $(./covtobed --format counts test/demo.bam | grep '>' | wc -l) -eq "2" ];
 then
 	echo PASS
+fi
+echo -n "Testing 'counts' format (printed lines): "
+if [ $(./covtobed --format counts test/demo.bam | grep '>' | wc -l) -eq "202" ];
+then
+        echo PASS
+fi
+
+# Checking BED output with reference output file
+echo -n "Checking identity of BED output with pre-calculated: "
+./covtobed test/demo.bam > test/output.test
+if [ $(diff test/output.test test/output.bed) -eq "0" ];
+then
+        echo PASS
+	rm test/output.test
 fi
