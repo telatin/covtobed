@@ -11,3 +11,4 @@ test_local
 *.sam
 time.*
 test2.bam
+*.cpp~
