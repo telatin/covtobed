@@ -49,8 +49,7 @@ The tool is also available as a Docker image downloadable from [Docker Hub](http
 # Code (structure and dependencies)
 
 The code of `covtobed` has been designed in an Object Oriented Programming paradigm, 
-with an *Output* class used to print the output lines, and *Coverage* and *Alignments* data structures. This allows a convenient template for adapting the code
-to specific tasks, if needed.
+with an *Output* class used to print the output lines, and *Coverage* and *Alignments* data structures. 
 
 `covtobed` relies on  `libbamtools` [@bamtools] for BAM file parsing, and `cpp-optparse` [@opt] for command line option parsing.
 
