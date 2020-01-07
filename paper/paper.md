@@ -32,10 +32,10 @@ For several applications of DNA sequencing it is useful to extract the **depth o
 encoding the output in the standard BED format [@bedtools].
 
 Here we describe `covtobed`, a C++ program designed to extract the depth of coverage per position from a sorted BAM file, 
-eventually specifying a range of coverage of interest and a minimum length for the features printed in the output BED file. 
-The fast parsing of BAM files is performed using `libbamtools` [@bamtools]. 
+optionally specifying a range of coverage of interest and a minimum length for the features printed in the output BED file. 
+Parsing of BAM files is performed using `libbamtools` [@bamtools]. 
 
-The implementation has been inspired by the UNIX programming phylosophy [@phylosophy], and thus `covtobed` performs a limited task and supports input and output streams.
+The design has been inspired by the UNIX programming phylosophy [@phylosophy], and thus `covtobed` performs a a single simple task and supports input and output streams.
 
 # Availability and Installation
 
@@ -48,8 +48,9 @@ The tool is also available as a Docker image downloadable from [Docker Hub](http
 
 # Code (structure and dependencies)
 
-The code of `covtobed` has been designed in an Object Oriented Programming paradigm, 
-with an *Output* class used to print the output lines, and *Coverage* and *Alignments* data structures. 
+The code of `covtobed` is an Object Oriented, 
+including an *Input* class handling reading and filtering of alignments and an *Output* class handling coverage filtering and writing in different formats.
+The main algorithm is based on a *priority_queue* from the standard library and is both fast and memory efficient.
 
 `covtobed` relies on  `libbamtools` [@bamtools] for BAM file parsing, and `cpp-optparse` [@opt] for command line option parsing.
 
