@@ -48,8 +48,7 @@ The tool is also available as a Docker image downloadable from [Docker Hub](http
 
 # Code (structure and dependencies)
 
-The code of `covtobed` is an Object Oriented, 
-including an *Input* class handling reading and filtering of alignments and an *Output* class handling coverage filtering and writing in different formats.
+The code is object oriented, including an *Input* class handling reading, parsing and filtering of alignments and an *Output* class handling coverage filtering and writing in different formats.
 The main algorithm is based on a *priority_queue* from the standard library and is both fast and memory efficient.
 
 `covtobed` relies on  `libbamtools` [@bamtools] for BAM file parsing, and `cpp-optparse` [@opt] for command line option parsing.
