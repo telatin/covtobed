@@ -13,10 +13,7 @@
 using namespace BamTools;
 using namespace std;
 
-// types
-typedef uint16_t DepthType;
-typedef size_t CountType;
-
+typedef uint16_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';
 
 const string VERSION = "%prog 0.7"
@@ -28,6 +25,7 @@ const string VERSION = "%prog 0.7"
 
 #define debug if(false)
 
+// Class that stores info about the end position of alignments, used in the alignment queue
 struct CovEnd {
 	PositionType end;
 	bool rev;
@@ -37,13 +35,14 @@ struct CovEnd {
 	}
 };
 
-class Alignments {
+// Class for input handling: reads and filters alignments from bams
+class Input {
 	public:
 		BamMultiReader input_bams;
 		const int min_mapq;
 
-
-		Alignments(const vector<string> &paths, const int q) : min_mapq(q) {
+		// open all files
+		Input(const vector<string> &paths, const int q) : min_mapq(q) {
 			if (paths.empty()) {
 				// no input files, use standard input
 				cerr << "Reading from STDIN... [try 'covtobed -h' for options]" << endl;
@@ -58,18 +57,21 @@ class Alignments {
 			}
 		}
 
+		// get next good alignment (if any)
 		bool get_next_alignment(BamAlignment & alignment) {
-			bool more_alignments;
+			bool more_alignments, good_alignment;
 			do {
 				debug cerr << "[M] " << alignment.Name << ":" << alignment.Position << " | Is mapped? " << alignment.IsMapped() << endl;
 				more_alignments = input_bams.GetNextAlignmentCore(alignment);
-			} while (more_alignments && alignment.MapQuality < min_mapq);
+				good_alignment = alignment.IsMapped() && alignment.MapQuality >= min_mapq;
+			} while (more_alignments && !good_alignment);
 			return more_alignments;
 		}
 		vector<RefData> get_ref_data() { return input_bams.GetReferenceData(); }
 		int get_ref_id(const string &ref) { return input_bams.GetReferenceID(ref); }
 };
 
+// Class that stores info about the current coverage
 struct Coverage {
 	DepthType f = 0, r = 0;
 
@@ -89,6 +91,7 @@ struct Coverage {
 	}
 };
 
+// Class for input handling: reads and filters alignments from bams
 class Output {
 	public:
 		enum Format {BED, COUNTS};
@@ -201,7 +204,7 @@ int main(int argc, char *argv[]) {
 	try {
 
 		Output output(&cout, f, options.get("output_strands"), minimum_coverage, maximum_coverage, minimum_length);
-		Alignments input(parser.args(), options.get("min_mapq"));
+		Input input(parser.args(), options.get("min_mapq"));
 
 
 		// main alignment parsing loop
@@ -254,10 +257,6 @@ int main(int argc, char *argv[]) {
 			debug cerr << "[_] Completed at " << ref.RefName << ":" << last_pos << endl;
 			// reference ended
 			assert(coverage_ends.empty());
-		}
-		while (more_alignments && !(alignment.IsMapped()) ) {
-			debug cerr << "[8] Emtpying trash" << endl;
-			more_alignments = input.get_next_alignment(alignment);
 		}
 		assert(!more_alignments);
 	} catch (string msg) {
