@@ -14,9 +14,9 @@ using namespace BamTools;
 using namespace std;
 
 typedef uint16_t DepthType; // type for depth of coverage, kept it small
-const char ref_char = '>';
+const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 0.7"
+const string VERSION = "%prog 0.8"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"License MIT"
 	".\n"
@@ -131,7 +131,7 @@ class Output {
 				switch(format) {
 					case Format::BED:
 						*out << i.ref << '\t' << i.start << '\t' << i.end << '\t';
-						if (c < 1000 and c >= 0) {
+						if (c >= 0) {
 							write_coverage(c);
 						}
 						break;
@@ -171,7 +171,6 @@ int main(int argc, char *argv[]) {
 	parser.add_option("-m", "--min-cov").metavar("MINCOV").type("int").set_default("0").help("print BED feature only if the coverage is bigger than (or equal to) MINCOV (default: %default)");
 	parser.add_option("-x", "--max-cov").metavar("MAXCOV").type("int").set_default("100000").help("print BED feature only if the coverage is lower than MAXCOV (default: %default)");
 	parser.add_option("-l", "--min-len").metavar("MINLEN").type("int").set_default("1").help("print BED feature only if its length is bigger (or equal to) than MINLELN (default: %default)");
-	//parser.add_option("-f", "--flatten").action("store_true").set_default("0").help("Flatten adjacent BED features (usually when specifying -m/-x)");
 
 	// output options
 	parser.add_option("--output-strands").action("store_true").set_default("0").help("outputs coverage and stats separately for each strand");
