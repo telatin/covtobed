@@ -11,3 +11,5 @@ test_local
 *.sam
 time.*
 test2.bam
+*bak
+pannelli
