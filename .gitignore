@@ -12,3 +12,5 @@ test_local
 time.*
 test2.bam
 *.cpp~
+*bak
+pannelli
