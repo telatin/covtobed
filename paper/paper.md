@@ -28,11 +28,12 @@ bibliography: paper.bib
 
 A common task in bioinformatics is the mapping of DNA sequencing reads (produced by "next generation sequencing" experiments) against a reference genome. 
 The output of the alignment is commonly encoded in a BAM file [@samformat]. 
-For several applications of DNA sequencing it is useful to extract the **depth of coverage** [@coverage] at specific positions in the BAM file, 
+For several applications of DNA sequencing it is useful to extract the **depth of coverage** [@coverage] 
+at specific positions in the BAM file, 
 encoding the output in the standard BED format [@bedtools].
 
 Here we describe `covtobed`, a C++ program designed to extract the depth of coverage per position from a sorted BAM file, 
-optionally specifying a range of coverage of interest and a minimum length for the features printed in the output BED file. 
+optionally specifying a range of coverage of interest and a minimum length for the features to be printed in the output BED file. 
 Parsing of BAM files is performed using `libbamtools` [@bamtools]. 
 
 The design has been inspired by the UNIX programming philosophy [@phylosophy], and thus `covtobed` performs a single task and supports input and output streams.
