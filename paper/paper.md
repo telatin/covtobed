@@ -35,7 +35,7 @@ Here we describe `covtobed`, a C++ program designed to extract the depth of cove
 optionally specifying a range of coverage of interest and a minimum length for the features printed in the output BED file. 
 Parsing of BAM files is performed using `libbamtools` [@bamtools]. 
 
-The design has been inspired by the UNIX programming phylosophy [@phylosophy], and thus `covtobed` performs a single task and supports input and output streams.
+The design has been inspired by the UNIX programming philosophy [@phylosophy], and thus `covtobed` performs a single task and supports input and output streams.
 
 # Availability and Installation
 
