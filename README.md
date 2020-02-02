@@ -8,7 +8,8 @@
 [![Singularity 10.5281/zenodo.1063493](https://img.shields.io/badge/singularity-available-yellow)](https://zenodo.org/record/1063493)
 ### a tool to generate BED coverage tracks from BAM files
 
-Read one (or more) alignment files (sorted BAM) and prints a BED with the coverage. It will join consecutive bases with the same coverage, and can be used to only print a BED file with the regions having a specific coverage range.
+Read one (or more) [alignment](https://en.wikipedia.org/wiki/Sequence_alignment) files
+(sorted [BAM](https://en.wikipedia.org/wiki/SAM_(file_format))) and prints a [BED](https://en.wikipedia.org/wiki/BED_(file_format)) with the [coverage](https://en.wikipedia.org/wiki/Coverage_(genetics)). It will join consecutive bases with the same coverage, and can be used to only print a BED file with the regions having a specific coverage range. ([Read more in the wiki]())
 
 
 ![covtobed example](img/coverage_bam_to_bed.png)
