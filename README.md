@@ -5,7 +5,9 @@
 ![Bioconda installs](https://img.shields.io/conda/dn/bioconda/covtobed)
 [![TravisCI Build Status](https://travis-ci.org/telatin/covtobed.svg?branch=master)](https://travis-ci.org/telatin/covtobed)
 [![Docker build](https://img.shields.io/docker/cloud/build/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed)
-[![Singularity 10.5281/zenodo.1063493](https://img.shields.io/badge/singularity-available-yellow)](https://zenodo.org/record/1063493)
+[![Singularity Zenodo Record](https://img.shields.io/badge/singularity-available-yellow)](https://zenodo.org/record/3600261)
+
+
 ### a tool to generate BED coverage tracks from BAM files
 
 Read one (or more) [alignment](https://en.wikipedia.org/wiki/Sequence_alignment) files
