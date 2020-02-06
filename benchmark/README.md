@@ -10,6 +10,7 @@ If invoked with a parameter, will also download an exome from the 1000 Genomes P
 
 A `benchmark_stream.sh` script will compare _covtobed_ to _bedtools_, redirecting the output to /dev/null,
 while `benchmark_disk.sh` will also compare _mosdepth_.
+_samtools_ is only included in the streaming section, but should be noted that produces a non-BED output, and the coverage will not be counted in deletions, that is not the intended behaviour in _covtobed_.
 
 ## Results: Linux VM (64 Gb RAM, 4 cores)
 
@@ -20,8 +21,9 @@ See also [example1.bam benchmark](stream/benchmarkStream_example1.md).
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| `covtobed example2.bam` | 1.951 ± 0.080 | 1.872 | 2.074 | 1.00 |
-| `bedtools genomecov -bga -ibam example2.bam` | 36.709 ± 0.878 | 35.784 | 38.083 | 18.82 ± 0.90 |
+| `samtools depth -a /example1.bam` | 600.603 ± 3.205 | 596.251 | 604.440 | 573.92 ± 26.79 |
+| `covtobed example1.bam` | 1.046 ± 0.049 | 0.982 | 1.096 | 1.00 |
+| `bedtools genomecov -bga -ibam example1.bam` | 34.717 ± 0.952 | 33.325 | 36.090 | 33.17 ± 1.79 |
 
 
 
