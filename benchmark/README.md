@@ -16,8 +16,8 @@ See also [example1.bam benchmark](stream/benchmarkStream_example1.md).
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| `covtobed /local/giovanni/covtobed/benchmark/../TE/example2.bam > /dev/null` | 1.951 ± 0.080 | 1.872 | 2.074 | 1.00 |
-| `bedtools genomecov -bga -ibam /local/giovanni/covtobed/benchmark/../TE/example2.bam > /dev/null` | 36.709 ± 0.878 | 35.784 | 38.083 | 18.82 ± 0.90 |
+| `covtobed example2.bam` | 1.951 ± 0.080 | 1.872 | 2.074 | 1.00 |
+| `bedtools genomecov -bga -ibam example2.bam` | 36.709 ± 0.878 | 35.784 | 38.083 | 18.82 ± 0.90 |
 
 
 
@@ -42,5 +42,5 @@ Streaming test.
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| `covtobed /Users/telatina/git/covtobed/benchmark/../TE/example2.bam > /dev/null` | 1.314 ± 0.024 | 1.289 | 1.346 | 1.00 |
-| `bedtools genomecov -bga -ibam /Users/telatina/git/covtobed/benchmark/../TE/example2.bam > /dev/null` | 18.190 ± 0.134 | 18.071 | 18.398 | 13.84 ± 0.27 |
+| `covtobed example2.bam` | 1.314 ± 0.024 | 1.289 | 1.346 | 1.00 |
+| `bedtools genomecov -bga -ibam example2.bam` | 18.190 ± 0.134 | 18.071 | 18.398 | 13.84 ± 0.27 |
