@@ -22,7 +22,8 @@ See also [example1.bam benchmark](stream/benchmarkStream_example1.md).
 
 ### Saving the output to disk
 
-This is the test done saving to file. See also [disk/benchmark2_example1.md](example1.bam benchmark).
+This is the test done saving to file. 
+See also [example1.bam benchmark](disk/benchmark2_example1.md).
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
