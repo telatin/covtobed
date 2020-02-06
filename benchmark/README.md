@@ -11,12 +11,12 @@ If invoked with a parameter, will also download an exome from the 1000 Genomes P
 
 ### Straming speed (not saving to disk)
 
-_mosdepth_ is not included as it only saves to file.
+_mosdepth_ is not included as it only saves to file. Other commands were redirected to `/dev/null`.
 
 | Command | Mean [ms] | Min [ms] | Max [ms] | Relative |
 |:---|---:|---:|---:|---:|
-| `covtobed example1.bam > /dev/null` | 986.2 ? 9.5 | 977.1 | 1003.5 | 1.00 |
-| `bedtools genomecov -bga -ibamexample1.bam > /dev/null` | 33596.2 ? 1550.4 | 31982.4 | 35700.0 | 34.07 ? 1.61 |
+| `covtobed example1.bam` | 986.2 ± 9.5 | 977.1 | 1003.5 | 1.00 |
+| `bedtools genomecov -bga -ibam example1.bam` | 33596.2 ± 1550.4 | 31982.4 | 35700.0 | 34.07 ? 1.61 |
 
 
 ### Saving the output to disk
