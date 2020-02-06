@@ -7,7 +7,7 @@ To download the datasets use the `get_datasets.sh` script.
 The script will download two target enrichment panels (BAM).
 If invoked with a parameter, will also download an exome from the 1000 Genomes Project.
 
-## Results
+## Results: Linux VM (64 Gb RAM, 4 cores)
 
 ### Straming speed (not saving to disk)
 
