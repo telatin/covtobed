@@ -3,9 +3,13 @@
 ## How to run
 
 The benchmark has been performed using [hyperfine](https://github.com/sharkdp/hyperfine), installable via conda.
+
 To download the datasets use the `get_datasets.sh` script. 
 The script will download two target enrichment panels (BAM).
 If invoked with a parameter, will also download an exome from the 1000 Genomes Project.
+
+A `benchmark_stream.sh` script will compare _covtobed_ to _bedtools_, redirecting the output to /dev/null,
+while `benchmark_disk.sh` will also compare _mosdepth_.
 
 ## Results: Linux VM (64 Gb RAM, 4 cores)
 
