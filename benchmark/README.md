@@ -11,9 +11,9 @@ If invoked with a parameter, will also download an exome from the 1000 Genomes P
 A `benchmark_stream.sh` script will compare _covtobed_ to _bedtools_, redirecting the output to `/dev/null`,
 while `benchmark_disk.sh` will also compare _mosdepth_.
 
-_samtools_ is only included in the streaming section, but should be noted that produces a non-BED output, and the coverage will not be counted in deletions, that is not the intended behaviour in _covtobed_.
+_samtools_ is only included in the streaming section, but should be noted that produces a non-BED output, and the coverage will not be counted in deletions, that is not the intended behaviour in _covtobed_ (but this explains the much bigger computation time).
 
-## Results: Linux VM (64 Gb RAM, 4 cores)
+## Results: Linux VM (64 Gb RAM, 8 cores)
 
 ### Straming speed (not saving to disk)
 
@@ -23,24 +23,25 @@ See also [example1.bam benchmark](stream/benchmarkStream_example1.md).
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
 | `samtools depth -a /example1.bam` | 600.603 ± 3.205 | 596.251 | 604.440 | 573.92 ± 26.79 |
-| `covtobed example1.bam` | 1.046 ± 0.049 | 0.982 | 1.096 | 1.00 |
 | `bedtools genomecov -bga -ibam example1.bam` | 34.717 ± 0.952 | 33.325 | 36.090 | 33.17 ± 1.79 |
-
+| `covtobed example1.bam` | 1.046 ± 0.049 | 0.982 | 1.096 | 1.00 |
 
 
 ### Saving the output to disk
 
 This is the test done saving to file. 
 Note that _mosdepth_ will save the file compressed and indexed, thus requiring more time, 
-and it's the only program tested supporting multithreading. 
+and it's the only program tested supporting multithreading (only for BAM decompression). 
 
-See also [example1.bam benchmark](disk/benchmark2_example1.md).
+See also [example2.bam benchmark](disk/benchmark2_example2.md).
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| ` mosdepth mosd2_ example2.bam` | 68.555 ± 0.765 | 67.672 | 68.999 | 33.57 ± 0.49 |
-| `covtobed example2.bam` | 2.042 ± 0.019 | 2.024 | 2.061 | 1.00 |
-| `bedtools genomecov -bga -ibam example2.bam` | 35.986 ± 0.167 | 35.844 | 36.169 | 17.62 ± 0.18 |
+| `mosdepth -x m_ example1.bam` | 68.344 ± 1.750 | 66.352 | 69.629 | 65.23 ± 2.22 |
+| `mosdepth -x -t 8  m2_ ex1.bam` | 65.891 ± 0.736 | 65.123 | 66.590 | 62.89 ± 1.57 |
+| `covtobed  example1.bam > ex1.bed` | 1.048 ± 0.023 | 1.021 | 1.063 | 1.00 |
+| `bedtools genomecov -bga -ibam ex1.bam > ex1.bed` | 32.478 ± 0.798 | 31.830 | 33.370 | 31.00 ± 1.03 |
+
 
 ## Results: macOS 10.15, MacBook Pro (16-inch, 2019)
 
