@@ -64,14 +64,13 @@ While a tool exists – called *mosdepth* [@mosdepth] – to perform a coverage 
 
 # Performance
 
-*covtobed* is orders of magnitude faster than the existing tools. In particular, *bedtools* is 20-30 times slower, and *mosdepth* is approximately 60 times slower (but will produce a compressed and indexed output):
+*covtobed* is orders of magnitude faster than the existing tools. In particular, *bedtools* is 20-30 times slower, and *mosdepth* is approximately 60 times slower (but will produce a compressed and indexed output). We report the measured time using a target enrichment panel [@dataset]:
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| `mosdepth -x pref_ ex2.bam` | 67.692 ± 1.221 | 66.288 | 68.509 | 32.89 ± 0.60 |
-| `mosdepth -x -t 8 pref2_ ex2.bam` | 67.681 ± 0.954 | 66.974 | 68.766 | 32.89 ± 0.47 |
-| `covtobed ex2.bam > out.bed` | 2.058 ± 0.006 | 2.054 | 2.065 | 1.00 |
-| `bedtools genomecov -bga -ibam ex2.bam >out.bed` | 37.677 ± 0.962 | 36.568 | 38.281 | 18.31 ± 0.47 |
+| mosdepth | 67.692 ± 1.221 | 66.288 | 68.509 | 32.89 ± 0.60 |
+| covtobed | 2.058 ± 0.006 | 2.054 | 2.065 | 1.00 |
+| bedtools | 37.677 ± 0.962 | 36.568 | 38.281 | 18.31 ± 0.47 |
 
 The scripts to perform the benchmark are available in the [github repository](https://github.com/telatin/covtobed/tree/master/benchmark).
 
