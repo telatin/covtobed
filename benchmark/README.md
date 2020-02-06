@@ -18,7 +18,7 @@ _samtools_ is only included in the streaming section, but should be noted that p
 ### Straming speed (not saving to disk)
 
 _mosdepth_ is not included as it only saves to file. Other commands were redirected to `/dev/null`.
-See also [example1.bam benchmark](stream/benchmarkStream_example1.md). 
+See also [example2.bam benchmark](stream/benchmarkStream_example2.md). 
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
