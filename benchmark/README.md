@@ -12,6 +12,7 @@ If invoked with a parameter, will also download an exome from the 1000 Genomes P
 ### Straming speed (not saving to disk)
 
 _mosdepth_ is not included as it only saves to file. Other commands were redirected to `/dev/null`.
+See also [example1.bam benchmark](stream/benchmarkStream_example1.md). 
 
 | Command | Mean [ms] | Min [ms] | Max [ms] | Relative |
 |:---|---:|---:|---:|---:|
@@ -21,8 +22,10 @@ _mosdepth_ is not included as it only saves to file. Other commands were redirec
 
 ### Saving the output to disk
 
+This is the test done saving to file. See also [disk/benchmark2_example1.md](example1.bam benchmark).
+
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
 | ` mosdepth mosd2_ example2.bam` | 68.555 ± 0.765 | 67.672 | 68.999 | 33.57 ± 0.49 |
-| `covtobed example2.bam > covt2_example2.bed` | 2.042 ± 0.019 | 2.024 | 2.061 | 1.00 |
-| `bedtools genomecov -bga -ibam example2.bam > bedt2_example2.bed` | 35.986 ± 0.167 | 35.844 | 36.169 | 17.62 ± 0.18 |
+| `covtobed example2.bam` | 2.042 ± 0.019 | 2.024 | 2.061 | 1.00 |
+| `bedtools genomecov -bga -ibam example2.bam` | 35.986 ± 0.167 | 35.844 | 36.169 | 17.62 ± 0.18 |
