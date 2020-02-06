@@ -8,8 +8,9 @@ To download the datasets use the `get_datasets.sh` script.
 The script will download two target enrichment panels (BAM).
 If invoked with a parameter, will also download an exome from the 1000 Genomes Project.
 
-A `benchmark_stream.sh` script will compare _covtobed_ to _bedtools_, redirecting the output to /dev/null,
+A `benchmark_stream.sh` script will compare _covtobed_ to _bedtools_, redirecting the output to `/dev/null`,
 while `benchmark_disk.sh` will also compare _mosdepth_.
+
 _samtools_ is only included in the streaming section, but should be noted that produces a non-BED output, and the coverage will not be counted in deletions, that is not the intended behaviour in _covtobed_.
 
 ## Results: Linux VM (64 Gb RAM, 4 cores)
