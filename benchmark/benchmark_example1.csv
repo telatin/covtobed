@@ -1,3 +1,4 @@
 command,mean,stddev,median,user,system,min,max
-covtobed /local/giovanni/covtobed/benchmark/../TE/example1.bam > /dev/null,0.9746421343216668,0.028915457965501896,0.9656950656550001,0.9279937283333334,0.042346224999999994,0.9449085221550001,1.0203472791550001
-bedtools genomecov -bga -ibam /local/giovanni/covtobed/benchmark/../TE/example1.bam > /dev/null,31.59578293482167,0.8086472538816574,31.561789885655003,12.505440561666665,19.05846905833333,30.671069504155,32.461138499155005
+"samtools index /local/giovanni/covtobed/benchmark/../TE/example1.bam && mosdepth ""/local/giovanni/covtobed/benchmark""/mosd_example1 /local/giovanni/covtobed/benchmark/../TE/example1.bam && gunzip ""/local/giovanni/covtobed/benchmark""/mosd_example1.per-base.bed.gz",70.92628180278,2.2197922526074096,70.28913479578,67.954445545,2.7657565499999994,69.09473660878,73.39497400377999
+"covtobed /local/giovanni/covtobed/benchmark/../TE/example1.bam > ""/local/giovanni/covtobed/benchmark""/covt_example1.bed",1.07976198578,0.009556659341979452,1.07902377478,0.9744288783333334,0.10250421666666665,1.07059583978,1.08966634278
+"bedtools genomecov -bga -ibam /local/giovanni/covtobed/benchmark/../TE/example1.bam > ""/local/giovanni/covtobed/benchmark""/bedt_example1.bed",36.50628820144667,2.615794274452499,35.52446914778,13.642104545,22.837651883333333,34.523454977780005,39.47094047878
