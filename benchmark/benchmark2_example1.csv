@@ -1,0 +1,4 @@
+command,mean,stddev,median,user,system,min,max
+" mosdepth ""/local/giovanni/covtobed/benchmark""/mosd2_example1 /local/giovanni/covtobed/benchmark/../TE/example1.bam",67.37330211431667,0.7093024321006525,67.04762572365,65.43511964833333,1.8266515749999996,66.88532458565,68.18695603365
+"covtobed /local/giovanni/covtobed/benchmark/../TE/example1.bam > ""/local/giovanni/covtobed/benchmark""/covt2_example1.bed",1.0522868696500003,0.0028444896168872188,1.05125777265,0.949719315,0.10012557500000001,1.0501001516500001,1.0555026846500002
+"bedtools genomecov -bga -ibam /local/giovanni/covtobed/benchmark/../TE/example1.bam > ""/local/giovanni/covtobed/benchmark""/bedt2_example1.bed",32.85382362731667,0.176978564516719,32.95054511565,12.835653315,19.97838224166667,32.64956186465,32.96136390165
