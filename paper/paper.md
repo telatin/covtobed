@@ -64,7 +64,7 @@ While a tool exists – called *mosdepth* [@mosdepth] – to perform a coverage 
 
 # Performance
 
-*covtobed* is faster than its alternatives. In particular, *bedtools* is approximately 20 times slower, and *mosdepth* is approximately 30 times slower (but will produce a compressed and indexed output). We report the measured time using a target enrichment panel [@dataset]:
+*covtobed* is faster than its alternatives. In particular, *bedtools* is approximately 20-30 times slower, and *mosdepth* is approximately 30-60 times slower (but will produce a compressed and indexed output). We report the measured time using a target enrichment panel [@dataset]:
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
