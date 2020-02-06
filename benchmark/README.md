@@ -22,7 +22,8 @@ See also [example1.bam benchmark](stream/benchmarkStream_example1.md).
 
 ### Saving the output to disk
 
-This is the test done saving to file. 
+This is the test done saving to file. Note that mosdepth will save the file compressed and indexed, thus requiring more time, and it's the only program tested supporting multithreading.
+
 See also [example1.bam benchmark](disk/benchmark2_example1.md).
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
