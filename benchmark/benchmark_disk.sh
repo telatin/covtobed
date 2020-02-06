@@ -1,6 +1,6 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-
+THREADS=4
 set -euo pipefail
 
 # Uses: 'hyperfine', available with 'conda install -y  -c conda-forge hyperfine'
@@ -30,9 +30,10 @@ do
 	fi
 
 	echo "$TAG [$FILE]"
-	hyperfine --warmup 1 --min-runs 3 --prepare "rm  mosd_* *.bed || true" --cleanup 'rm *.XXX || true' \
-		--export-csv benchmark2_$TAG.csv --export-markdown benchmark2_$TAG.md \
-		" mosdepth \"$DIR\"/mosd2_$TAG $FILE" \
+	hyperfine --warmup 3 --min-runs 6 --prepare "rm  mosd_* *.bed || true" --cleanup 'rm *.XXX || true' \
+		--export-csv disk/benchmark_$TAG.csv --export-markdown disk/benchmark_$TAG.md \
+		"mosdepth -x \"$DIR\"/mosd2_$TAG $FILE" \
+		"mosdepth -x -t $THREADS \"$DIR\"/mosd2_$TAG $FILE" \
 		"covtobed $FILE > \"$DIR\"/covt2_$TAG.bed" \
 		"bedtools genomecov -bga -ibam $FILE > \"$DIR\"/bedt2_$TAG.bed" 
 
