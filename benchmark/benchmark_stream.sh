@@ -15,6 +15,10 @@ for FILE in "$DIR"/../TE/example1.bam "$DIR"/../TE/example2.bam "$DIR"/../TE/HG0
 do
 	TAG=$(basename $FILE | cut -f1 -d.)
 
+	if [ ! -e "$FILE" ]; then
+	    echo "$FILE not found. Try re-downloading the datasets"
+	    exit 2
+	fi
 	if [ ! -z ${1+x} ];
 	then
 		# skip exome
@@ -23,17 +27,9 @@ do
 			exit;
 		fi
 	fi
-
-	if [ ! -e "$FILE" ]; then
-	    echo "$FILE not found. Try re-downloading the datasets"
-	    exit 2
-	fi
-
 	echo "$TAG [$FILE]"
-	hyperfine --warmup 1 --min-runs 3 --prepare "rm  mosd_* *.bed || true" --cleanup 'rm *.XXX || true' \
-		--export-csv benchmark2_$TAG.csv --export-markdown benchmark2_$TAG.md \
-		" mosdepth \"$DIR\"/mosd2_$TAG $FILE" \
-		"covtobed $FILE > \"$DIR\"/covt2_$TAG.bed" \
-		"bedtools genomecov -bga -ibam $FILE > \"$DIR\"/bedt2_$TAG.bed" 
-
+	hyperfine --warmup 1 --min-runs 6 --cleanup 'rm *.bed || true' \
+		--export-csv benchmarkStream_$TAG.csv --export-markdown benchmarkStream_$TAG.md \
+		"covtobed $FILE > /dev/null" \
+		"bedtools genomecov -bga -ibam $FILE > /dev/null"
 done

@@ -30,10 +30,10 @@ do
 	fi
 
 	echo "$TAG [$FILE]"
-	hyperfine --warmup 1 --min-runs 3 --prepare "rm $FILE.bai mosd_* *.bed || true" --cleanup 'rm *.XXX || true' \
-		--export-csv benchmark_$TAG.csv --export-markdown benchmark_$TAG.md \
-		"samtools index $FILE && mosdepth \"$DIR\"/mosd_$TAG $FILE && gunzip \"$DIR\"/mosd_$TAG.per-base.bed.gz" \
-		"covtobed $FILE > \"$DIR\"/covt_$TAG.bed" \
-		"bedtools genomecov -bga -ibam $FILE > \"$DIR\"/bedt_$TAG.bed" 
+	hyperfine --warmup 1 --min-runs 3 --prepare "rm  mosd_* *.bed || true" --cleanup 'rm *.XXX || true' \
+		--export-csv benchmark2_$TAG.csv --export-markdown benchmark2_$TAG.md \
+		" mosdepth \"$DIR\"/mosd2_$TAG $FILE" \
+		"covtobed $FILE > \"$DIR\"/covt2_$TAG.bed" \
+		"bedtools genomecov -bga -ibam $FILE > \"$DIR\"/bedt2_$TAG.bed" 
 
 done
