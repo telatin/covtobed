@@ -13,7 +13,12 @@ while `benchmark_disk.sh` will also compare _mosdepth_.
 
 _samtools_ is only included in the streaming section, but should be noted that produces a non-BED output, and the coverage will not be counted in deletions, that is not the intended behaviour in _covtobed_ (but this explains the much bigger computation time).
 
+
 ## Results: Linux VM (64 Gb RAM, 8 cores)
+
+*covtobed* is constantly faster than *bedtools*.
+
+*covtobed* is up to 20 times faster than *mosdepth* on medium datasets (_e. g._ Human gene panels), while on larger datasets (_e. g._ Human whole exomes) it's up to 5 times slower.
 
 ### Straming speed (not saving to disk)
 
