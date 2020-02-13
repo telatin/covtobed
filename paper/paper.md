@@ -64,7 +64,7 @@ While a tool exists – called *mosdepth* [@mosdepth] – to perform a coverage 
 
 # Performance
 
-*covtobed* is a fast tool, outperforming the popular *bedtools* and providing comparable speed with *mosdepth* (with some datasets *covtobed* is more than ten times faster than *mosdepth*).
+*covtobed* is a fast tool, constantly outperforming the popular *bedtools* and providing comparable speed with *mosdepth*. With some datasets, like "gene panels", *covtobed* is more than ten times faster than *mosdepth*.
 
 The scripts to perform the benchmark are available in the [github repository](https://github.com/telatin/covtobed/tree/master/benchmark).
 
