@@ -1,6 +1,6 @@
 # Benchmark
 
-![Summary](covtobed_benchmark.png)
+![Summary](benchmark.png)
 
 *covtobed* is faster than *mosdepth* on small genomes, and on large genomes (like the Human genome) with a limited fraction of the target covered (e. g. target enrichment panels). With panels it can be up to 60X faster than *mosdepth*.
 With large genomes highly *covered* (e. g. exomes, whole genome sequencing) is slightly slower than *mosdepth* (3-4X slower).
