@@ -73,3 +73,5 @@ See also [example2.bam benchmark](disk/benchmark2_example2.md).
 | `mosdepth -x -t 4 m_chr21 chr21.bam` | 5.064 ± 0.108 | 4.965 | 5.248 | 1.00 |
 | `covtobed chr21.bam > chr21.bed` | 18.764 ± 0.633 | 18.115 | 19.941 | 3.71 ± 0.15 |
 | `bedtools genomecov -bga -ibam chr21.bam > chr21.bed` | 62.386 ± 1.472 | 60.422 | 63.909 | 12.32 ± 0.39 |
+
+* See also [all chromosomes results](https://github.com/telatin/covtobed/tree/master/benchmark/exome_chromosomes)
