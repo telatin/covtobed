@@ -56,9 +56,18 @@ See also [example2.bam benchmark](disk/benchmark2_example2.md).
 
 ### Human exome (chromosome) - Savint to disk
 
+* chr1
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| `mosdepth -x mosd2_chr10 chr10.bam` | 18.382 ± 0.328 | 18.007 | 18.905 | 1.34 ± 0.03 |
-| `mosdepth -x -t 4 /mosd2_chr10 chr10.bam` | 13.698 ± 0.218 | 13.444 | 14.099 | 1.00 |
-| `covtobed chr10.bam > chr10.bed` | 64.620 ± 1.886 | 61.831 | 67.343 | 4.72 ± 0.16 |
-| `bedtools genomecov -bga -ibam chr10.bam > chr10.bed` | 126.262 ± 2.543 | 121.461 | 128.303 | 9.22 ± 0.24 |
+| `mosdepth -x m_chr1 chr1.bam` | 35.681 ± 0.650 | 35.154 | 36.974 | 1.41 ± 0.03 |
+| `mosdepth -x -t 4 m_chr1 chr1.bam` | 25.347 ± 0.362 | 25.044 | 25.940 | 1.00 |
+| `covtobed chr1.bam > chr1.bed` | 128.576 ± 3.142 | 122.704 | 131.607 | 5.07 ± 0.14 |
+| `bedtools genomecov -bga -ibam chr1.bam > chr1.bed` | 223.619 ± 6.603 | 217.182 | 235.391 | 8.82 ± 0.29 |
+
+* chr21
+| Command | Mean [s] | Min [s] | Max [s] | Relative |
+|:---|---:|---:|---:|---:|
+| `mosdepth -x m_chr21 chr21.bam` | 6.511 ± 0.156 | 6.384 | 6.809 | 1.29 ± 0.04 |
+| `mosdepth -x -t 4 m_chr21 chr21.bam` | 5.064 ± 0.108 | 4.965 | 5.248 | 1.00 |
+| `covtobed chr21.bam > chr21.bed` | 18.764 ± 0.633 | 18.115 | 19.941 | 3.71 ± 0.15 |
+| `bedtools genomecov -bga -ibam chr21.bam > chr21.bed` | 62.386 ± 1.472 | 60.422 | 63.909 | 12.32 ± 0.39 |
