@@ -1,9 +1,11 @@
 # Benchmark
 
-![Summary](benchmark.png)
-
 *covtobed* is faster than *mosdepth* on small genomes, and on large genomes (like the Human genome) with a limited fraction of the target covered (e. g. target enrichment panels). With panels it can be up to 60X faster than *mosdepth*.
 With large genomes highly *covered* (e. g. exomes, whole genome sequencing) is slightly slower than *mosdepth* (3-4X slower).
+
+
+![Summary](benchmark.png)
+
 
 ## How to run
 
@@ -25,7 +27,7 @@ _samtools_ is only included in the streaming section, but should be noted that p
 
 *covtobed* is up to 20 times faster than *mosdepth* on medium datasets (_e. g._ Human gene panels), while on larger datasets (_e. g._ Human whole exomes) it's up to 5 times slower.
 
-### Straming speed (not saving to disk)
+### Human panel - Straming speed (not saving to disk)
 
 _mosdepth_ is not included as it only saves to file. Other commands were redirected to `/dev/null`.
 See also [example2.bam benchmark](stream/benchmarkStream_example2.md). 
@@ -37,7 +39,7 @@ See also [example2.bam benchmark](stream/benchmarkStream_example2.md).
 | `covtobed example1.bam` | 1.046 ± 0.049 | 0.982 | 1.096 | 1.00 |
 
 
-### Saving the output to disk
+### Human panel - Saving the output to disk
 
 This is the test done saving to file. 
 Note that _mosdepth_ will save the file compressed and indexed, thus requiring more time, 
@@ -48,17 +50,15 @@ See also [example2.bam benchmark](disk/benchmark2_example2.md).
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
 | `mosdepth -x m_ example1.bam` | 68.344 ± 1.750 | 66.352 | 69.629 | 65.23 ± 2.22 |
-| `mosdepth -x -t 8  m2_ ex1.bam` | 65.891 ± 0.736 | 65.123 | 66.590 | 62.89 ± 1.57 |
+| `mosdepth -x -t 4  m2_ ex1.bam` | 65.891 ± 0.736 | 65.123 | 66.590 | 62.89 ± 1.57 |
 | `covtobed  example1.bam > ex1.bed` | 1.048 ± 0.023 | 1.021 | 1.063 | 1.00 |
 | `bedtools genomecov -bga -ibam ex1.bam > ex1.bed` | 32.478 ± 0.798 | 31.830 | 33.370 | 31.00 ± 1.03 |
 
-
-## Results: macOS 10.15, MacBook Pro (16-inch, 2019)
-
-_mosdepth_ is not available for macOS. 
-Streaming test.
+### Human exome (chromosome) - Savint to disk
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| `covtobed example2.bam` | 1.314 ± 0.024 | 1.289 | 1.346 | 1.00 |
-| `bedtools genomecov -bga -ibam example2.bam` | 18.190 ± 0.134 | 18.071 | 18.398 | 13.84 ± 0.27 |
+| `mosdepth -x mosd2_chr10 chr10.bam` | 18.382 ± 0.328 | 18.007 | 18.905 | 1.34 ± 0.03 |
+| `mosdepth -x -t 4 /mosd2_chr10 chr10.bam` | 13.698 ± 0.218 | 13.444 | 14.099 | 1.00 |
+| `covtobed chr10.bam > chr10.bed` | 64.620 ± 1.886 | 61.831 | 67.343 | 4.72 ± 0.16 |
+| `bedtools genomecov -bga -ibam chr10.bam > chr10.bed` | 126.262 ± 2.543 | 121.461 | 128.303 | 9.22 ± 0.24 |
