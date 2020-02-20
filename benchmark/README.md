@@ -54,7 +54,7 @@ See also [example2.bam benchmark](disk/benchmark2_example2.md).
 | `covtobed  example1.bam > ex1.bed` | 1.048 ± 0.023 | 1.021 | 1.063 | 1.00 |
 | `bedtools genomecov -bga -ibam ex1.bam > ex1.bed` | 32.478 ± 0.798 | 31.830 | 33.370 | 31.00 ± 1.03 |
 
-### Human exome (chromosome) - Savint to disk
+### Human exome (chromosome) - Saving to disk
 
 * chr1
 
