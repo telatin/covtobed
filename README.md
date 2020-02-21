@@ -82,6 +82,11 @@ sudo docker run --rm -ti andreatelatin/covtobed coverage -h
 singularity exec covtobed.simg coverage -h
 ```
 
+
+## Performance
+
+*covtobed* is faster than *bedtools*. More details are in the [benchmark](benchmark) page.
+
 ## Requirements and compiling
 
 This tool requires **libbamtools** and **zlib**.
