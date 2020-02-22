@@ -14,7 +14,7 @@ Reads one (or more) [alignment](https://en.wikipedia.org/wiki/Sequence_alignment
 (sorted [BAM](https://en.wikipedia.org/wiki/SAM_(file_format))) and prints a [BED](https://en.wikipedia.org/wiki/BED_(file_format)) with the [coverage](https://en.wikipedia.org/wiki/Coverage_(genetics)). It will join consecutive bases with the same coverage, and can be used to only print a BED file with the regions having a specific coverage range. (:book: [Read more in the wiki]())
 
 
-![covtobed example](img/coverage_bam_to_bed.png)
+[![covtobed example](img/coverage_bam_to_bed.png)](https://github.com/telatin/covtobed/wiki)
 
 ## Usage
 
