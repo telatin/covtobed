@@ -97,9 +97,11 @@ To manually compile:
 c++ -std=c++11 *.cpp -I/path/to/bamtools/ -L${HOME}/path/to/lib/ -lbamtools -o covtobed
 ```
 
-## Contributing
+## Issues, Limitations and how to contribute
 
-[Contributions](CONTRIBUTING.md) are welcome via PR.
+ - This program will read the coverage from *sorted BAM* files. The *CRAM* format is not supported at the moment.
+ - If you find a problem feel free to [raise an issue](https://github.com/telatin/covtobed/issues), we will try to address it as soon as possible
+ - [Contributions](CONTRIBUTING.md) are welcome via PR.
 
 ## Acknowledgements
 
