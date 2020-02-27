@@ -54,13 +54,13 @@ The main algorithm is based on a *priority_queue* from the standard library and 
 
 *covtobed* relies on  `libbamtools` [@bamtools] for BAM file parsing, and `cpp-optparse` [@opt] for command line option parsing.
 
-# Example application
+# Example applications
 
-When performing target enrichment experiments (where the aim is to sequence a set of selected regions of a genome), it's important to detect a lack of coverage or unsufficient coverage (*i.e.* is lower than `THRESHOLD` in the target regions). This can be calculated intersecting (with *bedtools*, [@bedtools]) the target BED file with the output of *covtobed*. 
+When performing target enrichment experiments (where the aim is to sequence a set of selected regions of a genome), it's important to detect a lack of coverage or insufficient coverage (*i.e.* the coverage on target is lower than `THRESHOLD`). This information can be obtained by intersecting (using *bedtools*, [@bedtools]) the BED file describing the captured target regions (usually supplied by the company producing the kit) with the output of *covtobed*. 
 
 The tool has been used, for example, in the setup of a *target enrichment* panel targeting 71 human genes [@poloni], in order to detect uncovered regions.
 
-While a tool exists – called *mosdepth* [@mosdepth] – to perform a coverage analysis, *covtobed* was designed with the ability to quickly extract regions between used defined coverage intervals and, more importantly, with streaming from standard input and to standard output, that Mosdepth doesn't support. *covtobed* is available both for Linux and macOS, while *mosdepth* is only available for Linux, and this makes *covtobed* a suitable building block for diverse pipelines (_e. g._ microbial genomics requires lesser resources and it is not uncommon to perform complete analyses on a laptop).
+While a tool exists – called *mosdepth* [@mosdepth] – to perform a coverage analysis, *covtobed* was designed with the ability to quickly extract regions between user-defined coverage intervals and, more importantly, with streaming from standard input and to standard output, that Mosdepth doesn't support. *covtobed* is available both for Linux and macOS, while *mosdepth* is only available for Linux, and this makes *covtobed* a suitable building block for diverse pipelines (_e. g._ microbial genomics requires lesser resources and it is not uncommon to perform complete analyses on a laptop).
 
 # Performance
 
