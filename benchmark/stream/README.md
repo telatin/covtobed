@@ -2,7 +2,7 @@
 ### Human panel - Straming speed (not saving to disk)
 
 _mosdepth_ is not included as it only saves to file. Other commands were redirected to `/dev/null`.
-See also [example2.bam benchmark](stream/benchmarkStream_example2.md). 
+See also [example2.bam benchmark](benchmarkStream_example2.md). 
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
