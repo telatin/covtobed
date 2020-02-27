@@ -56,7 +56,7 @@ The main algorithm is based on a *priority_queue* from the standard library and 
 
 # Example applications
 
-When performing target enrichment experiments (where the aim is to sequence a set of selected regions of a genome), it's important to detect a lack of coverage or unsufficient coverage (*i.e.* is lower than `THRESHOLD` in the target regions). This can be calculated intersecting (using *bedtools*, [@bedtools]) the BED file describing the target region captured with the output of *covtobed*. 
+When performing target enrichment experiments (where the aim is to sequence a set of selected regions of a genome), it's important to detect a lack of coverage or unsufficient coverage (*i.e.* the coverage on target is lower than `THRESHOLD`). This information can be obtained by intersecting (using *bedtools*, [@bedtools]) the BED file describing the target region captured with the output of *covtobed*. 
 
 The tool has been used, for example, in the setup of a *target enrichment* panel targeting 71 human genes [@poloni], in order to detect uncovered regions.
 
