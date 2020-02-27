@@ -30,6 +30,7 @@ do
 	echo "$TAG [$FILE]"
 	hyperfine --warmup 1 --min-runs 6 --cleanup 'rm *.bed || true' \
 		--export-csv stream/benchmark_$TAG.csv --export-markdown stream/benchmark_$TAG.md \
+		"samtools depth $FILE > /dev/null" \
 		"samtools depth -a $FILE > /dev/null" \
 		"covtobed $FILE > /dev/null" \
 		"bedtools genomecov -bga -ibam $FILE > /dev/null"

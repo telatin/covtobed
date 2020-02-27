@@ -20,6 +20,11 @@ if  [ "NO$1" != "NO" ]; then
  echo "Convert exome"
  samtools view HG00258.alt_bwamem_GRCh38DH.20150826.GBR.exome.cram -b > HG00258.bam
  samtools index HG00258.bam
+ echo "Get genome"
+ wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/data/GBR/HG00114/alignment/HG00114.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram.crai
+ wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/data/GBR/HG00114/alignment/HG00114.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram
+ samtools view HG00114.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram -b > genome.bam
+ samtools index genome.bam
 else
 	echo "Skipping exome download"
 fi

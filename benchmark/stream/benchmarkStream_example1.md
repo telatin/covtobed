@@ -1,4 +1,6 @@
-| Command | Mean [ms] | Min [ms] | Max [ms] | Relative |
+| Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| `covtobed /local/giovanni/covtobed/benchmark/../TE/example1.bam > /dev/null` | 986.2 ± 9.5 | 977.1 | 1003.5 | 1.00 |
-| `bedtools genomecov -bga -ibam /local/giovanni/covtobed/benchmark/../TE/example1.bam > /dev/null` | 33596.2 ± 1550.4 | 31982.4 | 35700.0 | 34.07 ± 1.61 |
+| `samtools depth -a ../TE/example1.bam > /dev/null` | 600.513 ± 3.980 | 594.494 | 605.576 | 605.45 ± 6.28 |
+| `samtools depth ../TE/example1.bam > /dev/null` | 2.025 ± 0.075 | 1.970 | 2.169 | 2.04 ± 0.08 |
+| `covtobed ../TE/example1.bam > /dev/null` | 0.992 ± 0.008 | 0.981 | 1.001 | 1.00 |
+| `bedtools genomecov -bga -ibam ../TE/example1.bam > /dev/null` | 34.376 ± 1.032 | 33.225 | 35.964 | 34.66 ± 1.08 |
