@@ -4,6 +4,7 @@
 # The typical test is a comparison of number of lines produced
 # Runs automatically with TravisCI, and is executed from the root of the repository.
 # REQUIRES: ./test/demo.bam
+#           ./test/mock.bam
 
 
 if [ ! -e "test/demo.bam" ]; then

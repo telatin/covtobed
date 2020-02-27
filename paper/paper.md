@@ -54,6 +54,10 @@ The main algorithm is based on a *priority_queue* from the standard library and 
 
 *covtobed* relies on  `libbamtools` [@bamtools] for BAM file parsing, and `cpp-optparse` [@opt] for command line option parsing.
 
+# Documentation
+
+The package documentation is maintained in the [GitHub wiki](https://github.com/telatin/covtobed/wiki). The documentation contains examples of usage, example of produced output and details about the package.
+
 # Example applications
 
 When performing target enrichment experiments (where the aim is to sequence a set of selected regions of a genome), it's important to detect a lack of coverage or insufficient coverage (*i.e.* the coverage on target is lower than `THRESHOLD`). This information can be obtained by intersecting (using *bedtools*, [@bedtools]) the BED file describing the captured target regions (usually supplied by the company producing the kit) with the output of *covtobed*. 
