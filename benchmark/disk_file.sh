@@ -24,7 +24,7 @@ fi
 
 	echo "$TAG [$FILE]"
 	hyperfine --warmup 2 --min-runs 6 --cleanup 'rm *.bed mos?_*.* || true' \
-		--export-markdown stream_$TAG.md \
+		--export-markdown disk_$TAG.md \
 		"mosdepth -F 4 -x -t 4 mos4_ $FILE" \
 		"mosdepth -F 4 -x      mos1_ $FILE" \
 		"covtobed $FILE > covtobed_$TAG.bed" \
