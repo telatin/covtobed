@@ -95,7 +95,7 @@ singularity exec covtobed.simg coverage -h
 
 ## Performance
 
-*covtobed* is faster than *bedtools*. More details are in the [benchmark](benchmark) page.
+*covtobed* is generally faster than *bedtools*. More details are in the [benchmark](benchmark) page.
 
 ## Requirements and compiling
 
