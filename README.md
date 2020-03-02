@@ -25,14 +25,13 @@ Reads one (or more) [alignment](https://en.wikipedia.org/wiki/Sequence_alignment
 
 Synopsis:
 ```
-Usage: covtobed_mac [options] [BAM]...
+Usage: covtobed [options] [BAM]...
 
 Computes coverage from alignments
 
 Options:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
-  -v                    prints program version
   --physical-coverage   compute physical coverage (needs paired alignments in input)
   -q MINQ, --min-mapq=MINQ
                         skip alignments whose mapping quality is less than MINQ
@@ -46,11 +45,11 @@ Options:
   -l MINLEN, --min-len=MINLEN
                         print BED feature only if its length is bigger (or equal
                         to) than MINLELN (default: 1)
-  -a, --only-valid-alignments
+  -d, --discard-invalid-alignments
                         skip duplicates, failed QC, and non primary alignment
                         (default: 0)
   --output-strands      outputs coverage and stats separately for each strand
-  --format=CHOICE       output format
+  --format=CHOICE       output format (BED, COUNTS)
 ```
 ## Example
 
