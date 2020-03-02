@@ -8,7 +8,7 @@ Here we compare the speed of *covtobed* with:
 *covtobed* is faster than *mosdepth* on small genomes, and on large genomes (like the Human genome) with a limited fraction of the target covered (e. g. target enrichment panels). With panels it can be up to 60X faster than *mosdepth*.
 With large genomes highly *covered* (e. g. exomes, whole genome sequencing) is slightly slower than *mosdepth* (3-4X slower).
 
-*sambamba* also performs coverage statistics but will not print a BED file. A test has been done to compare the speed that appear slower, possibly also because of the bigger output printed. See: [comparisong with sambamba](sambamba.md)
+*sambamba* also performs coverage statistics but will not print a BED file. A test has been done to compare the speed that appear slower, possibly also because of the bigger output printed. See: [comparison with sambamba](sambamba.md)
 
 
 ![Summary](benchmark.png)
