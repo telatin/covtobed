@@ -1,6 +1,6 @@
 # Benchmark including sambamba
 
-*sambamba* can perform coverage statics calculation, but not producing a BED output. 
+*[sambamba](https://lomereiter.github.io/sambamba/)* can perform coverage statics calculation, but not producing a BED output. 
 
 The "base" output will print a line for each position, while the "window" output will use a sliding window approach.
 
