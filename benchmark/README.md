@@ -71,3 +71,13 @@ See also [example2.bam benchmark](disk/benchmark2_example2.md).
 | `bedtools genomecov -bga -ibam chr21.bam > chr21.bed` | 62.386 ± 1.472 | 60.422 | 63.909 | 12.32 ± 0.39 |
 
 * See also [all chromosomes results](https://github.com/telatin/covtobed/tree/master/benchmark/exome_chromosomes)
+
+### Human whole genome sequencing - Saving to disk
+
+The human genome was downloaded from [here](ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/data/GBR/HG00114/alignment/HG00114.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram).
+
+| Command | Mean [s] | Min [s] | Max [s] | Relative |
+|:---|---:|---:|---:|---:|
+| `mosdepth -F 4 -x -t 4 mos4_ ../TE/genome.bam` | 327.083 ± 16.054 | 316.223 | 345.524 | 1.00 |
+| `covtobed ../TE/genome.bam > covtobed_genome.bed` | 1487.047 ± 78.500 | 1400.713 | 1554.132 | 4.55 ± 0.33 |
+| `bedtools genomecov -bga -ibam ../TE/genome.bam > bedtools_genome.bed` | 1926.564 ± 10.983 | 1914.994 | 1936.846 | 5.89 ± 0.29 |
