@@ -16,7 +16,7 @@ using namespace std;
 typedef uint32_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 1.0.1"
+const string VERSION = "%prog 1.1.0"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"License MIT"
 	".\n"
@@ -40,9 +40,9 @@ class Input {
 	public:
 		BamMultiReader input_bams;
 		const int min_mapq;
-
+		const int only_valid_alignments;
 		// open all files
-		Input(const vector<string> &paths, const int q) : min_mapq(q) {
+		Input(const vector<string> &paths, const int q, const int v) : min_mapq(q), only_valid_alignments(v) {
 			if (paths.empty()) {
 				// no input files, use standard input
 				cerr << "Reading from STDIN... [try 'covtobed -h' for options]" << endl;
@@ -63,7 +63,12 @@ class Input {
 			do {
 				debug cerr << "[M] " << alignment.Name << ":" << alignment.Position << " | Is mapped? " << alignment.IsMapped() << endl;
 				more_alignments = input_bams.GetNextAlignmentCore(alignment);
-				good_alignment = alignment.IsMapped() && alignment.MapQuality >= min_mapq;
+				if (only_valid_alignments) {
+					good_alignment = alignment.IsMapped() && alignment.MapQuality >= min_mapq
+									&& !alignment.IsDuplicate() && !alignment.IsFailedQC() && !alignment.IsPrimaryAlignment() ;
+				} else {
+					good_alignment = alignment.IsMapped() && alignment.MapQuality >= min_mapq;
+				}
 			} while (more_alignments && !good_alignment);
 			return more_alignments;
 		}
@@ -181,6 +186,8 @@ int main(int argc, char *argv[]) {
 	parser.add_option("-m", "--min-cov").metavar("MINCOV").type("int").set_default("0").help("print BED feature only if the coverage is bigger than (or equal to) MINCOV (default: %default)");
 	parser.add_option("-x", "--max-cov").metavar("MAXCOV").type("int").set_default("100000").help("print BED feature only if the coverage is lower than MAXCOV (default: %default)");
 	parser.add_option("-l", "--min-len").metavar("MINLEN").type("int").set_default("1").help("print BED feature only if its length is bigger (or equal to) than MINLELN (default: %default)");
+	parser.add_option("-a", "--only-valid-alignments").action("store_true").set_default("0").help("skip duplicates, failed QC, and non primary alignment (default: %default)");
+
 
 	// output options
 	parser.add_option("--output-strands").action("store_true").set_default("0").help("outputs coverage and stats separately for each strand");
@@ -191,13 +198,14 @@ int main(int argc, char *argv[]) {
 	optparse::Values options = parser.parse_args(argc, argv);
 
 	const bool physical_coverage = options.get("physical_coverage");
+	const bool only_valid       = options.get("only_valid_alignments"); 
 	const int  minimum_coverage  = options.get("min_cov");
 	const int  maximum_coverage  = options.get("max_cov");
 	const int  minimum_length    = options.get("min_len");
 
 	try {
 		// open input and output
-		Input input(parser.args(), options.get("min_mapq"));
+		Input input(parser.args(), options.get("min_mapq"), only_valid);
 		Output output(&cout,
 			static_cast<const char *>(options.get("format")), 
 			static_cast<bool>(options.get("output_strands")), 
