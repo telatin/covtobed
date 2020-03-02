@@ -67,7 +67,7 @@ NC_001416.1     169     170     4
 NC_001416.1     201     206     4
 [...]
 ```
-See the full example output from different tools [:folder: here](https://github.com/telatin/covtobed/blob/master/test/output/README.md)
+See the full example output from different tools [:open_file_folder: here](https://github.com/telatin/covtobed/blob/master/test/output/README.md)
 
 ## Install
 
