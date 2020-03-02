@@ -13,7 +13,7 @@
 using namespace BamTools;
 using namespace std;
 
-typedef uint16_t DepthType; // type for depth of coverage, kept it small
+typedef uint32_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
 const string VERSION = "%prog 1.0"
