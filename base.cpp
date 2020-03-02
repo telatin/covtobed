@@ -65,7 +65,7 @@ class Input {
 				more_alignments = input_bams.GetNextAlignmentCore(alignment);
 				if (only_valid_alignments) {
 					good_alignment = alignment.IsMapped() && alignment.MapQuality >= min_mapq
-									&& !alignment.IsDuplicate() && !alignment.IsFailedQC() && !alignment.IsPrimaryAlignment() ;
+									&& !alignment.IsDuplicate() && !alignment.IsFailedQC() && alignment.IsPrimaryAlignment() ;
 				} else {
 					good_alignment = alignment.IsMapped() && alignment.MapQuality >= min_mapq;
 				}

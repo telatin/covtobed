@@ -27,6 +27,8 @@ if [ ! -e "./covtobed" ]; then
 	fi
 fi
 
+./covtobed --version
+
 set -eou pipefail
 # Compilation success, checking that --version emits the expected "progname" string
 echo -n " - Compiled binary prints version: "
@@ -84,6 +86,24 @@ if [ $(diff test/output.test test/mock.bed | wc -l) -eq "0" ];
 then
         echo PASS 8
 	rm test/output.test
+else
+	echo FAIL
+	exit 1
+fi
+
+## Filter non valid alignments
+echo -n " - Checking filtering of invalid alignments: "
+if [ $(./covtobed -m 1 -a test/filtered.bam | wc -l) -eq "2" ] ; then
+	echo -n "PASS 9,"
+else
+	echo FAIL
+	exit 1
+fi
+if [ $(./covtobed -m 1 test/filtered.bam | wc -l) -eq "5" ] ; then
+	echo 10
+else
+	echo "FAIL: $(./covtobed -m 1 -a test/filtered.bam | wc -l)"
+	exit 1
 fi
 
 echo "ALL TESTS: PASSED"
