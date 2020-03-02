@@ -1,6 +1,8 @@
 # Benchmark including sambamba
 
-*sambamba* can perform coverage statics calculation, but not producing a BED output.
+*sambamba* can perform coverage statics calculation, but not producing a BED output. 
+
+The "base" output will print a line for each position, while the "window" output will use a sliding window approach.
 
 For the records, this benchmark has been run using the "example1.bam" target enrichment panel.
 
