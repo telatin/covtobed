@@ -93,7 +93,7 @@ fi
 
 ## Filter non valid alignments
 echo -n " - Checking filtering of invalid alignments: "
-if [ $(./covtobed -m 1 -a test/filtered.bam | wc -l) -eq "2" ] ; then
+if [ $(./covtobed -m 1 -d test/filtered.bam | wc -l) -eq "2" ] ; then
 	echo -n "PASS 9,"
 else
 	echo FAIL
@@ -102,7 +102,7 @@ fi
 if [ $(./covtobed -m 1 test/filtered.bam | wc -l) -eq "5" ] ; then
 	echo 10
 else
-	echo "FAIL: $(./covtobed -m 1 -a test/filtered.bam | wc -l)"
+	echo "FAIL: $(./covtobed -m 1 -d test/filtered.bam | wc -l)"
 	exit 1
 fi
 

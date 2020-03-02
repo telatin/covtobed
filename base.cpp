@@ -1,4 +1,4 @@
-#include <queue>
+	#include <queue>
 #include <vector>
 #include <iostream>
 #include <map>
@@ -40,9 +40,9 @@ class Input {
 	public:
 		BamMultiReader input_bams;
 		const int min_mapq;
-		const int only_valid_alignments;
+		const int discard_invalid_alignments;
 		// open all files
-		Input(const vector<string> &paths, const int q, const int v) : min_mapq(q), only_valid_alignments(v) {
+		Input(const vector<string> &paths, const int q, const int v) : min_mapq(q), discard_invalid_alignments(v) {
 			if (paths.empty()) {
 				// no input files, use standard input
 				cerr << "Reading from STDIN... [try 'covtobed -h' for options]" << endl;
@@ -63,7 +63,7 @@ class Input {
 			do {
 				debug cerr << "[M] " << alignment.Name << ":" << alignment.Position << " | Is mapped? " << alignment.IsMapped() << endl;
 				more_alignments = input_bams.GetNextAlignmentCore(alignment);
-				if (only_valid_alignments) {
+				if (discard_invalid_alignments) {
 					good_alignment = alignment.IsMapped() && alignment.MapQuality >= min_mapq
 									&& !alignment.IsDuplicate() && !alignment.IsFailedQC() && alignment.IsPrimaryAlignment() ;
 				} else {
@@ -178,7 +178,7 @@ int main(int argc, char *argv[]) {
 	// general options
 
 	optparse::OptionParser parser = optparse::OptionParser().description("Computes coverage from alignments").usage("%prog [options] [BAM]...").version(VERSION);
-	parser.add_option("-v") .action("version") .help("prints program version");
+	//parser.add_option("-v") .action("version") .help("prints program version");
 
 	// input options
 	parser.add_option("--physical-coverage").action("store_true").set_default("0").help("compute physical coverage (needs paired alignments in input)");
@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
 	parser.add_option("-m", "--min-cov").metavar("MINCOV").type("int").set_default("0").help("print BED feature only if the coverage is bigger than (or equal to) MINCOV (default: %default)");
 	parser.add_option("-x", "--max-cov").metavar("MAXCOV").type("int").set_default("100000").help("print BED feature only if the coverage is lower than MAXCOV (default: %default)");
 	parser.add_option("-l", "--min-len").metavar("MINLEN").type("int").set_default("1").help("print BED feature only if its length is bigger (or equal to) than MINLELN (default: %default)");
-	parser.add_option("-a", "--only-valid-alignments").action("store_true").set_default("0").help("skip duplicates, failed QC, and non primary alignment (default: %default)");
+	parser.add_option("-d", "--discard-invalid-alignments").action("store_true").set_default("0").help("skip duplicates, failed QC, and non primary alignment (default: %default)");
 
 
 	// output options
@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
 	optparse::Values options = parser.parse_args(argc, argv);
 
 	const bool physical_coverage = options.get("physical_coverage");
-	const bool only_valid       = options.get("only_valid_alignments"); 
+	const bool only_valid        = options.get("discard_invalid_alignments"); 
 	const int  minimum_coverage  = options.get("min_cov");
 	const int  maximum_coverage  = options.get("max_cov");
 	const int  minimum_length    = options.get("min_len");
