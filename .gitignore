@@ -1,3 +1,4 @@
+flag.*
 build.sh
 a.out
 *.bam.bai
@@ -16,3 +17,4 @@ test2.bam
 pannelli
 paper/paper.md~
 TE
+split_sam_by_flag.pl
