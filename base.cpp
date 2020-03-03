@@ -186,11 +186,11 @@ int main(int argc, char *argv[]) {
 	parser.add_option("-m", "--min-cov").metavar("MINCOV").type("int").set_default("0").help("print BED feature only if the coverage is bigger than (or equal to) MINCOV (default: %default)");
 	parser.add_option("-x", "--max-cov").metavar("MAXCOV").type("int").set_default("100000").help("print BED feature only if the coverage is lower than MAXCOV (default: %default)");
 	parser.add_option("-l", "--min-len").metavar("MINLEN").type("int").set_default("1").help("print BED feature only if its length is bigger (or equal to) than MINLELN (default: %default)");
-	parser.add_option("-d", "--discard-invalid-alignments").action("store_true").set_default("0").help("skip duplicates, failed QC, and non primary alignment (default: %default)");
+	parser.add_option("-d", "--discard-invalid-alignments").action("store_true").set_default("0").help("skip duplicates, failed QC, and non primary alignment, minq>0 (or user-defined if higher) (default: %default)");
 
 
 	// output options
-	parser.add_option("--output-strands").action("store_true").set_default("0").help("outputs coverage and stats separately for each strand");
+	parser.add_option("--output-strands").action("store_true").set_default("0").help("output coverage and stats separately for each strand");
 	vector<string> choices = {"bed", "counts"};
 	parser.add_option("--format").choices(choices.begin(), choices.end()).set_default("bed").help("output format");
 
@@ -202,10 +202,17 @@ int main(int argc, char *argv[]) {
 	const int  minimum_coverage  = options.get("min_cov");
 	const int  maximum_coverage  = options.get("max_cov");
 	const int  minimum_length    = options.get("min_len");
+	int min_mapq                 = options.get("min_mapq");
+
+	if (only_valid and !min_mapq) {
+		min_mapq = 1;
+	} else {
+		min_mapq = options.get("min_mapq");
+	}
 
 	try {
 		// open input and output
-		Input input(parser.args(), options.get("min_mapq"), only_valid);
+		Input input(parser.args(), min_mapq, only_valid);
 		Output output(&cout,
 			static_cast<const char *>(options.get("format")), 
 			static_cast<bool>(options.get("output_strands")), 

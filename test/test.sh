@@ -42,6 +42,9 @@ echo -n " - Minimum coverage, expected BED lines check: "
 if [ $(./covtobed -m 15 test/demo.bam  | wc -l) -eq "12" ];
 then
 	echo PASS 2
+else
+	echo FAIL
+	exit 1
 fi
 
 # Checking thath --physical-coverage will work, and it fits the expected number of lines
@@ -49,6 +52,9 @@ echo -n " - Physical coverage, expected BED lines check: "
 if [ $(./covtobed --physical-coverage test/mp.bam  | wc -l) -eq "136" ];
 then
 	echo PASS 3
+else
+	echo FAIL
+	exit 1
 fi
 
 # Checking stranded output: it should produce content in the fifth column of the bed file
@@ -56,6 +62,9 @@ echo -n " - Stranded output, testing column #5: "
 if [ $(./covtobed --out test/demo.bam | cut -f 5 | sort -u | wc -l) -eq "10" ];
 then
 	echo PASS 4
+else
+	echo FAIL
+	exit 1
 fi
 
 # Checking the "counts" output (counting the lines containing a ">")
@@ -63,11 +72,17 @@ echo -n " - Testing 'counts' format (printed headers): "
 if [ $(./covtobed --format counts test/demo.bam | grep '>' | wc -l) -eq "2" ];
 then
 	echo PASS 5
+else
+	echo FAIL
+	exit 1
 fi
 echo -n " - Testing 'counts' format (printed lines): "
 if [ $(./covtobed --format counts test/demo.bam | grep -v '>' | wc -l) -eq "202" ];
 then
         echo PASS 6
+else
+	echo FAIL
+	exit 1
 fi
 
 # Checking BED output with reference output file
@@ -77,6 +92,9 @@ if [ $(diff test/output.test test/output.bed | wc -l) -eq "0" ];
 then
         echo PASS 7
 	rm test/output.test
+else
+	echo FAIL
+	exit 1
 fi
 
 ## Synthetic BAM test
@@ -106,4 +124,15 @@ else
 	exit 1
 fi
 
+# A synthetic BAM containing reference name {n}X that should only print one reagion 
+# covered exactly {n}X times
+echo  " - Checking artificial coverage values:"
+./covtobed test/test_cov.bam -m 1 |cut -f 1,4| while read LINE;
+do
+	echo $LINE | perl -ne '($exp, $cov)=split /\s+/, $_; if ("$exp" ne "${cov}X") {
+		die "$exp != $cov\n";
+	} else {
+		print "\t#OK expecting $exp, ${cov}X found\n";
+	}'
+done
 echo "ALL TESTS: PASSED"
