@@ -5,7 +5,7 @@
 [![Bioconda installs](https://img.shields.io/conda/dn/bioconda/covtobed)](https://anaconda.org/bioconda/covtobed)
 [![TravisCI Build Status](https://travis-ci.org/telatin/covtobed.svg?branch=master)](https://travis-ci.org/telatin/covtobed)
 [![Docker build](https://img.shields.io/docker/cloud/build/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed)
-[![Singularity Zenodo Record](https://img.shields.io/badge/singularity-available-yellow)](https://zenodo.org/record/3600261)
+[![Singularity Zenodo Record](https://img.shields.io/badge/singularity-available-blue)](https://zenodo.org/record/3600261)
 [![status](https://joss.theoj.org/papers/0ed74df9f40a58a852bf3fff512acd2b/status.svg)](https://joss.theoj.org/papers/0ed74df9f40a58a852bf3fff512acd2b)
 
 ### a tool to generate BED coverage tracks from BAM files
