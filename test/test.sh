@@ -117,7 +117,7 @@ else
 	echo FAIL
 	exit 1
 fi
-if [ $(./covtobed -m 1 test/filtered.bam | wc -l) -eq "5" ] ; then
+if [ $(./covtobed -m 1 test/filtered.bam | wc -l) -eq "6" ] ; then
 	echo 10
 else
 	echo "FAIL: $(./covtobed -m 1 -d test/filtered.bam | wc -l)"
