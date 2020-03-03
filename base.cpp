@@ -270,7 +270,10 @@ int main(int argc, char *argv[]) {
 			// reference ended
 			assert(coverage_ends.empty());
 		}
-		assert(!more_alignments);
+		//assert(!more_alignments);
+		if (more_alignments) {
+			throw string("Unexpected alignment found, is the BAM sorted?");			
+		}
 	} catch (string msg) {
 		parser.error(msg);
 	}
