@@ -46,10 +46,10 @@ Options:
                         print BED feature only if its length is bigger (or equal
                         to) than MINLELN (default: 1)
   -d, --discard-invalid-alignments
-                        skip duplicates, failed QC, and non primary alignment
-                        (default: 0)
-  --output-strands      outputs coverage and stats separately for each strand
-  --format=CHOICE       output format (BED, COUNTS)
+                        skip duplicates, failed QC, and non primary alignment,
+                        minq>0 (or user-defined if higher) (default: 0)
+  --output-strands      output coverage and stats separately for each strand
+  --format=CHOICE       output format
 ```
 ## Example
 
