@@ -20,14 +20,13 @@ if [ ! -e "$FILE" ]; then
 	exit
 fi
 
-	TAG=$(basename $FILE | cut -f1 -d.)
+TAG=$(basename $FILE | cut -f1 -d.)
 
-	echo "$TAG [$FILE]"
-	hyperfine --warmup 2 --min-runs 6 --cleanup 'rm *.bed mos?_*.* || true' \
+echo "$TAG [$FILE]"
+hyperfine --warmup 2 --min-runs 6 --cleanup 'rm *.bed mos?_*.* || true' \
 		--export-markdown disk_$TAG.md \
 		"mosdepth -F 4 -x -t 4 mos4_ $FILE" \
 		"mosdepth -F 4 -x      mos1_ $FILE" \
 		"covtobed $FILE > covtobed_$TAG.bed" \
-		"sambamba depth base -F 'not unmapped' $FILE > sambamba.txt.bed" \
-		"sambamba depth window -F 'not unmapped' -w 1000 $FILE > sambamba2.txt.bed"\
 		"bedtools genomecov -bga -ibam $FILE > bedtools_$TAG.bed"
+
