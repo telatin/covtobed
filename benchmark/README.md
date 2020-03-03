@@ -78,8 +78,9 @@ The human genome was downloaded from:
 
 ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/data/GBR/HG00114/alignment/HG00114.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram
 
-| Command | Mean [s] | Min [s] | Max [s] | Relative |
-|:---|---:|---:|---:|---:|
-| `mosdepth -F 4 -x -t 4 mos4_ ../TE/genome.bam` | 327.083 ± 16.054 | 316.223 | 345.524 | 1.00 |
-| `covtobed ../TE/genome.bam > covtobed_genome.bed` | 1487.047 ± 78.500 | 1400.713 | 1554.132 | 4.55 ± 0.33 |
-| `bedtools genomecov -bga -ibam ../TE/genome.bam > bedtools_genome.bed` | 1926.564 ± 10.983 | 1914.994 | 1936.846 | 5.89 ± 0.29 |
+| Command | Mean [s] | Min [s] | Max [s] | Relative |                                                                                                                                
+|:---|---:|---:|---:|---:|                                                                                                                                                           
+| `mosdepth -F 4 -x      mosx1 genome.bam` | 212.429 ? 1.226 | 210.589 | 213.628 | 1.29 ? 0.01 |              
+| `mosdepth -F 4 -x -t 4 mosx4 genome.bam` | 164.605 ? 1.076 | 162.944 | 165.819 | 1.00 |                                                                                     
+| `covtobed genome.bam > covtobed.bed` | 555.892 ? 41.600 | 521.326 | 618.865 | 3.38 ? 0.25 |    
+| `bedtools genomecov -bga -ibam genome.bam > bedtools.bed` | 690.116 ? 39.299 | 666.012 | 759.161 | 4.19 ? 0.24 | 
