@@ -80,7 +80,7 @@ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/d
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |                                                                                                                                
 |:---|---:|---:|---:|---:|                                                                                                                                                           
-| `mosdepth -F 4 -x      mosx1 genome.bam` | 212.429 ? 1.226 | 210.589 | 213.628 | 1.29 ? 0.01 |              
-| `mosdepth -F 4 -x -t 4 mosx4 genome.bam` | 164.605 ? 1.076 | 162.944 | 165.819 | 1.00 |                                                                                     
-| `covtobed genome.bam > covtobed.bed` | 555.892 ? 41.600 | 521.326 | 618.865 | 3.38 ? 0.25 |    
-| `bedtools genomecov -bga -ibam genome.bam > bedtools.bed` | 690.116 ? 39.299 | 666.012 | 759.161 | 4.19 ? 0.24 | 
+| `mosdepth -F 4 -x      mosx1 genome.bam` | 212.4 ± 1.2 | 210.59 | 213.6 | 1.29 ± 0.01 |              
+| `mosdepth -F 4 -x -t 4 mosx4 genome.bam` | 164.6 ± 1.1 | 162.9 | 165.8 | 1.00 |                                                                                     
+| `covtobed genome.bam > covtobed.bed` | 555.9 ± 41.6 | 521.3 | 618.7 | 3.38 ± 0.25 |    
+| `bedtools genomecov -bga -ibam genome.bam > bedtools.bed` | 690.1 ± 39.3 | 666.0 | 759.2 | 4.19 ± 0.24 | 
