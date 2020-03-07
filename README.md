@@ -128,8 +128,8 @@ If you use this tool, why not citing the paper?
 
 > Birolo et al., (2020). covtobed: a simple and fast tool to extract coverage tracks from BAM files. Journal of Open Source Software, 5(47), 2119, https://doi.org/10.21105/joss.02119
 
-BibTeX provided
-´´´latex
+BibTeX citation:
+```latex
 @article{Birolo2020,
   doi = {10.21105/joss.02119},
   url = {https://doi.org/10.21105/joss.02119},
@@ -142,5 +142,4 @@ BibTeX provided
   title = {covtobed: a simple and fast tool to extract coverage tracks from BAM files},
   journal = {Journal of Open Source Software}
 }
-
-´´´
+```
