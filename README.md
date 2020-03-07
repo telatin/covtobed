@@ -121,3 +121,26 @@ This tools uses [libbamtools](https://github.com/pezmaster31/bamtools) by Derek 
 Giovanni Birolo ([@gbirolo](https://github.com/gbirolo)), University of Turin, and Andrea Telatin ([@telatin](https://github.com/telatin)), Quadram Institute Bioscience. 
 
 This program was finalized with a Flexible Talent Mobility Award funded by BBSRC through the [Quadram Institute](https://quadram.ac.uk).
+
+## Citation
+
+If you use this tool, why not citing the paper?
+
+> Birolo et al., (2020). covtobed: a simple and fast tool to extract coverage tracks from BAM files. Journal of Open Source Software, 5(47), 2119, https://doi.org/10.21105/joss.02119
+
+BibTeX provided
+´´´latex
+@article{Birolo2020,
+  doi = {10.21105/joss.02119},
+  url = {https://doi.org/10.21105/joss.02119},
+  year = {2020},
+  publisher = {The Open Journal},
+  volume = {5},
+  number = {47},
+  pages = {2119},
+  author = {Giovanni Birolo and Andrea Telatin},
+  title = {covtobed: a simple and fast tool to extract coverage tracks from BAM files},
+  journal = {Journal of Open Source Software}
+}
+
+´´´
