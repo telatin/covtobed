@@ -16,7 +16,7 @@ Reads one (or more) [alignment](https://en.wikipedia.org/wiki/Sequence_alignment
 :book: [Read more in the wiki](https://github.com/telatin/covtobed/wiki)
 
 
-[![covtobed example](img/coverage_bam_to_bed.png)](https://github.com/telatin/covtobed/wiki)
+[![covtobed example](img/covtobed-vignette.png)](https://github.com/telatin/covtobed/wiki)
 
 
 ## Usage
