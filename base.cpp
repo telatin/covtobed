@@ -16,7 +16,7 @@ using namespace std;
 typedef uint32_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 1.1.0"
+const string VERSION = "%prog 1.1.2"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"License MIT"
 	".\n"
@@ -274,7 +274,7 @@ int main(int argc, char *argv[]) {
 		if (more_alignments) {
 			throw string("Unexpected alignment found, is the BAM sorted?");			
 		}
-	} catch (string msg) {
+	} catch (const string msg) {
 		parser.error(msg);
 	}
 	return 0;
