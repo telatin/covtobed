@@ -1,5 +1,6 @@
 # covtobed
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f8782671a6864af5b6b135e5a7eec87e)](https://app.codacy.com/manual/telatin/covtobed?utm_source=github.com&utm_medium=referral&utm_content=telatin/covtobed&utm_campaign=Badge_Grade_Dashboard)
 [![License](https://img.shields.io/github/license/telatin/covtobed?color=blue)](https://github.com/telatin/covtobed/blob/master/LICENSE)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/covtobed/README.html)
 [![Bioconda installs](https://img.shields.io/conda/dn/bioconda/covtobed)](https://anaconda.org/bioconda/covtobed)
