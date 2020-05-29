@@ -3,10 +3,14 @@ COPY Docker/coverage /bin/coverage
 COPY Docker/v2.3.0.tar.gz /
 RUN mkdir /covtobed
 COPY *.cpp *.h /covtobed/
-RUN apt-get update && apt-get install -y software-properties-common=0.92.37.8
+RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common=0.92.37.8 \
+     && apt-get clean \
+     && rm -rf /var/lib/apt/lists/*
 
 RUN add-apt-repository universe && apt-get update
-RUN apt-get install -y build-essential=11.6ubuntu6 cmake=2.8.12.2-0ubuntu3 wget=1.15-1ubuntu1  zlib1g-dev=1:1.2.8.dfsg-1ubuntu1.1
+RUN apt-get install -y --no-install-recommends build-essential=11.6ubuntu6 cmake=2.8.12.2-0ubuntu3 wget=1.15-1ubuntu1  zlib1g-dev=1:1.2.8.dfsg-1ubuntu1.1 \
+     && apt-get clean \
+     && rm -rf /var/lib/apt/lists/*
 RUN tar xvfz "v2.3.0.tar.gz"
 RUN mkdir /bamtools-2.3.0/build 
 WORKDIR /bamtools-2.3.0/build
