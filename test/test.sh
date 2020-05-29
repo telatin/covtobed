@@ -6,7 +6,7 @@
 # REQUIRES: ./test/demo.bam
 #           ./test/mock.bam
 
-
+REMOVE=0
 if [ ! -e "test/demo.bam" ]; then
 	echo "WARNING: running this test from a bad location"
 	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
@@ -14,6 +14,7 @@ if [ ! -e "test/demo.bam" ]; then
 fi
 
 if [ ! -e "./covtobed" ]; then
+	REMOVE=1
 	echo "WARNING:"
 	echo "Binary not found: tring to use pre-compiled...";
 	if [ `uname` == 'Darwin' ]; then
@@ -129,10 +130,14 @@ fi
 echo  " - Checking artificial coverage values:"
 ./covtobed test/test_cov.bam -m 1 |cut -f 1,4| while read LINE;
 do
-	echo $LINE | perl -ne '($exp, $cov)=split /\s+/, $_; if ("$exp" ne "${cov}X") {
+	echo "$LINE" | perl -ne '($exp, $cov)=split /\s+/, $_; if ("$exp" ne "${cov}X") {
 		die "$exp != $cov\n";
 	} else {
 		print "\t#OK expecting $exp, ${cov}X found\n";
 	}'
 done
 echo "ALL TESTS: PASSED"
+
+if [[ $REMOVE -eq 1 ]]; then
+ rm ./covtobed
+fi
