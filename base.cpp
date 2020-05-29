@@ -274,7 +274,7 @@ int main(int argc, char *argv[]) {
 		if (more_alignments) {
 			throw string("Unexpected alignment found, is the BAM sorted?");			
 		}
-	} catch (const string msg) {
+	} catch (const string &msg) {
 		parser.error(msg);
 	}
 	return 0;

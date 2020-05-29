@@ -58,7 +58,7 @@ Command:
 covtobed -m 0 -x 5 test/demo.bam
 ```
 Output:
-```
+```text
 [...]
 NC_001416.1     0       2       0
 NC_001416.1     2       6       1
@@ -69,28 +69,29 @@ NC_001416.1     169     170     4
 NC_001416.1     201     206     4
 [...]
 ```
+
 See the full example output from different tools [:open_file_folder: here](https://github.com/telatin/covtobed/blob/master/test/output/README.md)
 
 ## Install
 
- * To install with Miniconda:
+* To install with Miniconda:
 
-```
+```bash
 conda install -c bioconda covtobed
 ```
 
- * Both **covtobed**, and the legacy program [**coverage**](https://github.com/telatin/covtobed/wiki/Using-coverage) are available as a single Docker container available from Docker Hub [![Docker build](https://img.shields.io/docker/cloud/build/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed)
-:
-```
+* Both **covtobed**, and the legacy program [**coverage**](https://github.com/telatin/covtobed/wiki/Using-coverage) are available as a single Docker container available from Docker Hub [![Docker build](https://img.shields.io/docker/cloud/build/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed):
+
+```bash
 sudo docker pull andreatelatin/covtobed
 sudo docker run --rm -ti andreatelatin/covtobed coverage -h
 ```
 
  * Download Singularity image by `singularity pull docker://andreatelatin/covtobed`, then:
-```
+
+```bash
 singularity exec covtobed.simg coverage -h
 ```
-
 
 ## Performance
 
@@ -107,14 +108,13 @@ c++ -std=c++11 *.cpp -I/path/to/bamtools/ -L${HOME}/path/to/lib/ -lbamtools -o c
 
 ## Issues, Limitations and how to contribute
 
- - This program will read the coverage from *sorted BAM* files. The *CRAM* format is not supported at the moment.
- - If you find a problem feel free to [raise an issue](https://github.com/telatin/covtobed/issues), we will try to address it as soon as possible
- - [Contributions](CONTRIBUTING.md) are welcome via PR.
+* This program will read the coverage from *sorted BAM* files. The *CRAM* format is not supported at the moment.
+* If you find a problem feel free to [raise an issue](https://github.com/telatin/covtobed/issues), we will try to address it as soon as possible
+* [Contributions](CONTRIBUTING.md) are welcome via PR.
 
 ## Acknowledgements
 
 This tools uses [libbamtools](https://github.com/pezmaster31/bamtools) by Derek Barnett, Erik Garrison, Gabor Marth and Michael Stromberg, and [cpp-optparse](https://github.com/weisslj/cpp-optparse) by Johannes Weißl. Both tools and this program are released with MIT license.
-
 
 ## Authors
 
