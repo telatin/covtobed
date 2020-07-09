@@ -1,4 +1,6 @@
-If you wish to fix a bug or add new features to the software we welcome Pull Requests. 
+# Contributing to `covtobed`
+
+If you wish to fix a bug or add new features to the software we welcome **Pull Requests**. 
 
 We use [GitHub Flow style development](https://guides.github.com/introduction/flow/). 
 
