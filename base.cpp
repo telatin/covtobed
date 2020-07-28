@@ -16,7 +16,7 @@ using namespace std;
 typedef uint32_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 1.1.2"
+const string VERSION = "%prog 1.1.3"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"https://github.com/telatin/covtobed - License MIT"
 	".\n"
@@ -208,6 +208,12 @@ int main(int argc, char *argv[]) {
 		min_mapq = 1;
 	} else {
 		min_mapq = options.get("min_mapq");
+	}
+
+	if (physical_coverage and only_valid) {
+		// https://github.com/telatin/covtobed/issues/11
+		cerr << "Parameters --physical-coverage and  --discard-invalid-alignments are currently mutually exclusive." << endl;
+		exit(0);
 	}
 
 	try {
