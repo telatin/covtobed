@@ -16,9 +16,9 @@ using namespace std;
 typedef uint32_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 1.1.0"
+const string VERSION = "%prog 1.1.3"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
-	"License MIT"
+	"https://github.com/telatin/covtobed - License MIT"
 	".\n"
 	"This is free software: you are free to change and redistribute it.\n"
 	"There is NO WARRANTY, to the extent permitted by law.";
@@ -210,6 +210,12 @@ int main(int argc, char *argv[]) {
 		min_mapq = options.get("min_mapq");
 	}
 
+	if (physical_coverage and only_valid) {
+		// https://github.com/telatin/covtobed/issues/11
+		cerr << "Parameters --physical-coverage and  --discard-invalid-alignments are currently mutually exclusive." << endl;
+		exit(0);
+	}
+
 	try {
 		// open input and output
 		Input input(parser.args(), min_mapq, only_valid);
@@ -274,7 +280,7 @@ int main(int argc, char *argv[]) {
 		if (more_alignments) {
 			throw string("Unexpected alignment found, is the BAM sorted?");			
 		}
-	} catch (string msg) {
+	} catch (const string &msg) {
 		parser.error(msg);
 	}
 	return 0;

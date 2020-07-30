@@ -26,8 +26,8 @@ namespace optparse {
 ////////// auxiliary (string) functions { //////////
 class str_wrap {
 public:
-  str_wrap(const string& l, const string& r) : lwrap(l), rwrap(r) {}
-  str_wrap(const string& w) : lwrap(w), rwrap(w) {}
+  explicit str_wrap(const string& l, const string& r) : lwrap(l), rwrap(r) {}
+  explicit str_wrap(const string& w) : lwrap(w), rwrap(w) {}
   string operator() (const string& s) { return lwrap + s + rwrap; }
   const string lwrap, rwrap;
 };

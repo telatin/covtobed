@@ -14,10 +14,10 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 cd "$SCRIPT_DIR/.."
 
 sed -i.bak 's/#define debug if(.*)/#define debug if(true)/' base.cpp
-c++ -std=c++11 *.cpp -I${HOME}/miniconda3/include/bamtools/ -L${HOME}/miniconda3/lib/ $HOME/miniconda3/lib/libbamtools.a  \
+c++ -std=c++11 ./*.cpp -I"${HOME}"/miniconda3/include/bamtools/ -L$"{HOME}"/miniconda3/lib/ "$HOME"/miniconda3/lib/libbamtools.a  \
  -o binaries/covtobed_mac_debug -lz
 
 sed -i.bak 's/#define debug if(.*)/#define debug if(false)/' base.cpp
-c++ -std=c++11 *.cpp -I${HOME}/miniconda3/include/bamtools/ -L${HOME}/miniconda3/lib/ $HOME/miniconda3/lib/libbamtools.a  \
+c++ -std=c++11 ./*.cpp -I"${HOME}"/miniconda3/include/bamtools/ -L"${HOME}"/miniconda3/lib/ "$HOME"/miniconda3/lib/libbamtools.a  \
  -o binaries/covtobed_mac -lz
 cd -

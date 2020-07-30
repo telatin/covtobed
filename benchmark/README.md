@@ -74,9 +74,9 @@ See also [example2.bam benchmark](disk/benchmark2_example2.md).
 
 ### Human whole genome sequencing - Saving to disk
 
-The human genome was downloaded from:
+The human genome alignment file (124,379,080 alignments) was downloaded from:
 
-ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/data/GBR/HG00114/alignment/HG00114.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram
+:link: ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/data/GBR/HG00114/alignment/HG00114.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |                                                                                                                                
 |:---|---:|---:|---:|---:|                                                                                                                                                           
