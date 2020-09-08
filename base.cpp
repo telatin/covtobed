@@ -1,4 +1,4 @@
-	#include <queue>
+#include <queue>
 #include <vector>
 #include <iostream>
 #include <map>
@@ -16,7 +16,7 @@ using namespace std;
 typedef uint32_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 1.1.3"
+const string VERSION = "%prog 1.1.4"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"https://github.com/telatin/covtobed - License MIT"
 	".\n"
@@ -61,11 +61,17 @@ class Input {
 		bool get_next_alignment(BamAlignment & alignment) {
 			bool more_alignments, good_alignment;
 			do {
-				debug cerr << "[M] " << alignment.Name << ":" << alignment.Position << " | Is mapped? " << alignment.IsMapped() << endl;
+				debug cerr << "[M] Read  on ref#" << alignment.RefID << " pos:" << alignment.Position << 
+				    "\n\t| Is mapped? " << alignment.IsMapped() << " | AlignmentFlag:" << alignment.AlignmentFlag << endl;
 				more_alignments = input_bams.GetNextAlignmentCore(alignment);
 				if (discard_invalid_alignments) {
 					good_alignment = alignment.IsMapped() && alignment.MapQuality >= min_mapq
-									&& !alignment.IsDuplicate() && !alignment.IsFailedQC() && alignment.IsPrimaryAlignment() ;
+									&& !alignment.IsDuplicate() && !alignment.IsFailedQC() && alignment.IsPrimaryAlignment();
+
+					// 1.2.0 ProperPair
+					if (alignment.IsPaired() && ! alignment.IsProperPair() ) {
+					    good_alignment = false;
+					}
 				} else {
 					good_alignment = alignment.IsMapped() && alignment.MapQuality >= min_mapq;
 				}
@@ -210,11 +216,6 @@ int main(int argc, char *argv[]) {
 		min_mapq = options.get("min_mapq");
 	}
 
-	if (physical_coverage and only_valid) {
-		// https://github.com/telatin/covtobed/issues/11
-		cerr << "Parameters --physical-coverage and  --discard-invalid-alignments are currently mutually exclusive." << endl;
-		exit(0);
-	}
 
 	try {
 		// open input and output
@@ -253,6 +254,7 @@ int main(int argc, char *argv[]) {
 				while (more_alignments_for_ref && next_change == alignment.Position) {
 					if (physical_coverage) {
 						if (alignment.InsertSize > 0) {
+						        debug cerr << "   [phy] pos:" << alignment.Position << " size:" << alignment.InsertSize << endl;
 							coverage_ends.push({alignment.Position + alignment.InsertSize, alignment.IsReverseStrand()});
 							coverage.inc(alignment.IsReverseStrand());
 						}
@@ -272,9 +274,13 @@ int main(int argc, char *argv[]) {
 				debug cerr << "[<] Coverage is " << coverage << " from " << next_change << endl;
 				last_pos = next_change;
 			} while (last_pos != ref.RefLength);
-			debug cerr << "[_] Completed at " << ref.RefName << ":" << last_pos << endl;
+			debug cerr << "[_] Completed at " << ref.RefName << ":" << last_pos << " [coverage:"  << coverage_ends.size() << "]" << endl;
 			// reference ended
-			assert(coverage_ends.empty());
+			if (!coverage_ends.empty()) {
+			    cerr << "Coverage is not zero at the end of " << ref.RefName << endl;
+			    cerr << "Try samtools fixmate on the input file" << endl;
+			}
+			// 1.2.0 -- removed: assert(coverage_ends.empty());
 		}
 		//assert(!more_alignments);
 		if (more_alignments) {
