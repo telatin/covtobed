@@ -1,12 +1,14 @@
 # covtobed
 
-[![License](https://img.shields.io/github/license/telatin/covtobed?color=blue)](https://github.com/telatin/covtobed/blob/master/LICENSE)
-[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/covtobed/README.html)
+
+[![install with bioconda](https://img.shields.io/conda/vn/bioconda/covtobed)](http://bioconda.github.io/recipes/covtobed/README.html)
 [![Bioconda installs](https://img.shields.io/conda/dn/bioconda/covtobed)](https://anaconda.org/bioconda/covtobed)
 [![TravisCI Build Status](https://travis-ci.org/telatin/covtobed.svg?branch=master)](https://travis-ci.org/telatin/covtobed)
 [![Docker build](https://img.shields.io/docker/cloud/build/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/36944efb0d2b44cca850964e96c036a4)](https://www.codacy.com/manual/telatin/covtobed?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=telatin/covtobed&amp;utm_campaign=Badge_Grade)
+
 [![status](https://joss.theoj.org/papers/0ed74df9f40a58a852bf3fff512acd2b/status.svg)](https://joss.theoj.org/papers/0ed74df9f40a58a852bf3fff512acd2b)
+[![License](https://img.shields.io/github/license/telatin/covtobed?color=blue)](https://github.com/telatin/covtobed/blob/master/LICENSE)
 
 ### a tool to generate BED coverage tracks from BAM files
 
