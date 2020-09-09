@@ -1,7 +1,7 @@
 # covtobed
 
 
-[![install with bioconda](https://img.shields.io/conda/vn/bioconda/covtobed)](http://bioconda.github.io/recipes/covtobed/README.html)
+[![install with bioconda](https://img.shields.io/conda/vn/bioconda/covtobed?label=install%20from%20bioconda)](http://bioconda.github.io/recipes/covtobed/README.html)
 [![Bioconda installs](https://img.shields.io/conda/dn/bioconda/covtobed)](https://anaconda.org/bioconda/covtobed)
 [![TravisCI Build Status](https://travis-ci.org/telatin/covtobed.svg?branch=master)](https://travis-ci.org/telatin/covtobed)
 [![Docker build](https://img.shields.io/docker/cloud/build/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed)
