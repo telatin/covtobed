@@ -17,6 +17,10 @@ Reads one (or more) [alignment](https://en.wikipedia.org/wiki/Sequence_alignment
 
 :book: **[Read more in the wiki](https://github.com/telatin/covtobed/wiki)** - this is the **main** documentation source
 
+Features:
+* Can read (sorted) BAMs from stream (like `bwa mem .. | samtools view -b | samtools sort - | covtobed`)
+* Can print _strand specific_ coverage to check for strand imbalance
+* Can print the _physical coverage_ (with paired-end or mate-paired libraries)
 
 [![covtobed example](img/covtobed-vignette.png)](https://github.com/telatin/covtobed/wiki)
 
