@@ -16,7 +16,7 @@ using namespace std;
 typedef uint32_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 1.1.4"
+const string VERSION = "%prog 1.2.0"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"https://github.com/telatin/covtobed - License MIT"
 	".\n"
@@ -192,6 +192,7 @@ int main(int argc, char *argv[]) {
 	parser.add_option("-m", "--min-cov").metavar("MINCOV").type("int").set_default("0").help("print BED feature only if the coverage is bigger than (or equal to) MINCOV (default: %default)");
 	parser.add_option("-x", "--max-cov").metavar("MAXCOV").type("int").set_default("100000").help("print BED feature only if the coverage is lower than MAXCOV (default: %default)");
 	parser.add_option("-l", "--min-len").metavar("MINLEN").type("int").set_default("1").help("print BED feature only if its length is bigger (or equal to) than MINLELN (default: %default)");
+	parser.add_option("-z", "--min-ctg-len").metavar("MINCTGLEN").type("int").help("Skip reference sequences (contigs) shorter than this value");
 	parser.add_option("-d", "--discard-invalid-alignments").action("store_true").set_default("0").help("skip duplicates, failed QC, and non primary alignment, minq>0 (or user-defined if higher) (default: %default)");
 
 
@@ -208,6 +209,7 @@ int main(int argc, char *argv[]) {
 	const int  minimum_coverage  = options.get("min_cov");
 	const int  maximum_coverage  = options.get("max_cov");
 	const int  minimum_length    = options.get("min_len");
+	const int  minimum_contig_len= options.get("min_ctg_len");
 	int min_mapq                 = options.get("min_mapq");
 
 	if (only_valid and !min_mapq) {
@@ -232,6 +234,9 @@ int main(int argc, char *argv[]) {
 		for (const auto &ref : input.get_ref_data()) { // loop on reference
 			// init new reference data
 			const int ref_id = input.get_ref_id(ref.RefName);
+			if (ref.RefLength <= minimum_contig_len) {
+				continue;
+			}
 			debug cerr << "[R] Reference: " << ref_id << endl;
 			PositionType last_pos = 0;
 			priority_queue<CovEnd> coverage_ends;
