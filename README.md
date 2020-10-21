@@ -51,6 +51,8 @@ Options:
   -l MINLEN, --min-len=MINLEN
                         print BED feature only if its length is bigger (or equal
                         to) than MINLELN (default: 1)
+  -z MINCTG, --min-ctg-len=MINCTG
+                        skip reference sequences having size less or equal to MINCTG
   -d, --discard-invalid-alignments
                         skip duplicates, failed QC, and non primary alignment,
                         minq>0 (or user-defined if higher) (default: 0)
