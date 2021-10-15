@@ -1,0 +1,31 @@
+name: covtobed
+'on':
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  Build:
+    runs-on: '${{ matrix.os }}'
+    strategy:
+      matrix:
+        os:
+          - ubuntu-18.04
+    steps:
+      - name: Install dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |-
+          sudo apt-get update
+          sudo apt-get install -y clang-3.8 g++-6 libbamtools-dev
+      - uses: actions/checkout@v2
+      - run: '[ $CXX = g++ ] && export CXX=g++-6 || true'
+      - run: '[ $CXX = clang++ ] && export CXX=clang++-3.8 || true'
+      - run: >-
+          $CXX -std=c++11 *.cpp -I/usr/include/bamtools
+          /usr/lib/x86_64-linux-gnu/libbamtools.a  -o covtobed -lz
+      - run: ./covtobed -h
+      - run: ./covtobed test/demo.bam > /dev/null
+      - run: ./covtobed --physical-coverage test/mp.bam > /dev/null
+      - run: bash test/test.sh
