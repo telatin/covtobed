@@ -18,7 +18,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |-
           sudo apt-get update
-          sudo apt-get install -y clang-3.8 g++-6 libbamtools-dev
+          sudo apt-get install -y clang-3.9 g++-6 libbamtools-dev
       - uses: actions/checkout@v2
       - run: '[ $CXX = g++ ] && export CXX=g++-6 || true'
       - run: '[ $CXX = clang++ ] && export CXX=clang++-3.8 || true'
