@@ -3,7 +3,7 @@
 
 [![install with bioconda](https://img.shields.io/conda/vn/bioconda/covtobed?label=install%20from%20bioconda)](http://bioconda.github.io/recipes/covtobed/README.html)
 [![Bioconda installs](https://img.shields.io/conda/dn/bioconda/covtobed)](https://anaconda.org/bioconda/covtobed)
-[![TravisCI Build Status](https://travis-ci.org/telatin/covtobed.svg?branch=master)](https://travis-ci.org/telatin/covtobed)
+[![covtobed](https://github.com/telatin/covtobed/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/telatin/covtobed/actions/workflows/c-cpp.yml)
 [![Docker build](https://img.shields.io/docker/pulls/andreatelatin/covtobed)](https://hub.docker.com/r/andreatelatin/covtobed)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/36944efb0d2b44cca850964e96c036a4)](https://www.codacy.com/manual/telatin/covtobed?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=telatin/covtobed&amp;utm_campaign=Badge_Grade)
 
@@ -15,7 +15,7 @@
 Reads one (or more) [alignment](https://en.wikipedia.org/wiki/Sequence_alignment) files
 (sorted [BAM](https://en.wikipedia.org/wiki/SAM_(file_format))) and prints a [BED](https://en.wikipedia.org/wiki/BED_(file_format)) with the [coverage](https://en.wikipedia.org/wiki/Coverage_(genetics)). It will join consecutive bases with the same coverage, and can be used to only print a BED file with the regions having a specific coverage range. 
 
-:book: **[Read more in the wiki](https://github.com/telatin/covtobed/wiki)** - this is the **main** documentation source
+:book:  **[Read more in the wiki](https://github.com/telatin/covtobed/wiki)** - this is the **main** documentation source
 
 Features:
 * Can read (sorted) BAMs from stream (like `bwa mem .. | samtools view -b | samtools sort - | covtobed`)
@@ -51,6 +51,8 @@ Options:
   -l MINLEN, --min-len=MINLEN
                         print BED feature only if its length is bigger (or equal
                         to) than MINLELN (default: 1)
+  -z MINCTG, --min-ctg-len=MINCTG
+                        skip reference sequences having size less or equal to MINCTG
   -d, --discard-invalid-alignments
                         skip duplicates, failed QC, and non primary alignment,
                         minq>0 (or user-defined if higher) (default: 0)
@@ -136,7 +138,7 @@ This program was finalized with a Flexible Talent Mobility Award funded by BBSRC
 
 ## Citation
 
-If you use this tool, why not citing the paper?
+If you use this tool, we would really appreciate if you will cite its paper:
 
 > Birolo et al., (2020). covtobed: a simple and fast tool to extract coverage tracks from BAM files. Journal of Open Source Software, 5(47), 2119, https://doi.org/10.21105/joss.02119
 

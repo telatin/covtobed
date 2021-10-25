@@ -1,6 +1,7 @@
 #!/bin/bash
 if [ ! -d "$HOME/miniconda3" ]; then
 	echo "MINICONDA not found in $HOME/miniconda3"
+	echo "Install miniconda, then get bamtools from bioconda."
 	exit 1;
 fi
 if [ ! -e "$HOME/miniconda3/lib/libbamtools.a" ]; then
