@@ -99,6 +99,12 @@ sudo docker run --rm -ti andreatelatin/covtobed coverage -h
 singularity exec covtobed.simg coverage -h
 ```
 
+## Startup message
+
+When invoked without arguments, covtobed will print a message to inform the user that it
+is waiting for input from STDIN.
+To suppress this message, set the environment variable `COVTOBED_QUIET` to `1`.
+
 ## Performance
 
 *covtobed* is generally faster than *bedtools*. More details are in the [benchmark](benchmark) page.

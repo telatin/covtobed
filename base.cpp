@@ -16,7 +16,7 @@ using namespace std;
 typedef uint32_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 1.2.0"
+const string VERSION = "%prog 1.3.0"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"https://github.com/telatin/covtobed - License MIT"
 	".\n"
@@ -45,7 +45,12 @@ class Input {
 		Input(const vector<string> &paths, const int q, const int v) : min_mapq(q), discard_invalid_alignments(v) {
 			if (paths.empty()) {
 				// no input files, use standard input
-				cerr << "Reading from STDIN... [try 'covtobed -h' for options]" << endl;
+				// 1.3.0 - provide feedback unless $COVTOBED_QUIET is set to 1
+				// Check environment variable COVTOBED_QUIET
+				if (getenv("COVTOBED_QUIET") == NULL) {
+					cerr << "Reading from STDIN... [Ctrl+C to exit; 'covtobed -h' for help]" << endl;
+				}
+				
 				if (!input_bams.OpenFile("-"))
 					throw string("cannot read BAM from standard input, are you piping a BAM file?");
 					//throw input_bams.GetErrorString();
