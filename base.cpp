@@ -105,6 +105,9 @@ struct Coverage {
 		else
 			--f;
 	}
+	bool operator==(const Coverage &o) const {
+		return f == o.f && r == o.r;
+	}
 };
 
 // Class for output handling: writes coverage in the specified format
