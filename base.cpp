@@ -16,7 +16,7 @@ using namespace std;
 typedef uint32_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 1.3.1"
+const string VERSION = "%prog 1.3.2"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"https://github.com/telatin/covtobed - License MIT"
 	".\n"
@@ -205,7 +205,7 @@ int main(int argc, char *argv[]) {
 	parser.add_option("-l", "--min-len").metavar("MINLEN").type("int").set_default("1").help("print BED feature only if its length is bigger (or equal to) than MINLELN (default: %default)");
 	parser.add_option("-z", "--min-ctg-len").metavar("MINCTGLEN").type("int").help("Skip reference sequences (contigs) shorter than this value");
 	parser.add_option("-d", "--discard-invalid-alignments").action("store_true").set_default("0").help("skip duplicates, failed QC, and non primary alignment, minq>0 (or user-defined if higher) (default: %default)");
-
+	parser.add_option("--keep-invalid-alignments").action("store_true").set_default("0").help("Keep duplicates, failed QC, and non primary alignment, min=0 (or user-defined if higher) (default: %default)");
 
 	// output options
 	parser.add_option("--output-strands").action("store_true").set_default("0").help("output coverage and stats separately for each strand");
@@ -216,12 +216,29 @@ int main(int argc, char *argv[]) {
 	optparse::Values options = parser.parse_args(argc, argv);
 
 	const bool physical_coverage = options.get("physical_coverage");
-	const bool only_valid        = options.get("discard_invalid_alignments"); 
+	bool only_valid              = options.get("discard_invalid_alignments"); 
+	const bool keep_invalid      = options.get("keep_invalid_alignments"); 
 	const int  minimum_coverage  = options.get("min_cov");
 	const int  maximum_coverage  = options.get("max_cov");
 	const int  minimum_length    = options.get("min_len");
 	const int  minimum_contig_len= options.get("min_ctg_len");
 	int min_mapq                 = options.get("min_mapq");
+
+	// since 1.3.2 deprecate --discard-invalid-alignments
+
+	if (only_valid and keep_invalid) {
+		cerr << "ERROR: --discard-invalid-alignments and --keep-invalid-alignments are incompatible." << endl << "In the future --discard-invalid-alignments will be the default." << endl;
+		exit(1);
+	} else if (!only_valid and !keep_invalid) {
+		cerr << "WARNING: --discard-invalid-alignments in the future will be activated by default." << endl;
+	
+	} else if (only_valid) {
+		cerr << "WARNING: --discard-invalid-alignments is deprecated and will be removed in the future." << endl;
+	
+	} else if (keep_invalid) {
+		// this if statement will remain: in the future only_valid will be the default
+		only_valid = false;
+	}
 
 	if (only_valid and !min_mapq) {
 		min_mapq = 1;
