@@ -16,7 +16,7 @@ using namespace std;
 typedef uint32_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 1.3.0"
+const string VERSION = "%prog 1.3.1"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"https://github.com/telatin/covtobed - License MIT"
 	".\n"
@@ -105,8 +105,11 @@ struct Coverage {
 		else
 			--f;
 	}
-	bool operator==(const Coverage &o) const {
-		return f == o.f && r == o.r;
+	bool equal(const Coverage &o, bool stranded) const {
+	    	if (stranded)
+		    return f == o.f && r == o.r;
+		else
+		    return f + r == o.f + o.r;
 	}
 };
 
@@ -122,7 +125,7 @@ class Output {
 		// write interval to bed
 		void operator() (const Interval &i, const Coverage &c) {
 			// can the last interval be extended with the same coverage?
-			if (i.ref == last_interval.ref && i.start == last_interval.end && last_coverage == c)
+			if (i.ref == last_interval.ref && i.start == last_interval.end && last_coverage.equal(c, strands))
 				// extend previous interval
 				last_interval.end = i.end;
 			else {
