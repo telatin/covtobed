@@ -24,5 +24,5 @@ c++ -std=c++11 ./*.cpp  -I/usr/include/bamtools /usr/lib/x86_64-linux-gnu/libbam
 # Make NORMAL
 sed -i 's/#define debug if(.*)/#define debug if(false)/' base.cpp
 c++ -std=c++11 ./*.cpp  -I/usr/include/bamtools /usr/lib/x86_64-linux-gnu/libbamtools.a  /usr/lib/gcc/x86_64-linux-gnu/5/libstdc++.a \
- -o binaries/covtobed -lz
+ -o binaries/covtobed -lz -O3
 cd -
