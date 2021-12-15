@@ -16,7 +16,7 @@ using namespace std;
 typedef uint32_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 1.3.2"
+const string VERSION = "%prog 1.3.3"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"https://github.com/telatin/covtobed - License MIT"
 	".\n"
@@ -230,11 +230,15 @@ int main(int argc, char *argv[]) {
 		cerr << "ERROR: --discard-invalid-alignments and --keep-invalid-alignments are incompatible." << endl << "In the future --discard-invalid-alignments will be the default." << endl;
 		exit(1);
 	} else if (!only_valid and !keep_invalid) {
-		cerr << "WARNING: --discard-invalid-alignments in the future will be activated by default." << endl;
-	
+		if (getenv("COVTOBED_QUIET") == NULL) {
+			cerr << "WARNING: --discard-invalid-alignments in the future will be activated by default." << endl;
+		}
+		// only_valid = false by default as legacy behaviour
 	} else if (only_valid) {
-		cerr << "WARNING: --discard-invalid-alignments is deprecated and will be removed in the future." << endl;
-	
+		if (getenv("COVTOBED_QUIET") == NULL) {
+			cerr << "WARNING: --discard-invalid-alignments will be automatically enabled in the future." << endl;
+		}
+		only_valid = true;
 	} else if (keep_invalid) {
 		// this if statement will remain: in the future only_valid will be the default
 		only_valid = false;
@@ -281,7 +285,14 @@ int main(int argc, char *argv[]) {
 
 				// output coverage
 				assert(coverage_ends.size() == coverage);
+
+				// check unsorted 1.3.3
+				if  ( not ( last_pos <= next_change or (last_pos == 0 and next_change == 0) )) {
+					throw string("Position going backward, is the BAM sorted? last_pos=" + 
+						to_string(last_pos) + " next_change=" + to_string(next_change));
+				}
 				output({ref.RefName, last_pos, next_change}, coverage);
+				
 
 				// increment coverage with alignments that start here
 				while (more_alignments_for_ref && next_change == alignment.Position) {
@@ -306,6 +317,8 @@ int main(int argc, char *argv[]) {
 
 				debug cerr << "[<] Coverage is " << coverage << " from " << next_change << endl;
 				last_pos = next_change;
+				
+
 			} while (last_pos != ref.RefLength);
 			debug cerr << "[_] Completed at " << ref.RefName << ":" << last_pos << " [coverage:"  << coverage_ends.size() << "]" << endl;
 			// reference ended
@@ -314,6 +327,7 @@ int main(int argc, char *argv[]) {
 			    cerr << "Try samtools fixmate on the input file" << endl;
 			}
 			// 1.2.0 -- removed: assert(coverage_ends.empty());
+		
 		}
 		//assert(!more_alignments);
 		if (more_alignments) {
