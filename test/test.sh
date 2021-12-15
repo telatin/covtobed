@@ -6,6 +6,7 @@
 # REQUIRES: ./test/demo.bam
 #           ./test/mock.bam
 
+export COVTOBED_QUIET=1
 REMOVE=0
 if [ ! -e "test/demo.bam" ]; then
 	echo "WARNING: running this test from a bad location"
@@ -42,8 +43,24 @@ else
 		exit
 fi
 
+# Testing sortedness
+echo -n " - Working with sorted file: "
+if [[ $(./covtobed   test/mini-sorted.bam  2> /dev/null || echo "FAIL" ) != "FAIL" ]];
+then
+		echo PASS
+else
+		echo FAIL
+		exit
+fi
 
-
+echo -n " - Working with unsorted file (should raise error): "
+if [[ $(./covtobed   test/mini-unsorted.bam 2> /dev/null >/dev/null || echo "FAIL" ) == "FAIL" ]];
+then
+		echo PASS
+else
+		echo FAIL
+		exit
+fi
 # Testing that -m MIN produces an output, and it fits the expectation for demo.bam (n. lines)
 echo -n " - Minimum coverage, expected BED lines check: "
 if [ $(./covtobed -m 15 test/demo.bam  | wc -l) -eq "12" ];
