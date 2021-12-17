@@ -286,8 +286,8 @@ int main(int argc, char *argv[]) {
 				// output coverage
 				assert(coverage_ends.size() == coverage);
 
-				// check unsorted 1.3.3
-				if  ( not ( last_pos <= next_change or (last_pos == 0 and next_change == 0) )) {
+				// check unsorted 1.3.4
+				if  (  last_pos > next_change ) {
 					throw string("Position going backward, is the BAM sorted? last_pos=" + 
 						to_string(last_pos) + " next_change=" + to_string(next_change));
 				}
