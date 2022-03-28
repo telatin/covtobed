@@ -21,6 +21,8 @@ Features:
 * Can print _strand specific_ coverage to check for strand imbalance
 * Can print the _physical coverage_ (with paired-end or mate-paired libraries)
 
+:information_source: For more features, check the [**BamToCov**](https://github.com/telatin/bamtocov) suite.
+
 [![covtobed example](img/covtobed-vignette.png)](https://github.com/telatin/covtobed/wiki)
 
 
