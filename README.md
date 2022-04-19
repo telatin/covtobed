@@ -141,20 +141,12 @@ This program was finalized with a Flexible Talent Mobility Award funded by BBSRC
 
 If you use this tool, we would really appreciate if you will cite its paper:
 
+Releases after 1.3 (inclusive):
+
+> Giovanni Birolo, Andrea Telatin, 
+[BamToCov: an efficient toolkit for sequence coverage calculations](https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btac125/6535233), Bioinformatics, 2022
+
+Releases up to 1.2:
+
 > Birolo et al., (2020). covtobed: a simple and fast tool to extract coverage tracks from BAM files. Journal of Open Source Software, 5(47), 2119, https://doi.org/10.21105/joss.02119
 
-BibTeX citation:
-```latex
-@article{Birolo2020,
-  doi = {10.21105/joss.02119},
-  url = {https://doi.org/10.21105/joss.02119},
-  year = {2020},
-  publisher = {The Open Journal},
-  volume = {5},
-  number = {47},
-  pages = {2119},
-  author = {Giovanni Birolo and Andrea Telatin},
-  title = {covtobed: a simple and fast tool to extract coverage tracks from BAM files},
-  journal = {Journal of Open Source Software}
-}
-```
