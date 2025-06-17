@@ -57,9 +57,11 @@ run_test() {
     local stdout_file=$(mktemp)
     local stderr_file=$(mktemp)
     
-    # Run the test command
+    # Run the test command (disable exit on error for this command)
+    set +e
     eval "$test_command" > "$stdout_file" 2> "$stderr_file"
     local actual_exit_code=$?
+    set -e
     
     # Check exit code
     if [ "$actual_exit_code" -eq "$expected_exit_code" ]; then

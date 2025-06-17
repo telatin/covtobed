@@ -53,7 +53,7 @@ run_test "minimum_coverage_filter" \
     0
 
 run_test "maximum_coverage_filter" \
-    "./covtobed -x 5 test/demo.bam | head -10" \
+    "./covtobed -x 5 test/demo.bam | head -10 >/dev/null" \
     0
 
 # Test 6: Physical coverage
