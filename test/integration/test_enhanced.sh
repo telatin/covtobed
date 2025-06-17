@@ -45,7 +45,7 @@ run_test "sorted_bam_accepted" \
 
 run_test "unsorted_bam_rejected" \
     "./covtobed test/mini-unsorted.bam" \
-    1
+    2
 
 # Test 5: Coverage filtering
 run_test "minimum_coverage_filter" \
@@ -58,25 +58,25 @@ run_test "maximum_coverage_filter" \
 
 # Test 6: Physical coverage
 run_test "physical_coverage" \
-    "./covtobed --physical-coverage test/mp.bam | wc -l | grep -q 136" \
+    "./covtobed --keep-invalid-alignments --physical-coverage test/mp.bam | wc -l | grep -q 136" \
     0
 
 # Test 7: Stranded output
 run_test "stranded_output" \
-    "./covtobed --output-strands test/demo.bam | cut -f 5 | sort -u | wc -l | grep -q 10" \
+    "./covtobed --keep-invalid-alignments --output-strands test/demo.bam | cut -f 5 | sort -u | wc -l | grep -q 10" \
     0
 
 # Test 8: Different output formats
 run_test "bed_format_output" \
-    "./covtobed --format bed test/demo.bam | head -1" \
+    "./covtobed --keep-invalid-alignments --format bed test/demo.bam | head -1" \
     0
 
 run_test "counts_format_output" \
-    "./covtobed --format counts test/demo.bam | grep '>' | wc -l | grep -q 2" \
+    "./covtobed --keep-invalid-alignments --format counts test/demo.bam | grep '>' | wc -l | grep -q 2" \
     0
 
 run_test "counts_format_lines" \
-    "./covtobed --format counts test/demo.bam | grep -v '>' | wc -l | grep -q 202" \
+    "./covtobed --keep-invalid-alignments --format counts test/demo.bam | grep -v '>' | wc -l | grep -q 202" \
     0
 
 # Test 9: Length filtering
@@ -91,11 +91,11 @@ run_test "mapping_quality_filter" \
 
 # Test 11: Invalid alignment filtering
 run_test "discard_invalid_alignments" \
-    "./covtobed -d test/filtered.bam | wc -l | grep -q 2" \
+    "./covtobed test/filtered.bam | wc -l | grep -q 2" \
     0
 
 run_test "keep_invalid_alignments" \
-    "./covtobed test/filtered.bam | wc -l | grep -q 6" \
+    "./covtobed --keep-invalid-alignments test/filtered.bam | wc -l | grep -q 6" \
     0
 
 # Test 12: Output consistency check

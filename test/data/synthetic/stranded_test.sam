@@ -1,0 +1,9 @@
+@HD	VN:1.4	SO:coordinate
+@SQ	SN:chr1	LN:10000
+@PG	ID:samtools	PN:samtools	VN:1.20	CL:samtools view -Sb /home/telatina/git/covtobed/test/data/synthetic/stranded_test.sam.sam
+@PG	ID:samtools.1	PN:samtools	PP:samtools	VN:1.20	CL:samtools sort -o /home/telatina/git/covtobed/test/data/synthetic/stranded_test.sam
+forward_1	0	chr1	111	30	50M	*	0	0	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+forward_2	0	chr1	121	30	50M	*	0	0	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+forward_3	0	chr1	131	30	50M	*	0	0	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+reverse_1	16	chr1	161	30	50M	*	0	0	TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+reverse_2	16	chr1	171	30	50M	*	0	0	TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

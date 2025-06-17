@@ -73,7 +73,7 @@ fi
 
 # Checking thath --physical-coverage will work, and it fits the expected number of lines
 echo -n " - Physical coverage, expected BED lines check: "
-if [ $(./covtobed --physical-coverage test/mp.bam  | wc -l) -eq "136" ];
+if [ $(./covtobed --keep-invalid-alignments --physical-coverage test/mp.bam  | wc -l) -eq "136" ];
 then
 	echo PASS 3
 else
@@ -83,7 +83,7 @@ fi
 
 # Checking stranded output: it should produce content in the fifth column of the bed file
 echo -n " - Stranded output, testing column #5: "
-if [ $(./covtobed --out test/demo.bam | cut -f 5 | sort -u | wc -l) -eq "10" ];
+if [ $(./covtobed --keep-invalid-alignments --output-strands test/demo.bam | cut -f 5 | sort -u | wc -l) -eq "10" ];
 then
 	echo PASS 4
 else
@@ -93,7 +93,7 @@ fi
 
 # Checking the "counts" output (counting the lines containing a ">")
 echo -n " - Testing 'counts' format (printed headers): "
-if [ $(./covtobed --format counts test/demo.bam | grep '>' | wc -l) -eq "2" ];
+if [ $(./covtobed --keep-invalid-alignments --format counts test/demo.bam | grep '>' | wc -l) -eq "2" ];
 then
 	echo PASS 5
 else
@@ -101,7 +101,7 @@ else
 	exit 1
 fi
 echo -n " - Testing 'counts' format (printed lines): "
-if [ $(./covtobed --format counts test/demo.bam | grep -v \> | wc -l) -eq "202" ];
+if [ $(./covtobed --keep-invalid-alignments --format counts test/demo.bam | grep -v \> | wc -l) -eq "202" ];
 then
         echo PASS 6
 else
@@ -110,7 +110,7 @@ else
 fi
 
 echo -n " - Testing strand with adjacent intervals: "
-if [[ $(./covtobed  test/stranded.bam | wc -l) -eq "1"  && $(./covtobed --output-strands test/stranded.bam | wc -l) -eq "2" ]];
+if [[ $(./covtobed --keep-invalid-alignments test/stranded.bam | wc -l) -eq "1"  && $(./covtobed --keep-invalid-alignments --output-strands test/stranded.bam | wc -l) -eq "2" ]];
 then
         echo PASS 7
 else
@@ -119,7 +119,7 @@ else
 fi
 # Checking BED output with reference output file
 echo -n " - Checking identity of BED output with pre-calculated: "
-./covtobed test/demo.bam > test/output.test
+./covtobed --keep-invalid-alignments test/demo.bam > test/output.test
 if [ $(diff test/output.test test/output.bed | wc -l) -eq "0" ];
 then
         echo PASS 8
@@ -131,7 +131,7 @@ fi
 
 ## Synthetic BAM test
 echo -n " - Checking computed coverage for a synthetic BAM file: "
-./covtobed -m 1 test/mock.bam > test/output.test
+./covtobed --keep-invalid-alignments -m 1 test/mock.bam > test/output.test
 if [ $(diff test/output.test test/mock.bed | wc -l) -eq "0" ];
 then
         echo PASS 9
@@ -149,7 +149,7 @@ else
 	echo FAIL
 	exit 1
 fi
-if [ $(./covtobed -m 1 test/filtered.bam | wc -l) -eq "6" ] ; then
+if [ $(./covtobed --keep-invalid-alignments -m 1 test/filtered.bam | wc -l) -eq "6" ] ; then
 	echo 10
 else
 	echo "FAIL: $(./covtobed -m 1 -d test/filtered.bam | wc -l)"
@@ -159,7 +159,7 @@ fi
 # A synthetic BAM containing reference name {n}X that should only print one reagion 
 # covered exactly {n}X times
 echo  " - Checking artificial coverage values:"
-./covtobed test/test_cov.bam -m 1 |cut -f 1,4| while read LINE;
+./covtobed --keep-invalid-alignments test/test_cov.bam -m 1 |cut -f 1,4| while read LINE;
 do
 	echo "$LINE" | perl -ne '($exp, $cov)=split /\s+/, $_; if ("$exp" ne "${cov}X") {
 		die "$exp != $cov\n";

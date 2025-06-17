@@ -1,0 +1,5 @@
+@HD	VN:1.4	SO:coordinate
+@SQ	SN:chr1	LN:10000
+@PG	ID:samtools	PN:samtools	VN:1.20	CL:samtools view -Sb /home/telatina/git/covtobed/test/data/synthetic/single_read.sam.sam
+@PG	ID:samtools.1	PN:samtools	PP:samtools	VN:1.20	CL:samtools sort -o /home/telatina/git/covtobed/test/data/synthetic/single_read.sam
+single_read	0	chr1	1001	30	100M	*	0	0	AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
