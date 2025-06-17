@@ -18,15 +18,15 @@ typedef int PositionType;
 
 struct CoordinateInterval {
 	PositionType start, end;
-	bool empty() const { return end <= start; }
-	size_t length() const { return empty() ? 0 : end - start; }
-	operator bool() const { return !empty(); }
+	bool empty() const noexcept { return end <= start; }
+	size_t length() const noexcept { return empty() ? 0 : end - start; }
+	operator bool() const noexcept { return !empty(); }
 	// ordering
-	bool operator<(const CoordinateInterval &i) const { return start < i.start || (start == i.start && end < i.end); }
+	bool operator<(const CoordinateInterval &i) const noexcept { return start < i.start || (start == i.start && end < i.end); }
 	// disjointness
-	bool operator<<(const CoordinateInterval &i) const { return end <= i.start; }
+	bool operator<<(const CoordinateInterval &i) const noexcept { return end <= i.start; }
 	// intersection
-	CoordinateInterval operator*(const CoordinateInterval &o) const { return {max(start, o.start), min(end, o.end)}; }
+	CoordinateInterval operator*(const CoordinateInterval &o) const noexcept { return {std::max(start, o.start), std::min(end, o.end)}; }
 	/*
 	tuple<CoordinateInterval, CoordinateInterval, CoordinateInterval> split(const CoordinateInterval &o) const {
 		return {{start, min(end, o.start)}, 
@@ -38,13 +38,13 @@ struct CoordinateInterval {
 		assert(!o.empty());
 
 		//debug_inter cerr << *this << " - " << o << " = " << CoordinateInterval{start, min(end, o.start)} << ", " << CoordinateInterval{max(start, o.end), end} << endl;
-		return {{start, min(end, o.start)}, {max(start, o.end), end}};
+		return {{start, std::min(end, o.start)}, {std::max(start, o.end), end}};
 	}
 };
 
 ostream &operator<<(ostream &o, const CoordinateInterval &i) { return o << i.start << '-' << i.end; }
 
-bool compare_ref_name(const string &r1, const string &r2) {
+bool compare_ref_name(const std::string &r1, const std::string &r2) noexcept {
 	//int prefix_len;
 	//for (prefix_len = 0; prefix_len < min(r1.size(), r2.size()); ++prefix_len) {
 	//FIXME implement
@@ -52,26 +52,26 @@ bool compare_ref_name(const string &r1, const string &r2) {
 }
 
 struct Interval : public CoordinateInterval {
-	string ref;
+	std::string ref;
 
-	Interval(const string &r="", PositionType s=0, PositionType e=0) : CoordinateInterval{s, e}, ref(r) {}
+	Interval(const std::string &r="", PositionType s=0, PositionType e=0) : CoordinateInterval{s, e}, ref(r) {}
 	//Interval(istream &s) { read_bed(s); }
 	// ordering
-	bool operator<(const Interval &o) const { 
+	bool operator<(const Interval &o) const noexcept { 
 		return compare_ref_name(ref, o.ref) || 
 			(ref == o.ref && CoordinateInterval::operator<(o));
 	}
 	
-	ostream &print_bed(ostream &s) const { return s << ref << '\t' << start << '\t' << end; }
-	istream &read_bed(istream &s) { return s >> ref >> start >> end; }
-	ostream &print_igv(ostream &s) const { return s << ref << ':' << start << '-' << end; }
+	std::ostream &print_bed(std::ostream &s) const { return s << ref << '\t' << start << '\t' << end; }
+	std::istream &read_bed(std::istream &s) { return s >> ref >> start >> end; }
+	std::ostream &print_igv(std::ostream &s) const { return s << ref << ':' << start << '-' << end; }
 };
 ostream &operator<< (ostream &s, const Interval &i) { return i.print_bed(s); }
 istream &operator>> (istream &s, Interval &i) { return i.read_bed(s); }
 
 
 struct NamedInterval : public Interval {
-	string name;
+	std::string name;
 
 	//Interval(const string &r, const CoordinateInterval &i, const string &n="") : CoordinateInterval(i), ref(r), name(n) {}
 
@@ -127,12 +127,12 @@ class Intervals {
 		}
 
 		// load intervals from bed file
-		bool read_bed(istream &input) {
-			string line;
-			for (int line_count = 0; getline(input, line); ++line_count) {
+		bool read_bed(std::istream &input) {
+			std::string line;
+			for (int line_count = 0; std::getline(input, line); ++line_count) {
 				//debug_bed cerr << "read line " << line << endl;
-				istringstream line_input(line);
-				string ref;
+				std::istringstream line_input(line);
+				std::string ref;
 				NamedInterval i;
 				//if (line_input >> ref >> i.start >> i.end) {
 				if (line_input >> i) {
@@ -145,16 +145,16 @@ class Intervals {
 					intervals_by_ref[ref].push_back(i);
 					//debug_bed cerr << "read interval '" << i.name << "' " << ref << ":" << i.start << "-" << i.end << endl;
 				} else {
-					ostringstream err;
-					cerr << "bad format at line " << line_count << " of target file";
+					std::ostringstream err;
+					std::cerr << "bad format at line " << line_count << " of target file";
 				}
 				input.clear();
 				//input.ignore(10000, '\n');
 
 			}
 			if (!input.eof()) {
-				cerr << "error reading target file" << endl;
-				exit(1);
+				std::cerr << "error reading target file" << std::endl;
+				std::exit(1);
 			}
 			//debug cerr << "loaded " << count() << " intervals in " << intervals_by_ref.size() << " references" << endl;
 
@@ -162,17 +162,17 @@ class Intervals {
 		}
 
 		void sort() {
-			for (auto &intervals : intervals_by_ref)
-				std::sort(intervals.second.begin(), intervals.second.end());
+			for (auto &[ref_name, intervals] : intervals_by_ref)
+				std::sort(intervals.begin(), intervals.end());
 		}
 
 
-		bool has_names() const { return _has_names; }
+		bool has_names() const noexcept { return _has_names; }
 
-		size_t count() const {
+		size_t count() const noexcept {
 			size_t acc = 0;
-			for (const auto &ref_intervals : intervals_by_ref)
-				acc += ref_intervals.second.size();
+			for (const auto &[ref_name, intervals] : intervals_by_ref)
+				acc += intervals.size();
 			return acc;
 		}
 
@@ -245,8 +245,8 @@ class Intervals {
 		}
 		*/
 	private:
-		map<string, vector<CoordinateInterval> > intervals_by_ref;
-		string last_ref;
+		std::map<std::string, std::vector<CoordinateInterval> > intervals_by_ref;
+		std::string last_ref;
 		bool _has_names = false;
 		size_t last_first_interval = 0;
 };
@@ -256,13 +256,13 @@ class BEDOutput {
 	public:
 		BEDOutput(const char *p) : path(p), use_stdout(path == "-") {
 			if (!use_stdout)
-				file_out.open(p, ofstream::out);
+				file_out.open(p, std::ofstream::out);
 			last_interval.start = last_interval.end = 0;
 		}
 		// write interval to bed
 		// checks if we can extend the last interval
 		// cols is appended after the interval name if not empty
-		void operator() (const NamedInterval &i, const string &cols="") {
+		void operator() (const NamedInterval &i, const std::string &cols="") {
 			if (writable()) {
 				// check for extension
 				if (i.ref == last_interval.ref && i.start == last_interval.end && 
@@ -298,13 +298,13 @@ class BEDOutput {
 			*out << endl;
 		}
 		
-		const string path;
+		const std::string path;
 		const bool use_stdout;
-		ofstream file_out;
+		std::ofstream file_out;
 
 
 		NamedInterval last_interval;
-		string last_cols;
+		std::string last_cols;
 };
 
 class SimpleOutput {
@@ -316,7 +316,7 @@ class SimpleOutput {
 		// write interval to bed
 		// checks if we can extend the last interval
 		// cols is appended after the interval name if not empty
-		void operator() (const NamedInterval &i, const string &cols="") {
+		void operator() (const NamedInterval &i, const std::string &cols="") {
 			if (writable()) {
 				ostream *out = use_stdout ? &cout : &file_out;
 				for (int b = i.start; b < i.end; ++b)

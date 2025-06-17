@@ -56,15 +56,23 @@ Options:
                         skip reference sequences having size less or equal to MINCTG
   -d, --discard-invalid-alignments
                         skip duplicates, failed QC, and non primary alignment,
-                        minq>0 (or user-defined if higher) (default: 0)
+                        minq>0 (or user-defined if higher) (default: enabled)
+  --keep-invalid-alignments
+                        Keep duplicates, failed QC, and non primary alignment,
+                        min=0 (or user-defined if higher) - reverts to legacy behavior
   --output-strands      output coverage and stats separately for each strand
   --format=CHOICE       output format
 ```
 ## Example
 
-Command:
+Command (with new default filtering):
 ```
 covtobed -m 0 -x 5 test/demo.bam
+```
+
+To use legacy behavior (no filtering):
+```
+covtobed --keep-invalid-alignments -m 0 -x 5 test/demo.bam
 ```
 Output:
 ```text
@@ -102,6 +110,14 @@ sudo docker run --rm -ti andreatelatin/covtobed coverage -h
 singularity exec covtobed.simg coverage -h
 ```
 
+## Important Changes in v1.4.0
+
+**Default Behavior Change**: Starting with version 1.4.0, `covtobed` now **filters invalid alignments by default** (duplicates, failed QC, non-primary alignments). This provides higher quality results out of the box.
+
+- **New default**: Invalid alignments are discarded (equivalent to using `--discard-invalid-alignments`)
+- **Legacy behavior**: Use `--keep-invalid-alignments` to revert to the old behavior
+- **Conflicting flags**: Using both `--discard-invalid-alignments` and `--keep-invalid-alignments` will result in an error
+
 ## Startup message
 
 When invoked without arguments, covtobed will print a message to inform the user that it
@@ -118,7 +134,7 @@ This tool requires **libbamtools** and **zlib**.
 
 To manually compile:
 ```
-c++ -std=c++11 *.cpp -I/path/to/bamtools/ -L${HOME}/path/to/lib/ -lbamtools -o covtobed
+c++ -std=c++17 *.cpp -I/path/to/bamtools/ -L${HOME}/path/to/lib/ -lbamtools -o covtobed
 ```
 
 ## Issues, Limitations and how to contribute

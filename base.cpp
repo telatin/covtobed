@@ -4,6 +4,7 @@
 #include <map>
 #include <cstdlib>
 #include <cassert>
+#include <memory>
 #include <api/BamMultiReader.h>
 #include <api/BamAlignment.h>
 #include "OptionParser.h"
@@ -30,7 +31,7 @@ struct CovEnd {
 	PositionType end;
 	bool rev;
 	// order for queuing
-	bool operator<(const CovEnd &o) const {
+	bool operator<(const CovEnd &o) const noexcept {
 		return end > o.end;
 	}
 };
@@ -42,7 +43,7 @@ class Input {
 		const int min_mapq;
 		const int discard_invalid_alignments;
 		// open all files
-		Input(const vector<string> &paths, const int q, const int v) : min_mapq(q), discard_invalid_alignments(v) {
+		Input(const std::vector<std::string> &paths, const int q, const int v) : min_mapq(q), discard_invalid_alignments(v) {
 			if (paths.empty()) {
 				// no input files, use standard input
 				// 1.3.0 - provide feedback unless $COVTOBED_QUIET is set to 1
@@ -52,7 +53,7 @@ class Input {
 				}
 				
 				if (!input_bams.OpenFile("-"))
-					throw string("cannot read BAM from standard input, are you piping a BAM file?");
+					throw std::string("cannot read BAM from standard input, are you piping a BAM file?");
 					//throw input_bams.GetErrorString();
 			} else {
 				for (const auto &path : paths)
@@ -83,29 +84,29 @@ class Input {
 			} while (more_alignments && !good_alignment);
 			return more_alignments;
 		}
-		vector<RefData> get_ref_data() { return input_bams.GetReferenceData(); }
-		int get_ref_id(const string &ref) { return input_bams.GetReferenceID(ref); }
+		std::vector<RefData> get_ref_data() const { return input_bams.GetReferenceData(); }
+		int get_ref_id(const std::string &ref) const { return input_bams.GetReferenceID(ref); }
 };
 
 // Class that stores info about the current coverage
 struct Coverage {
 	DepthType f = 0, r = 0;
 
-	operator DepthType() const { return f + r; }
+	operator DepthType() const noexcept { return f + r; }
 
-	void inc(bool rev=false) {
+	void inc(bool rev=false) noexcept {
 		if (rev)
 			++r;
 		else
 			++f;
 	}
-	void dec(bool rev=false) {
+	void dec(bool rev=false) noexcept {
 		if (rev)
 			--r;
 		else
 			--f;
 	}
-	bool equal(const Coverage &o, bool stranded) const {
+	bool equal(const Coverage &o, bool stranded) const noexcept {
 	    	if (stranded)
 		    return f == o.f && r == o.r;
 		else
@@ -119,7 +120,7 @@ class Output {
 		enum Format {BED, COUNTS};
 
 		// class constructor
-		Output(ostream *o, const char *f, bool s=false, int m=0, int x=100000, int l=1) : out(o), format(parse_format(f)), strands(s), mincov(m), maxcov(x), minlen(l) {
+		Output(std::ostream *o, const char *f, bool s=false, int m=0, int x=100000, int l=1) : out(o), format(parse_format(f)), strands(s), mincov(m), maxcov(x), minlen(l) {
 		}
 
 		// write interval to bed
@@ -172,16 +173,16 @@ class Output {
 				*out  << static_cast<DepthType>(c);
 		}
 		static Format parse_format(const char *format_str) {
-			const string s = format_str;
+			const std::string s = format_str;
 			if (s == "bed")
 				return Output::BED;
 			if (s == "counts")
 				return Output::COUNTS;
-			throw string("unkown format specification: \"") + format_str + "\"";
+			throw std::string("unknown format specification: \"") + format_str + "\"";
 		}
 
 
-		ostream *out;
+		std::ostream *out;
 		const Format format;
 		const bool strands;
 		const int mincov;
@@ -204,19 +205,19 @@ int main(int argc, char *argv[]) {
 	parser.add_option("-x", "--max-cov").metavar("MAXCOV").type("int").set_default("100000").help("print BED feature only if the coverage is lower than MAXCOV (default: %default)");
 	parser.add_option("-l", "--min-len").metavar("MINLEN").type("int").set_default("1").help("print BED feature only if its length is bigger (or equal to) than MINLELN (default: %default)");
 	parser.add_option("-z", "--min-ctg-len").metavar("MINCTGLEN").type("int").help("Skip reference sequences (contigs) shorter than this value");
-	parser.add_option("-d", "--discard-invalid-alignments").action("store_true").set_default("0").help("skip duplicates, failed QC, and non primary alignment, minq>0 (or user-defined if higher) (default: %default)");
-	parser.add_option("--keep-invalid-alignments").action("store_true").set_default("0").help("Keep duplicates, failed QC, and non primary alignment, min=0 (or user-defined if higher) (default: %default)");
+	parser.add_option("-d", "--discard-invalid-alignments").action("store_true").set_default("0").help("skip duplicates, failed QC, and non primary alignment, minq>0 (or user-defined if higher) (default: enabled)");
+	parser.add_option("--keep-invalid-alignments").action("store_true").set_default("0").help("Keep duplicates, failed QC, and non primary alignment, min=0 (or user-defined if higher) - reverts to legacy behavior");
 
 	// output options
 	parser.add_option("--output-strands").action("store_true").set_default("0").help("output coverage and stats separately for each strand");
-	vector<string> choices = {"bed", "counts"};
+	std::vector<std::string> choices = {"bed", "counts"};
 	parser.add_option("--format").choices(choices.begin(), choices.end()).set_default("bed").help("output format");
 
 	// parse arguments
 	optparse::Values options = parser.parse_args(argc, argv);
 
 	const bool physical_coverage = options.get("physical_coverage");
-	bool only_valid              = options.get("discard_invalid_alignments"); 
+	const bool discard_explicit  = options.get("discard_invalid_alignments"); 
 	const bool keep_invalid      = options.get("keep_invalid_alignments"); 
 	const int  minimum_coverage  = options.get("min_cov");
 	const int  maximum_coverage  = options.get("max_cov");
@@ -224,30 +225,31 @@ int main(int argc, char *argv[]) {
 	const int  minimum_contig_len= options.get("min_ctg_len");
 	int min_mapq                 = options.get("min_mapq");
 
-	// since 1.3.2 deprecate --discard-invalid-alignments
-
-	if (only_valid and keep_invalid) {
-		cerr << "ERROR: --discard-invalid-alignments and --keep-invalid-alignments are incompatible." << endl << "In the future --discard-invalid-alignments will be the default." << endl;
-		exit(1);
-	} else if (!only_valid and !keep_invalid) {
-		if (getenv("COVTOBED_QUIET") == NULL) {
-			cerr << "WARNING: --discard-invalid-alignments in the future will be activated by default." << endl;
-		}
-		// only_valid = false by default as legacy behaviour
-	} else if (only_valid) {
-		if (getenv("COVTOBED_QUIET") == NULL) {
-			cerr << "WARNING: --discard-invalid-alignments will be automatically enabled in the future." << endl;
-		}
-		only_valid = true;
-	} else if (keep_invalid) {
-		// this if statement will remain: in the future only_valid will be the default
+	// As of version 1.4.0: --discard-invalid-alignments is now the default
+	// Check for conflicting flags
+	if (discard_explicit && keep_invalid) {
+		std::cerr << "ERROR: --discard-invalid-alignments and --keep-invalid-alignments are incompatible." << std::endl;
+		std::exit(1);
+	}
+	
+	// Determine final only_valid setting
+	bool only_valid;
+	
+	if (keep_invalid) {
+		// Explicit request to keep invalid alignments (legacy behavior)
 		only_valid = false;
+		if (getenv("COVTOBED_QUIET") == NULL) {
+			std::cerr << "INFO: keeping invalid alignments in coverage calculation (--keep-invalid-alignments)." << std::endl;
+		}
+	} else {
+		// Default behavior: discard invalid alignments (whether explicit or default)
+		only_valid = true;
 	}
 
-	if (only_valid and !min_mapq) {
+	// Set minimum mapping quality
+	if (only_valid && min_mapq == 0) {
+		// When discarding invalid alignments, default min_mapq to 1
 		min_mapq = 1;
-	} else {
-		min_mapq = options.get("min_mapq");
 	}
 
 
@@ -265,7 +267,7 @@ int main(int argc, char *argv[]) {
 		bool more_alignments = input.get_next_alignment(alignment);
 		for (const auto &ref : input.get_ref_data()) { // loop on reference
 			// init new reference data
-			const int ref_id = input.get_ref_id(ref.RefName);
+			const auto ref_id = input.get_ref_id(ref.RefName);
 			if (ref.RefLength <= minimum_contig_len) {
 				continue;
 			}
@@ -278,8 +280,8 @@ int main(int argc, char *argv[]) {
 			// loop current reference
 			do {
 				// find next possible coverage change
-				const PositionType next_change = more_alignments_for_ref ? 
-					(coverage_ends.empty() ? alignment.Position : min(alignment.Position, coverage_ends.top().end)) :
+				const auto next_change = more_alignments_for_ref ? 
+					(coverage_ends.empty() ? alignment.Position : std::min(alignment.Position, coverage_ends.top().end)) :
 					(coverage_ends.empty() ? ref.RefLength : coverage_ends.top().end);
 				debug cerr << "[-] Coverage is " << coverage << " up to " << next_change << endl;
 
@@ -288,8 +290,8 @@ int main(int argc, char *argv[]) {
 
 				// check unsorted 1.3.4
 				if  (  last_pos > next_change ) {
-					throw string("Position going backward, is the BAM sorted? last_pos=" + 
-						to_string(last_pos) + " next_change=" + to_string(next_change));
+					throw std::string("Position going backward, is the BAM sorted? last_pos=" + 
+						std::to_string(last_pos) + " next_change=" + std::to_string(next_change));
 				}
 				output({ref.RefName, last_pos, next_change}, coverage);
 				
@@ -331,7 +333,7 @@ int main(int argc, char *argv[]) {
 		}
 		//assert(!more_alignments);
 		if (more_alignments) {
-			throw string("Unexpected alignment found, is the BAM sorted?");			
+			throw std::string("Unexpected alignment found, is the BAM sorted?");			
 		}
 	} catch (const string &msg) {
 		parser.error(msg);
