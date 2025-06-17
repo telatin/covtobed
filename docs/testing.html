@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing - covtobed</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-title"><a href="index.html" style="color: white; text-decoration: none;">covtobed</a></h1>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="usage-guide.html">Usage Guide</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="testing.html">Testing</a></li>
+                <li><a href="https://github.com/telatin/covtobed">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main style="margin-top: 80px;">
+        <section class="section">
+            <div class="container">
+                <h1>Testing Framework</h1>
+                
+                <div class="testing-content">
+                    <div class="ci-status">
+                        <h2>Continuous Integration</h2>
+                        <img src="https://github.com/telatin/covtobed/workflows/C/C++%20CI/badge.svg" alt="CI Status">
+                        <p>Automated testing on Ubuntu with multiple compilers (g++, clang++)</p>
+                    </div>
+                    
+                    <h2>Test Suite Overview</h2>
+                    
+                    <div class="test-features">
+                        <h3>🧪 Comprehensive Testing</h3>
+                        <p>The covtobed testing framework includes multiple layers of validation:</p>
+                        <ul>
+                            <li><strong>Unit Tests</strong>: Core functionality testing with Catch2</li>
+                            <li><strong>Integration Tests</strong>: End-to-end workflow validation</li>
+                            <li><strong>Performance Benchmarks</strong>: Speed and memory optimization</li>
+                            <li><strong>Synthetic Data Generation</strong>: Controlled test scenarios</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Running Tests</h2>
+                    
+                    <div class="test-commands">
+                        <div class="example-card">
+                            <h4>Quick Test Suite</h4>
+                            <pre><code class="language-bash"># Run the main integration test suite
+bash test/test.sh</code></pre>
+                            <p>This script tests all major functionality using pre-built test data.</p>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Enhanced Integration Tests</h4>
+                            <pre><code class="language-bash"># Run comprehensive integration tests with detailed output
+bash test/integration/test_enhanced.sh</code></pre>
+                            <p>Features colored output, performance timing, and detailed validation.</p>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Unit Tests (CMake)</h4>
+                            <pre><code class="language-bash"># Build and run unit tests
+cd test
+mkdir -p build && cd build
+cmake ..
+make
+./test_coverage</code></pre>
+                            <p>Requires bamtools development libraries and Catch2.</p>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Performance Benchmarks</h4>
+                            <pre><code class="language-bash"># Build and run benchmarks
+cd test/build
+make benchmark_coverage
+./benchmark_coverage</code></pre>
+                            <p>Uses Google Benchmark for performance analysis.</p>
+                        </div>
+                    </div>
+                    
+                    <h2>Test Data</h2>
+                    
+                    <div class="examples">
+                        <div class="example-card">
+                            <h4>Standard Test Files</h4>
+                            <ul>
+                                <li><code>test/demo.bam</code> - Main test BAM with sorted alignments</li>
+                                <li><code>test/mp.bam</code> - Mate-pair data for physical coverage</li>
+                                <li><code>test/mock.bam</code> - Synthetic data with known coverage</li>
+                                <li><code>test/stranded.bam</code> - Strand-specific test data</li>
+                                <li><code>test/unsorted.bam</code> - Unsorted BAM for error testing</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Synthetic Data Generation</h4>
+                            <pre><code class="language-bash"># Generate custom test data
+bash test/utils/simple_test_generator.sh output_prefix num_reads [coverage_pattern]
+
+# Examples:
+bash test/utils/simple_test_generator.sh custom_test 1000
+bash test/utils/simple_test_generator.sh stranded_test 500 stranded
+bash test/utils/simple_test_generator.sh single_test 200 single</code></pre>
+                        </div>
+                    </div>
+                    
+                    <h2>Test Categories</h2>
+                    
+                    <div class="examples">
+                        <div class="example-card">
+                            <h4>Functionality Tests</h4>
+                            <ul>
+                                <li>Basic coverage calculation</li>
+                                <li>Strand-specific analysis</li>
+                                <li>Physical coverage for paired reads</li>
+                                <li>Quality filtering (mapping quality, alignment validity)</li>
+                                <li>Coverage thresholds (min/max filtering)</li>
+                                <li>Output format validation (BED, counts)</li>
+                                <li>Pipeline integration (STDIN/STDOUT)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Error Handling Tests</h4>
+                            <ul>
+                                <li>Unsorted BAM detection</li>
+                                <li>Invalid file format handling</li>
+                                <li>Conflicting parameter validation</li>
+                                <li>Memory management under load</li>
+                                <li>Large file processing</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Performance Tests</h4>
+                            <ul>
+                                <li>Coverage calculation speed</li>
+                                <li>Memory usage optimization</li>
+                                <li>Priority queue performance</li>
+                                <li>Large dataset scalability</li>
+                                <li>Multi-threading efficiency</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h2>Test Infrastructure</h2>
+                    
+                    <div class="feature-card">
+                        <h3>🔧 Build Requirements</h3>
+                        <p>For full testing capabilities, install these dependencies:</p>
+                        <pre><code class="language-bash"># Ubuntu/Debian
+sudo apt update
+sudo apt install -y \
+    build-essential \
+    cmake \
+    pkg-config \
+    libbamtools-dev \
+    libjsoncpp-dev \
+    libcatch2-dev \
+    libbenchmark-dev
+
+# CentOS/RHEL (requires EPEL)
+sudo yum install -y \
+    gcc-c++ \
+    cmake \
+    pkgconfig \
+    bamtools-devel \
+    jsoncpp-devel</code></pre>
+                    </div>
+                    
+                    <h2>Test Results and Validation</h2>
+                    
+                    <div class="examples">
+                        <div class="example-card">
+                            <h4>Expected Outputs</h4>
+                            <p>The test suite validates against known outputs:</p>
+                            <ul>
+                                <li><code>test/output.bed</code> - Expected output for demo.bam</li>
+                                <li><code>test/mock.bed</code> - Expected output for mock.bam</li>
+                                <li>Dynamically generated expected results for synthetic data</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Coverage Validation</h4>
+                            <pre><code class="language-bash"># Manual validation example
+covtobed test/demo.bam > actual_output.bed
+diff actual_output.bed test/output.bed
+
+# Should show no differences for a passing test</code></pre>
+                        </div>
+                    </div>
+                    
+                    <h2>Adding New Tests</h2>
+                    
+                    <div class="example-card">
+                        <h4>Integration Test Structure</h4>
+                        <pre><code class="language-bash"># Template for new integration test
+run_test() {
+    local test_name="$1"
+    local command="$2"
+    local expected_output="$3"
+    
+    echo -n "Testing ${test_name}... "
+    
+    if eval "$command" > temp_output.bed 2>/dev/null; then
+        if diff -q temp_output.bed "$expected_output" >/dev/null 2>&1; then
+            echo -e "${GREEN}PASS${NC}"
+            return 0
+        else
+            echo -e "${RED}FAIL${NC} (output mismatch)"
+            return 1
+        fi
+    else
+        echo -e "${RED}FAIL${NC} (command failed)"
+        return 1
+    fi
+}</code></pre>
+                    </div>
+                    
+                    <div class="example-card">
+                        <h4>Unit Test Structure</h4>
+                        <pre><code class="language-cpp">// Template for new unit test
+#include <catch2/catch.hpp>
+
+TEST_CASE("New functionality test", "[category]") {
+    // Setup
+    // ... test data preparation
+    
+    SECTION("Test case description") {
+        // Test execution
+        // ... your test logic
+        
+        // Assertions
+        REQUIRE(expected_condition);
+        CHECK(optional_condition);
+    }
+}</code></pre>
+                    </div>
+                    
+                    <h2>Troubleshooting Tests</h2>
+                    
+                    <div class="feature-card">
+                        <h3>🔍 Common Issues</h3>
+                        <ul>
+                            <li><strong>Missing binary</strong>: Tests look for <code>./covtobed</code> first, then fallback to <code>binaries/</code></li>
+                            <li><strong>Permission errors</strong>: Ensure test files have read permissions</li>
+                            <li><strong>Missing dependencies</strong>: Install all required development libraries</li>
+                            <li><strong>CMake errors</strong>: Check pkg-config can find bamtools-1</li>
+                            <li><strong>Segmentation faults</strong>: May indicate test framework issues, not covtobed bugs</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Contributing Tests</h2>
+                    
+                    <div class="example-card">
+                        <h4>Test Development Guidelines</h4>
+                        <ul>
+                            <li>Add both positive and negative test cases</li>
+                            <li>Include edge cases (empty files, extreme values)</li>
+                            <li>Test error conditions and recovery</li>
+                            <li>Validate output format compliance</li>
+                            <li>Include performance regression tests</li>
+                            <li>Document expected behavior clearly</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2014-2024 Giovanni Birolo and Andrea Telatin. Licensed under MIT.</p>
+            <p>
+                <a href="https://github.com/telatin/covtobed">GitHub</a> | 
+                <a href="https://github.com/telatin/covtobed/issues">Issues</a> | 
+                <a href="https://github.com/telatin/covtobed/wiki">Wiki</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="assets/script.js"></script>
+</body>
+</html>

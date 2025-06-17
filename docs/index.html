@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>covtobed - BAM to BED Coverage Tool</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-title">covtobed</h1>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#installation">Installation</a></li>
+                <li><a href="#usage">Usage</a></li>
+                <li><a href="#testing">Testing</a></li>
+                <li><a href="#performance">Performance</a></li>
+                <li><a href="https://github.com/telatin/covtobed">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>covtobed</h1>
+                    <p class="hero-subtitle">A tool to generate BED coverage tracks from BAM files</p>
+                    <img src="images/covtobed-vignette.png" alt="covtobed workflow" class="hero-image">
+                    
+                    <div class="badges">
+                        <img src="https://img.shields.io/conda/vn/bioconda/covtobed?label=install%20from%20bioconda" alt="Bioconda">
+                        <img src="https://github.com/telatin/covtobed/actions/workflows/c-cpp.yml/badge.svg" alt="Build Status">
+                        <img src="https://img.shields.io/github/license/telatin/covtobed?color=blue" alt="License">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <h2>Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>🚀 Stream Processing</h3>
+                        <p>Read BAM files from streams and pipes, perfect for bioinformatics pipelines</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🧬 Strand-specific Analysis</h3>
+                        <p>Output coverage separately for forward and reverse strands</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📊 Physical Coverage</h3>
+                        <p>Calculate physical coverage for paired-end and mate-pair libraries</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>⚡ High Performance</h3>
+                        <p>Faster than bedtools with memory-efficient algorithms</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔧 Flexible Filtering</h3>
+                        <p>Filter by coverage, quality, length, and alignment validity</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📝 Multiple Formats</h3>
+                        <p>Output in BED format or counts format for different use cases</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="installation" class="section">
+            <div class="container">
+                <h2>Installation</h2>
+                
+                <div class="install-options">
+                    <div class="install-card">
+                        <h3>📦 Conda (Recommended)</h3>
+                        <pre><code class="language-bash">conda install -c bioconda covtobed</code></pre>
+                    </div>
+                    
+                    <div class="install-card">
+                        <h3>🐳 Docker</h3>
+                        <pre><code class="language-bash">docker pull andreatelatin/covtobed
+docker run --rm -ti andreatelatin/covtobed covtobed -h</code></pre>
+                    </div>
+                    
+                    <div class="install-card">
+                        <h3>🔨 Compile from Source</h3>
+                        <p><strong>Dependencies:</strong></p>
+                        <pre><code class="language-bash"># Ubuntu/Debian
+sudo apt install build-essential libbamtools-dev libjsoncpp-dev zlib1g-dev
+
+# Compile
+c++ -std=c++11 *.cpp -I/usr/include/bamtools -lbamtools -o covtobed -lz</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="usage" class="section">
+            <div class="container">
+                <h2>Usage</h2>
+                
+                <div class="usage-content">
+                    <h3>Basic Usage</h3>
+                    <pre><code class="language-bash">covtobed [options] [BAM]...</code></pre>
+                    
+                    <h3>Common Examples</h3>
+                    <div class="examples">
+                        <div class="example-card">
+                            <h4>Basic Coverage</h4>
+                            <pre><code class="language-bash">covtobed demo.bam > coverage.bed</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Filter Low Coverage</h4>
+                            <pre><code class="language-bash">covtobed -m 10 demo.bam > high_coverage.bed</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Strand-specific Coverage</h4>
+                            <pre><code class="language-bash">covtobed --output-strands demo.bam > stranded_coverage.bed</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Physical Coverage</h4>
+                            <pre><code class="language-bash">covtobed --physical-coverage paired.bam > physical_coverage.bed</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Pipeline Usage</h4>
+                            <pre><code class="language-bash">bwa mem genome.fa reads.fq | samtools view -bS | \
+  samtools sort | covtobed --max-cov 5 | \
+  bedtools merge > low_coverage.bed</code></pre>
+                        </div>
+                    </div>
+                    
+                    <h3>Command-line Options</h3>
+                    <div class="options-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Default</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>-h, --help</code></td>
+                                    <td>Show help message and exit</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--version</code></td>
+                                    <td>Show program version</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-q MINQ, --min-mapq=MINQ</code></td>
+                                    <td>Skip alignments with mapping quality less than MINQ</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-m MINCOV, --min-cov=MINCOV</code></td>
+                                    <td>Print BED feature only if coverage ≥ MINCOV</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-x MAXCOV, --max-cov=MAXCOV</code></td>
+                                    <td>Print BED feature only if coverage < MAXCOV</td>
+                                    <td>100000</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-l MINLEN, --min-len=MINLEN</code></td>
+                                    <td>Print BED feature only if length ≥ MINLEN</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-z MINCTG, --min-ctg-len=MINCTG</code></td>
+                                    <td>Skip reference sequences shorter than MINCTG</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-d, --discard-invalid-alignments</code></td>
+                                    <td>Skip duplicates, failed QC, non-primary alignments</td>
+                                    <td>✅ Default in v1.4.0+</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--keep-invalid-alignments</code></td>
+                                    <td>Keep duplicates, failed QC, non-primary alignments</td>
+                                    <td>Legacy behavior</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--physical-coverage</code></td>
+                                    <td>Compute physical coverage (paired alignments)</td>
+                                    <td>false</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--output-strands</code></td>
+                                    <td>Output coverage separately for each strand</td>
+                                    <td>false</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--format=CHOICE</code></td>
+                                    <td>Output format: bed or counts</td>
+                                    <td>bed</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="version-note">
+                        <h4>⚠️ Version 1.4.0 Breaking Change</h4>
+                        <p>As of version 1.4.0, <strong>invalid alignments are discarded by default</strong> (duplicates, failed QC, non-primary). Use <code>--keep-invalid-alignments</code> for legacy behavior.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testing" class="section">
+            <div class="container">
+                <h2>Testing</h2>
+                
+                <div class="testing-content">
+                    <div class="ci-status">
+                        <h3>Continuous Integration</h3>
+                        <img src="https://github.com/telatin/covtobed/actions/workflows/c-cpp.yml/badge.svg" alt="GitHub Actions">
+                        <p>This repository is automatically tested at each release by GitHub Actions.</p>
+                    </div>
+                    
+                    <h3>Enhanced Test Suite (v1.4.0+)</h3>
+                    <p>covtobed includes a comprehensive testing framework:</p>
+                    
+                    <div class="test-commands">
+                        <pre><code class="language-bash"># Run all tests (unit, integration, benchmarks)
+cd test
+bash run_tests.sh --all
+
+# Run specific test types
+bash run_tests.sh --unit        # Unit tests with Catch2
+bash run_tests.sh --integration # Enhanced integration tests
+bash run_tests.sh --benchmark   # Performance benchmarks</code></pre>
+                    </div>
+                    
+                    <div class="test-features">
+                        <h4>Testing Components:</h4>
+                        <ul>
+                            <li><strong>Unit tests</strong>: Using Catch2 framework for core classes</li>
+                            <li><strong>Integration tests</strong>: Comprehensive functional testing with colored output</li>
+                            <li><strong>Benchmarks</strong>: Performance testing with Google Benchmark</li>
+                            <li><strong>Test data generation</strong>: Synthetic BAM/SAM file creation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="performance" class="section">
+            <div class="container">
+                <h2>Performance</h2>
+                
+                <div class="performance-content">
+                    <p>covtobed is generally faster than bedtools genomecov while providing additional features.</p>
+                    
+                    <h3>Benchmark Results</h3>
+                    <div class="benchmark-results">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Operation</th>
+                                    <th>Time</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Coverage Increment</td>
+                                    <td>1.39 ns</td>
+                                    <td>Core coverage calculation</td>
+                                </tr>
+                                <tr>
+                                    <td>Priority Queue (100 items)</td>
+                                    <td>4.5 μs</td>
+                                    <td>Alignment end tracking</td>
+                                </tr>
+                                <tr>
+                                    <td>Interval Intersection</td>
+                                    <td>0.167 ns</td>
+                                    <td>Genomic interval operations</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <p>For detailed performance comparisons and benchmarking data, see the <a href="https://github.com/telatin/covtobed/tree/master/benchmark">benchmark directory</a>.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="changelog" class="section">
+            <div class="container">
+                <h2>Version History</h2>
+                
+                <div class="changelog">
+                    <div class="version">
+                        <h3>Version 1.4.0 🆕</h3>
+                        <p><strong>Breaking change</strong>: Default behavior now discards invalid alignments. Added <code>--keep-invalid-alignments</code> flag for legacy behavior. Improved error checking for conflicting flags.</p>
+                    </div>
+                    
+                    <div class="version">
+                        <h3>Version 1.3.x</h3>
+                        <p>Enhanced filtering and output options</p>
+                    </div>
+                    
+                    <div class="version">
+                        <h3>Version 1.2.0</h3>
+                        <p>Introduced the <code>-z</code> flag to skip reference shorter than a specified length (useful in fragmented metagenomic datasets)</p>
+                    </div>
+                    
+                    <div class="version">
+                        <h3>Version 1.1.0</h3>
+                        <p>New feature: <code>-d, --discard-invalid-alignments</code> flag to discard invalid alignments (PCR duplicates, failing QC, supplementary)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2014-2024 Giovanni Birolo and Andrea Telatin. Licensed under MIT.</p>
+            <p>
+                <a href="https://github.com/telatin/covtobed">GitHub</a> | 
+                <a href="https://github.com/telatin/covtobed/issues">Issues</a> | 
+                <a href="https://github.com/telatin/covtobed/wiki">Wiki</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="assets/script.js"></script>
+</body>
+</html>

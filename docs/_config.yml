@@ -1,0 +1,41 @@
+title: covtobed
+description: A tool to generate BED coverage tracks from BAM files
+url: https://telatin.github.io/covtobed
+baseurl: /covtobed
+
+# GitHub Pages settings
+remote_theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Exclude files
+exclude:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/
+
+# Markdown settings
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+# Collections
+collections:
+  docs:
+    output: true
+    permalink: /:collection/:name/
+
+defaults:
+  - scope:
+      path: ""
+      type: "docs"
+    values:
+      layout: "default"

@@ -1,0 +1,177 @@
+name: CMake Test Suite
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          pkg-config \
+          catch2 \
+          libbenchmark-dev \
+          libbamtools-dev \
+          libjsoncpp-dev \
+          zlib1g-dev \
+          samtools \
+          valgrind \
+          bc
+          
+    - name: Set up compiler
+      run: |
+        if [ "${{ matrix.compiler }}" = "clang" ]; then
+          sudo apt-get install -y clang
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
+        else
+          echo "CC=gcc" >> $GITHUB_ENV
+          echo "CXX=g++" >> $GITHUB_ENV
+        fi
+        
+    - name: Build covtobed
+      run: |
+        $CXX -std=c++17 *.cpp -I/usr/include/bamtools -lbamtools -o covtobed -lz
+        
+    - name: Verify covtobed build
+      run: |
+        ./covtobed --version
+        
+    - name: Configure CMake test suite
+      working-directory: test
+      run: |
+        rm -rf build
+        mkdir -p build
+        cd build
+        cmake ..
+        
+    - name: Build test suite
+      working-directory: test/build
+      run: |
+        make -j$(nproc)
+        
+    - name: Generate synthetic test data
+      working-directory: test/build
+      run: |
+        make generate_test_data
+        
+    - name: Run unit tests
+      working-directory: test/build
+      run: |
+        ./unit/unit_tests --reporter=xml --out=unit_test_results.xml
+        
+    - name: Run integration tests
+      run: |
+        cd test
+        bash integration/test_enhanced.sh
+        
+    - name: Run benchmarks (quick)
+      working-directory: test/build
+      run: |
+        timeout 60s ./benchmark/benchmark_coverage --benchmark_min_time=0.1s || true
+        
+    - name: Run original test suite (compatibility)
+      run: |
+        bash test/test.sh
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.compiler }}
+        path: |
+          test/build/unit_test_results.xml
+          test/data/synthetic/
+          
+    - name: Memory check (gcc only)
+      if: matrix.compiler == 'gcc'
+      run: |
+        valgrind --tool=memcheck --leak-check=full --error-exitcode=1 \
+          ./covtobed test/demo.bam > /dev/null
+          
+  test-minimal:
+    name: Test minimal dependencies
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install minimal dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          libbamtools-dev \
+          libjsoncpp-dev \
+          zlib1g-dev
+          
+    - name: Build covtobed (minimal)
+      run: |
+        g++ -std=c++17 *.cpp -I/usr/include/bamtools -lbamtools -o covtobed -lz
+        
+    - name: Test basic functionality
+      run: |
+        ./covtobed --version
+        ./covtobed test/demo.bam > /dev/null
+        
+  cross-platform:
+    name: Cross-platform compatibility
+    strategy:
+      matrix:
+        os: [ubuntu-22.04]
+        
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          pkg-config \
+          libbamtools-dev \
+          libjsoncpp-dev \
+          zlib1g-dev
+          
+        # Install testing frameworks if available
+        sudo apt-get install -y catch2 libbenchmark-dev || true
+        
+    - name: Build covtobed
+      run: |
+        g++ -std=c++17 *.cpp -I/usr/include/bamtools -lbamtools -o covtobed -lz
+        
+    - name: Run basic tests
+      run: |
+        ./covtobed --version
+        bash test/test.sh
+        
+    - name: Build test suite (if dependencies available)
+      run: |
+        if pkg-config --exists catch2 2>/dev/null; then
+          cd test
+          rm -rf build
+          mkdir -p build
+          cd build
+          cmake .. && make -j$(nproc) || echo "Test suite build failed, continuing..."
+        fi

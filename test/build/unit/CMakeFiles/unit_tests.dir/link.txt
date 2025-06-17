@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/unit_tests.dir/test_main.cpp.o CMakeFiles/unit_tests.dir/test_coverage.cpp.o CMakeFiles/unit_tests.dir/test_intervals.cpp.o CMakeFiles/unit_tests.dir/test_output.cpp.o -o unit_tests  /usr/lib/libCatch2Main.a -lbamtools -lz /usr/lib/libCatch2.a

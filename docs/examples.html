@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examples - covtobed</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-title"><a href="index.html" style="color: white; text-decoration: none;">covtobed</a></h1>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="usage-guide.html">Usage Guide</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="testing.html">Testing</a></li>
+                <li><a href="https://github.com/telatin/covtobed">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main style="margin-top: 80px;">
+        <section class="section">
+            <div class="container">
+                <h1>Examples</h1>
+                
+                <div class="usage-content">
+                    <h2>Basic Coverage Analysis</h2>
+                    
+                    <div class="example-card">
+                        <h4>Simple Coverage Track</h4>
+                        <p>Generate a basic coverage track from a sorted BAM file:</p>
+                        <pre><code class="language-bash">covtobed sample.bam > coverage.bed</code></pre>
+                        
+                        <p><strong>Example output:</strong></p>
+                        <pre><code>chr1    0       1000    0
+chr1    1000    1050    5
+chr1    1050    1200    12
+chr1    1200    1500    8
+chr1    1500    2000    0</code></pre>
+                    </div>
+                    
+                    <h2>Quality Control Workflows</h2>
+                    
+                    <div class="examples">
+                        <div class="example-card">
+                            <h4>Detect Low Coverage Regions</h4>
+                            <pre><code class="language-bash"># Find regions with coverage less than 10x
+covtobed -x 10 sample.bam > low_coverage.bed
+
+# Merge adjacent low coverage regions
+bedtools merge -i low_coverage.bed -d 100 > merged_low_coverage.bed
+
+# Get summary statistics
+awk '{sum += $3-$2} END {print "Total low coverage bp:", sum}' merged_low_coverage.bed</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Identify High Coverage Regions</h4>
+                            <pre><code class="language-bash"># Find regions with coverage greater than 100x (potential PCR duplicates)
+covtobed -m 100 sample.bam > high_coverage.bed
+
+# Calculate coverage statistics
+awk '{print $4}' high_coverage.bed | sort -n | \
+awk '{a[i++]=$1} END {print "Max coverage:", a[i-1]; print "95th percentile:", a[int(i*0.95)]}'</code></pre>
+                        </div>
+                    </div>
+                    
+                    <h2>Target Enrichment Analysis</h2>
+                    
+                    <div class="example-card">
+                        <h4>Evaluate Target Coverage</h4>
+                        <pre><code class="language-bash"># Generate coverage for target enrichment data
+covtobed -q 20 enriched_sample.bam > enriched_coverage.bed
+
+# Find well-covered targets (≥20x)
+covtobed -m 20 enriched_sample.bam > well_covered.bed
+
+# Intersect with target regions
+bedtools intersect -a targets.bed -b well_covered.bed -wa -wb > covered_targets.bed
+
+# Calculate target coverage statistics
+bedtools intersect -a targets.bed -b enriched_coverage.bed -wa -wb | \
+awk '{sum+=$7*($6-$5); len+=$6-$5} END {print "Mean target coverage:", sum/len}'</code></pre>
+                    </div>
+                    
+                    <h2>Strand-Specific Analysis</h2>
+                    
+                    <div class="examples">
+                        <div class="example-card">
+                            <h4>RNA-seq Strand Bias Detection</h4>
+                            <pre><code class="language-bash"># Generate strand-specific coverage
+covtobed --output-strands rnaseq.bam > stranded_coverage.bed
+
+# Find regions with significant strand bias
+awk 'abs($4-$5) > 10 && ($4+$5) > 20' stranded_coverage.bed > strand_biased.bed
+
+# Calculate strand bias ratio
+awk '{if($4+$5>0) print $1,$2,$3,$4/($4+$5)}' stranded_coverage.bed > strand_ratios.bed</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>TradIS/Tn-seq Analysis</h4>
+                            <pre><code class="language-bash"># Analyze transposon insertion sites with strand information
+covtobed --output-strands tradis.bam > tradis_coverage.bed
+
+# Find upregulated regions (high forward strand coverage)
+awk '$4 > 50 && $4 > $5*2' tradis_coverage.bed > upregulated_regions.bed
+
+# Find downregulated regions (high reverse strand coverage)  
+awk '$5 > 50 && $5 > $4*2' tradis_coverage.bed > downregulated_regions.bed</code></pre>
+                        </div>
+                    </div>
+                    
+                    <h2>Physical Coverage Analysis</h2>
+                    
+                    <div class="example-card">
+                        <h4>Mate-Pair Library Analysis</h4>
+                        <p>Physical coverage shows the span between paired reads, useful for assembly validation:</p>
+                        <pre><code class="language-bash"># Calculate physical coverage for mate-pair data
+covtobed --physical-coverage mate_pairs.bam > physical_coverage.bed
+
+# Compare with regular coverage
+covtobed mate_pairs.bam > regular_coverage.bed
+
+# Find regions with good physical coverage but low read coverage (gaps between mates)
+bedtools intersect -a physical_coverage.bed -b regular_coverage.bed -v > mate_pair_gaps.bed</code></pre>
+                        
+                        <img src="images/phy.png" alt="Physical coverage example" style="max-width: 600px; margin: 1rem 0;">
+                    </div>
+                    
+                    <h2>Pipeline Integration</h2>
+                    
+                    <div class="examples">
+                        <div class="example-card">
+                            <h4>Complete Alignment to Coverage Pipeline</h4>
+                            <pre><code class="language-bash">#!/bin/bash
+# Complete pipeline from FASTQ to coverage analysis
+
+GENOME="reference.fa"
+READS1="sample_R1.fastq.gz"
+READS2="sample_R2.fastq.gz"
+SAMPLE="sample_name"
+
+# Alignment and sorting
+bwa mem -t 8 "$GENOME" "$READS1" "$READS2" | \
+  samtools view -bS | \
+  samtools sort -o "${SAMPLE}.bam"
+
+# Generate coverage with quality filtering
+export COVTOBED_QUIET=1
+covtobed -q 20 "${SAMPLE}.bam" > "${SAMPLE}_coverage.bed"
+
+# Quality control reports
+echo "=== Coverage Statistics for $SAMPLE ==="
+awk '{sum+=$4*($3-$2); len+=$3-$2} END {print "Mean coverage:", sum/len}' "${SAMPLE}_coverage.bed"
+
+# Low coverage regions
+covtobed -x 10 "${SAMPLE}.bam" | \
+  bedtools merge -d 50 > "${SAMPLE}_low_coverage.bed"
+
+echo "Low coverage regions (<10x):"
+awk '{sum+=$3-$2} END {print sum " bp"}' "${SAMPLE}_low_coverage.bed"</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Multi-Sample Coverage Comparison</h4>
+                            <pre><code class="language-bash">#!/bin/bash
+# Compare coverage across multiple samples
+
+SAMPLES=("sample1" "sample2" "sample3")
+
+# Generate coverage for all samples
+for sample in "${SAMPLES[@]}"; do
+    covtobed "${sample}.bam" > "${sample}_coverage.bed"
+done
+
+# Create a unified coverage track
+bedtools unionbedg -i *_coverage.bed > combined_coverage.bedgraph
+
+# Find consistently low coverage regions across all samples
+awk 'NF==6 && $4<10 && $5<10 && $6<10' combined_coverage.bedgraph > consistently_low.bed
+
+# Generate summary report
+echo "Coverage comparison summary:"
+for sample in "${SAMPLES[@]}"; do
+    mean_cov=$(awk '{sum+=$4*($3-$2); len+=$3-$2} END {print sum/len}' "${sample}_coverage.bed")
+    echo "$sample: mean coverage = $mean_cov"
+done</code></pre>
+                        </div>
+                    </div>
+                    
+                    <h2>Advanced Filtering Examples</h2>
+                    
+                    <div class="examples">
+                        <div class="example-card">
+                            <h4>Version 1.4.0+ Filtering (Default Behavior)</h4>
+                            <pre><code class="language-bash"># Default: automatically filters invalid alignments
+covtobed sample.bam > filtered_coverage.bed
+
+# Equivalent explicit command
+covtobed -d sample.bam > filtered_coverage.bed
+
+# High-quality coverage only
+covtobed -q 30 sample.bam > high_quality_coverage.bed</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Legacy Behavior (Include All Alignments)</h4>
+                            <pre><code class="language-bash"># Include duplicates, failed QC, and non-primary alignments
+covtobed --keep-invalid-alignments sample.bam > all_alignments_coverage.bed
+
+# Compare filtered vs unfiltered
+echo "Filtered coverage:"
+awk '{sum+=$4*($3-$2); len+=$3-$2} END {print "Mean:", sum/len}' filtered_coverage.bed
+
+echo "Unfiltered coverage:"
+awk '{sum+=$4*($3-$2); len+=$3-$2} END {print "Mean:", sum/len}' all_alignments_coverage.bed</code></pre>
+                        </div>
+                    </div>
+                    
+                    <h2>Assembly Quality Assessment</h2>
+                    
+                    <div class="example-card">
+                        <h4>Metagenomic Assembly Coverage</h4>
+                        <pre><code class="language-bash"># Skip small contigs common in fragmented assemblies
+covtobed -z 1000 metagenome_reads.bam > assembly_coverage.bed
+
+# Calculate per-contig coverage statistics
+awk '{contig=$1; cov+=$4*($3-$2); len+=$3-$2} 
+     contig!=last {if(last) print last, cov/len; cov=0; len=0; last=contig}
+     END {print contig, cov/len}' assembly_coverage.bed > contig_mean_coverage.txt
+
+# Find well-covered contigs (>10x mean coverage)
+awk '$2 > 10' contig_mean_coverage.txt > well_covered_contigs.txt</code></pre>
+                    </div>
+                    
+                    <h2>Output Format Examples</h2>
+                    
+                    <div class="examples">
+                        <div class="example-card">
+                            <h4>BED Format (Default)</h4>
+                            <pre><code class="language-bash">covtobed sample.bam</code></pre>
+                            <p><strong>Output:</strong></p>
+                            <pre><code>chr1    0       100     0
+chr1    100     200     15
+chr1    200     300     23
+chr1    300     400     18</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Counts Format</h4>
+                            <pre><code class="language-bash">covtobed --format counts sample.bam</code></pre>
+                            <p><strong>Output:</strong></p>
+                            <pre><code>>chr1
+0    100
+15   100
+23   100
+18   100</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Stranded BED Format</h4>
+                            <pre><code class="language-bash">covtobed --output-strands sample.bam</code></pre>
+                            <p><strong>Output (chr, start, end, forward_cov, reverse_cov):</strong></p>
+                            <pre><code>chr1    100     200     8       7
+chr1    200     300     12      11
+chr1    300     400     10      8</code></pre>
+                        </div>
+                    </div>
+                    
+                    <h2>Integration with Other Tools</h2>
+                    
+                    <div class="examples">
+                        <div class="example-card">
+                            <h4>With bedtools</h4>
+                            <pre><code class="language-bash"># Merge adjacent regions with same coverage
+covtobed sample.bam | bedtools merge -c 4 -o mean > merged_coverage.bed
+
+# Intersect coverage with gene annotations
+bedtools intersect -a genes.bed -b coverage.bed -wa -wb > gene_coverage.bed
+
+# Find coverage gaps in exons
+bedtools intersect -a exons.bed -b coverage.bed -v > uncovered_exons.bed</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>With samtools</h4>
+                            <pre><code class="language-bash"># Pre-filter with samtools before coverage analysis
+samtools view -q 30 -F 1804 sample.bam | \
+  samtools view -bS | \
+  covtobed > high_quality_coverage.bed
+
+# Process specific chromosomes
+samtools view -b sample.bam chr1 chr2 chr3 | \
+  covtobed > main_chromosomes_coverage.bed</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>With awk for custom analysis</h4>
+                            <pre><code class="language-bash"># Calculate coverage distribution
+covtobed sample.bam | \
+  awk '{print $4}' | \
+  sort -n | \
+  uniq -c | \
+  awk '{print $2, $1}' > coverage_distribution.txt
+
+# Find regions with exactly zero coverage
+covtobed sample.bam | \
+  awk '$4 == 0' > zero_coverage_regions.bed
+
+# Coverage-weighted GC content (if you have GC content data)
+bedtools intersect -a coverage.bed -b gc_content.bed -wa -wb | \
+  awk '{sum+=$4*$8*($3-$2); total+=$4*($3-$2)} END {print "GC-weighted by coverage:", sum/total}'</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2014-2024 Giovanni Birolo and Andrea Telatin. Licensed under MIT.</p>
+            <p>
+                <a href="https://github.com/telatin/covtobed">GitHub</a> | 
+                <a href="https://github.com/telatin/covtobed/issues">Issues</a> | 
+                <a href="https://github.com/telatin/covtobed/wiki">Wiki</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="assets/script.js"></script>
+</body>
+</html>
