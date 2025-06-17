@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/benchmark_coverage.dir/benchmark_coverage.cpp.o -o benchmark_coverage  /usr/lib/x86_64-linux-gnu/libbenchmark.so.1.8.3 -lbamtools -lz -lpthread

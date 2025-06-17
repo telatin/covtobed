@@ -16,7 +16,7 @@ using namespace std;
 typedef uint32_t DepthType; // type for depth of coverage, kept it small
 const char ref_char = '>';  // reference prefix for "counts" output
 
-const string VERSION = "%prog 1.3.5"
+const string VERSION = "%prog 1.4.0"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"https://github.com/telatin/covtobed - License MIT"
 	".\n"

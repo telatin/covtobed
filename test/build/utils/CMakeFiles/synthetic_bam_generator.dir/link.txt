@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/synthetic_bam_generator.dir/synthetic_bam_generator.cpp.o -o synthetic_bam_generator  -lbamtools -lz

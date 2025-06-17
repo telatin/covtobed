@@ -1,0 +1,17 @@
+/home/telatina/git/covtobed/test/build/CMakeFiles/run_all_tests.dir
+/home/telatina/git/covtobed/test/build/CMakeFiles/run_all_benchmarks.dir
+/home/telatina/git/covtobed/test/build/CMakeFiles/generate_test_data.dir
+/home/telatina/git/covtobed/test/build/CMakeFiles/test_comprehensive.dir
+/home/telatina/git/covtobed/test/build/CMakeFiles/edit_cache.dir
+/home/telatina/git/covtobed/test/build/CMakeFiles/rebuild_cache.dir
+/home/telatina/git/covtobed/test/build/unit/CMakeFiles/unit_tests.dir
+/home/telatina/git/covtobed/test/build/unit/CMakeFiles/run_unit_tests.dir
+/home/telatina/git/covtobed/test/build/unit/CMakeFiles/edit_cache.dir
+/home/telatina/git/covtobed/test/build/unit/CMakeFiles/rebuild_cache.dir
+/home/telatina/git/covtobed/test/build/benchmark/CMakeFiles/benchmark_coverage.dir
+/home/telatina/git/covtobed/test/build/benchmark/CMakeFiles/run_benchmarks.dir
+/home/telatina/git/covtobed/test/build/benchmark/CMakeFiles/benchmark_results.dir
+/home/telatina/git/covtobed/test/build/benchmark/CMakeFiles/edit_cache.dir
+/home/telatina/git/covtobed/test/build/benchmark/CMakeFiles/rebuild_cache.dir
+/home/telatina/git/covtobed/test/build/utils/CMakeFiles/edit_cache.dir
+/home/telatina/git/covtobed/test/build/utils/CMakeFiles/rebuild_cache.dir
