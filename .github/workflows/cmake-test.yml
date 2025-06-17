@@ -25,7 +25,7 @@ jobs:
           build-essential \
           cmake \
           pkg-config \
-          libcatch2-dev \
+          catch2 \
           libbenchmark-dev \
           libbamtools-dev \
           libjsoncpp-dev \
@@ -155,7 +155,7 @@ jobs:
           zlib1g-dev
           
         # Install testing frameworks if available
-        sudo apt-get install -y libcatch2-dev libbenchmark-dev || true
+        sudo apt-get install -y catch2 libbenchmark-dev || true
         
     - name: Build covtobed
       run: |
