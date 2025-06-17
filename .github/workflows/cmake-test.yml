@@ -25,7 +25,7 @@ jobs:
           build-essential \
           cmake \
           pkg-config \
-          catch2 \
+          libcatch2-dev \
           libbenchmark-dev \
           libbamtools-dev \
           libjsoncpp-dev \
@@ -56,7 +56,8 @@ jobs:
     - name: Configure CMake test suite
       working-directory: test
       run: |
-        mkdir build
+        rm -rf build
+        mkdir -p build
         cd build
         cmake ..
         
@@ -154,7 +155,7 @@ jobs:
           zlib1g-dev
           
         # Install testing frameworks if available
-        sudo apt-get install -y catch2 libbenchmark-dev || true
+        sudo apt-get install -y libcatch2-dev libbenchmark-dev || true
         
     - name: Build covtobed
       run: |
@@ -167,8 +168,9 @@ jobs:
         
     - name: Build test suite (if dependencies available)
       run: |
-        if command -v catch2 >/dev/null 2>&1; then
+        if pkg-config --exists catch2 2>/dev/null; then
           cd test
+          rm -rf build
           mkdir -p build
           cd build
           cmake .. && make -j$(nproc) || echo "Test suite build failed, continuing..."

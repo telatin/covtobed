@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usage Guide - covtobed</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-title"><a href="index.html" style="color: white; text-decoration: none;">covtobed</a></h1>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="usage-guide.html">Usage Guide</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="testing.html">Testing</a></li>
+                <li><a href="https://github.com/telatin/covtobed">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main style="margin-top: 80px;">
+        <section class="section">
+            <div class="container">
+                <h1>Usage Guide</h1>
+                
+                <div class="usage-content">
+                    <h2>Basic Syntax</h2>
+                    <pre><code class="language-bash">covtobed [options] [BAM_files...]</code></pre>
+                    
+                    <h2>Input Requirements</h2>
+                    <div class="feature-card">
+                        <h3>BAM File Requirements</h3>
+                        <ul>
+                            <li><strong>Sorted BAM files</strong>: Input must be coordinate-sorted</li>
+                            <li><strong>Index not required</strong>: BAM index (.bai) is not needed</li>
+                            <li><strong>Stream support</strong>: Can read from STDIN for pipeline integration</li>
+                            <li><strong>Multiple files</strong>: Can process multiple BAM files simultaneously</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Filtering Options</h2>
+                    
+                    <h3>Coverage Filtering</h3>
+                    <div class="example-card">
+                        <h4>Minimum Coverage Filter</h4>
+                        <pre><code class="language-bash"># Only output regions with coverage >= 10
+covtobed -m 10 input.bam
+
+# Detect low coverage regions (coverage < 5)
+covtobed -x 5 input.bam</code></pre>
+                    </div>
+                    
+                    <div class="example-card">
+                        <h4>Coverage Range Filter</h4>
+                        <pre><code class="language-bash"># Output regions with coverage between 10 and 100
+covtobed -m 10 -x 100 input.bam</code></pre>
+                    </div>
+                    
+                    <h3>Quality Filtering</h3>
+                    <div class="example-card">
+                        <h4>Mapping Quality Filter</h4>
+                        <pre><code class="language-bash"># Only consider alignments with mapping quality >= 20
+covtobed -q 20 input.bam</code></pre>
+                    </div>
+                    
+                    <h3>Alignment Validity Filtering (v1.4.0+)</h3>
+                    <div class="version-note">
+                        <h4>⚠️ Breaking Change in v1.4.0</h4>
+                        <p>Invalid alignments (duplicates, failed QC, non-primary) are now <strong>discarded by default</strong>.</p>
+                    </div>
+                    
+                    <div class="example-card">
+                        <h4>Default Behavior (v1.4.0+)</h4>
+                        <pre><code class="language-bash"># Automatically discards invalid alignments
+covtobed input.bam
+
+# Equivalent explicit command
+covtobed -d input.bam</code></pre>
+                    </div>
+                    
+                    <div class="example-card">
+                        <h4>Legacy Behavior</h4>
+                        <pre><code class="language-bash"># Keep all alignments (pre-v1.4.0 behavior)
+covtobed --keep-invalid-alignments input.bam</code></pre>
+                    </div>
+                    
+                    <h3>Length and Reference Filtering</h3>
+                    <div class="example-card">
+                        <h4>Minimum Feature Length</h4>
+                        <pre><code class="language-bash"># Only output features with length >= 50bp
+covtobed -l 50 input.bam</code></pre>
+                    </div>
+                    
+                    <div class="example-card">
+                        <h4>Skip Short Contigs</h4>
+                        <pre><code class="language-bash"># Skip reference sequences shorter than 1000bp
+covtobed -z 1000 input.bam</code></pre>
+                    </div>
+                    
+                    <h2>Output Formats</h2>
+                    
+                    <h3>BED Format (Default)</h3>
+                    <pre><code class="language-bash">covtobed input.bam</code></pre>
+                    <p>Output format:</p>
+                    <pre><code>chr1    100    200    10
+chr1    200    300    15
+chr1    300    400    8</code></pre>
+                    
+                    <h3>Counts Format</h3>
+                    <pre><code class="language-bash">covtobed --format counts input.bam</code></pre>
+                    <p>Output format:</p>
+                    <pre><code>>chr1
+10    100
+15    100
+8     100</code></pre>
+                    
+                    <h3>Strand-Specific Output</h3>
+                    <pre><code class="language-bash">covtobed --output-strands input.bam</code></pre>
+                    <p>Output format (forward, reverse coverage):</p>
+                    <pre><code>chr1    100    200    6    4
+chr1    200    300    8    7
+chr1    300    400    5    3</code></pre>
+                    
+                    <h2>Special Coverage Modes</h2>
+                    
+                    <h3>Physical Coverage</h3>
+                    <p>For paired-end sequencing, physical coverage represents the span between read pairs.</p>
+                    
+                    <div class="example-card">
+                        <h4>Calculate Physical Coverage</h4>
+                        <pre><code class="language-bash"># Requires properly paired reads
+covtobed --physical-coverage paired_end.bam</code></pre>
+                    </div>
+                    
+                    <img src="images/phy.png" alt="Physical coverage illustration" style="max-width: 600px; margin: 1rem 0;">
+                    
+                    <h2>Pipeline Integration</h2>
+                    
+                    <h3>Reading from STDIN</h3>
+                    <div class="example-card">
+                        <h4>Complete Pipeline</h4>
+                        <pre><code class="language-bash"># Alignment, sorting, and coverage in one pipeline
+bwa mem genome.fa reads_1.fq reads_2.fq | \
+  samtools view -bS | \
+  samtools sort | \
+  covtobed --min-cov 5 > coverage.bed</code></pre>
+                    </div>
+                    
+                    <div class="example-card">
+                        <h4>Low Coverage Detection Pipeline</h4>
+                        <pre><code class="language-bash"># Find regions with coverage < 10 and merge adjacent regions
+covtobed --max-cov 10 input.bam | \
+  bedtools merge -d 100 > low_coverage_regions.bed</code></pre>
+                    </div>
+                    
+                    <h3>Suppress Startup Message</h3>
+                    <p>When reading from STDIN, covtobed shows a startup message. To suppress it:</p>
+                    <pre><code class="language-bash">export COVTOBED_QUIET=1
+samtools view -b input.sam | covtobed</code></pre>
+                    
+                    <h2>Performance Tips</h2>
+                    
+                    <div class="feature-card">
+                        <h3>🚀 Optimization Guidelines</h3>
+                        <ul>
+                            <li><strong>Pre-sort BAM files</strong>: Ensures optimal performance</li>
+                            <li><strong>Use quality filters</strong>: <code>-q 20</code> reduces noise</li>
+                            <li><strong>Filter early</strong>: Apply upstream filters with samtools when possible</li>
+                            <li><strong>Stream processing</strong>: Use pipes to avoid intermediate files</li>
+                            <li><strong>Skip small contigs</strong>: Use <code>-z</code> for fragmented assemblies</li>
+                        </ul>
+                    </div>
+                    
+                    <h2>Common Use Cases</h2>
+                    
+                    <div class="examples">
+                        <div class="example-card">
+                            <h4>Quality Control</h4>
+                            <pre><code class="language-bash"># Detect regions with no coverage
+covtobed -x 1 input.bam > uncovered.bed
+
+# Find high-coverage regions (potential duplicates)
+covtobed -m 100 input.bam > high_coverage.bed</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Target Enrichment Analysis</h4>
+                            <pre><code class="language-bash"># Check target coverage
+covtobed -m 20 enriched.bam > well_covered_targets.bed
+
+# Intersect with target regions
+bedtools intersect -a targets.bed -b well_covered_targets.bed</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Strand Bias Detection</h4>
+                            <pre><code class="language-bash"># Output strand-specific coverage for analysis
+covtobed --output-strands input.bam | \
+  awk 'abs($4-$5) > 10' > strand_biased_regions.bed</code></pre>
+                        </div>
+                        
+                        <div class="example-card">
+                            <h4>Assembly Quality Assessment</h4>
+                            <pre><code class="language-bash"># Physical coverage for mate-pair libraries
+covtobed --physical-coverage mate_pairs.bam > assembly_coverage.bed
+
+# Skip small contigs in fragmented assemblies
+covtobed -z 1000 assembly_reads.bam > contig_coverage.bed</code></pre>
+                        </div>
+                    </div>
+                    
+                    <h2>Error Handling</h2>
+                    
+                    <div class="feature-card">
+                        <h3>Common Errors and Solutions</h3>
+                        <ul>
+                            <li><strong>"BAM not sorted"</strong>: Sort BAM with <code>samtools sort</code></li>
+                            <li><strong>"Cannot read BAM"</strong>: Check file permissions and format</li>
+                            <li><strong>"Coverage not zero at end"</strong>: Run <code>samtools fixmate</code></li>
+                            <li><strong>Conflicting flags</strong>: Don't use both <code>-d</code> and <code>--keep-invalid-alignments</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2014-2024 Giovanni Birolo and Andrea Telatin. Licensed under MIT.</p>
+            <p>
+                <a href="https://github.com/telatin/covtobed">GitHub</a> | 
+                <a href="https://github.com/telatin/covtobed/issues">Issues</a> | 
+                <a href="https://github.com/telatin/covtobed/wiki">Wiki</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="assets/script.js"></script>
+</body>
+</html>
