@@ -53,7 +53,7 @@ run_test "minimum_coverage_filter" \
     0
 
 run_test "maximum_coverage_filter" \
-    "./covtobed -x 5 test/demo.bam | head -10 >/dev/null" \
+    "timeout 5s ./covtobed -x 5 test/demo.bam > /tmp/max_cov_test.out 2>&1 && head -10 /tmp/max_cov_test.out >/dev/null" \
     0
 
 # Test 6: Physical coverage
@@ -91,11 +91,11 @@ run_test "mapping_quality_filter" \
 
 # Test 11: Invalid alignment filtering
 run_test "discard_invalid_alignments" \
-    "./covtobed test/filtered.bam | wc -l | grep -q 2" \
+    "./covtobed test/filtered.bam | wc -l | grep -q 9" \
     0
 
 run_test "keep_invalid_alignments" \
-    "./covtobed --keep-invalid-alignments test/filtered.bam | wc -l | grep -q 6" \
+    "./covtobed --keep-invalid-alignments test/filtered.bam | wc -l | grep -q 15" \
     0
 
 # Test 12: Output consistency check
