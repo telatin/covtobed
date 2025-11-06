@@ -5,11 +5,9 @@
 #include <iostream>
 #include <map>
 #include <memory>
-#include <optional>
 #include <queue>
 #include <stdexcept>
 #include <string>
-#include <string_view>
 #include <vector>
 #include <api/BamMultiReader.h>
 #include <api/BamAlignment.h>
@@ -18,12 +16,12 @@
 using DepthType = std::uint32_t; // type for depth of coverage, kept it small
 constexpr char ref_char = '>';  // reference prefix for "counts" output
 
-constexpr std::string_view VERSION = "%prog 1.4.0"
-	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
-	"https://github.com/telatin/covtobed - License MIT"
-	".\n"
-	"This is free software: you are free to change and redistribute it.\n"
-	"There is NO WARRANTY, to the extent permitted by law.";
+constexpr const char VERSION[] = "%prog 1.4.0"
+        "\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
+        "https://github.com/telatin/covtobed - License MIT"
+        ".\n"
+        "This is free software: you are free to change and redistribute it.\n"
+        "There is NO WARRANTY, to the extent permitted by law.";
 
 #define debug if(false)
 
@@ -123,18 +121,19 @@ class Output {
                 enum class Format { Bed, Counts };
 
                 // class constructor
-                Output(std::ostream &o, std::string_view f, bool s=false, int m=0, int x=100000, int l=1)
-                        : out(o), format(parse_format(f)), strands(s), mincov(m), maxcov(x), minlen(l) {
+                Output(std::ostream &o, const std::string &f, bool s=false, int m=0, int x=100000, int l=1)
+                        : out(o), format(parse_format(f)), strands(s), mincov(m), maxcov(x), minlen(l),
+                          has_last_interval(false) {
                 }
 
                 // write interval to bed
                 void operator() (const Interval &i, const Coverage &c) {
                         // can the last interval be extended with the same coverage?
-                        if (last_interval && last_coverage && i.ref == last_interval->ref && i.start == last_interval->end && last_coverage->equal(c, strands))
+                        if (has_last_interval && i.ref == last_interval.ref && i.start == last_interval.end && last_coverage.equal(c, strands))
                                 // extend previous interval
-                                last_interval->end = i.end;
+                                last_interval.end = i.end;
                         else {
-                                const bool ref_changed = !last_interval || i.ref != last_interval->ref;
+                                const bool ref_changed = !has_last_interval || i.ref != last_interval.ref;
                                 // output previous interval
                                 flush();
                                 if (ref_changed)
@@ -148,6 +147,7 @@ class Output {
                                         }
                                 last_interval = i;
                                 last_coverage = c;
+                                has_last_interval = true;
                         }
                 }
                 ~Output() {
@@ -155,10 +155,9 @@ class Output {
                 }
         private:
                 void flush() {
-                        if (last_interval && last_coverage) {
-                                write(*last_interval, *last_coverage);
-                                last_interval.reset();
-                                last_coverage.reset();
+                        if (has_last_interval) {
+                                write(last_interval, last_coverage);
+                                has_last_interval = false;
                         }
                 }
                 void write(const Interval &i, const Coverage &c) {
@@ -184,12 +183,12 @@ class Output {
                         else
                                 out  << static_cast<DepthType>(c);
                 }
-                static Format parse_format(std::string_view format_str) {
+                static Format parse_format(const std::string &format_str) {
                         if (format_str == "bed")
                                 return Format::Bed;
                         if (format_str == "counts")
                                 return Format::Counts;
-                        throw std::invalid_argument("unknown format specification: \"" + std::string(format_str) + "\"");
+                        throw std::invalid_argument("unknown format specification: \"" + format_str + "\"");
                 }
 
 
@@ -199,8 +198,9 @@ class Output {
                 const int mincov;
                 const int maxcov;
                 const int minlen;
-                std::optional<Interval> last_interval;
-                std::optional<Coverage> last_coverage;
+                Interval last_interval;
+                Coverage last_coverage;
+                bool has_last_interval;
 };
 
 int main(int argc, char *argv[]) {

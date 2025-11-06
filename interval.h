@@ -162,18 +162,23 @@ class Intervals {
 			return true;
 		}
 
-		void sort() {
-			for (auto &[ref_name, intervals] : intervals_by_ref)
-				std::sort(intervals.begin(), intervals.end());
-		}
+                void sort() {
+                        for (std::map<std::string, std::vector<Interval> >::iterator it = intervals_by_ref.begin();
+                             it != intervals_by_ref.end(); ++it) {
+                                std::vector<Interval> &intervals = it->second;
+                                std::sort(intervals.begin(), intervals.end());
+                        }
+                }
 
 
 		bool has_names() const noexcept { return _has_names; }
 
                 std::size_t count() const noexcept {
                         std::size_t acc = 0;
-                        for (const auto &[ref_name, intervals] : intervals_by_ref)
-                                acc += intervals.size();
+                        for (std::map<std::string, std::vector<Interval> >::const_iterator it = intervals_by_ref.begin();
+                             it != intervals_by_ref.end(); ++it) {
+                                acc += it->second.size();
+                        }
                         return acc;
                 }
 
