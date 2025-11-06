@@ -1,25 +1,26 @@
 #ifndef __INTERVAL_H__
 #define __INTERVAL_H__
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <map>
 #include <algorithm>
-//#include <cstdlib>
 #include <cassert>
-
-using namespace std;
+#include <cstddef>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
 
 // types
-typedef int PositionType;
+using PositionType = int;
 //typedef uint16_t DepthType;
 //typedef size_t CountType;
 
 struct CoordinateInterval {
 	PositionType start, end;
 	bool empty() const noexcept { return end <= start; }
-	size_t length() const noexcept { return empty() ? 0 : end - start; }
+        std::size_t length() const noexcept { return empty() ? 0 : end - start; }
 	operator bool() const noexcept { return !empty(); }
 	// ordering
 	bool operator<(const CoordinateInterval &i) const noexcept { return start < i.start || (start == i.start && end < i.end); }
@@ -34,7 +35,7 @@ struct CoordinateInterval {
 		*/
 
 	// difference, returns two (possibly empty) intervals
-	pair<CoordinateInterval, CoordinateInterval> operator-(const CoordinateInterval &o) const {
+        std::pair<CoordinateInterval, CoordinateInterval> operator-(const CoordinateInterval &o) const {
 		assert(!o.empty());
 
 		//debug_inter cerr << *this << " - " << o << " = " << CoordinateInterval{start, min(end, o.start)} << ", " << CoordinateInterval{max(start, o.end), end} << endl;
@@ -42,7 +43,7 @@ struct CoordinateInterval {
 	}
 };
 
-ostream &operator<<(ostream &o, const CoordinateInterval &i) { return o << i.start << '-' << i.end; }
+inline std::ostream &operator<<(std::ostream &o, const CoordinateInterval &i) { return o << i.start << '-' << i.end; }
 
 bool compare_ref_name(const std::string &r1, const std::string &r2) noexcept {
 	//int prefix_len;
@@ -66,8 +67,8 @@ struct Interval : public CoordinateInterval {
 	std::istream &read_bed(std::istream &s) { return s >> ref >> start >> end; }
 	std::ostream &print_igv(std::ostream &s) const { return s << ref << ':' << start << '-' << end; }
 };
-ostream &operator<< (ostream &s, const Interval &i) { return i.print_bed(s); }
-istream &operator>> (istream &s, Interval &i) { return i.read_bed(s); }
+inline std::ostream &operator<< (std::ostream &s, const Interval &i) { return i.print_bed(s); }
+inline std::istream &operator>> (std::istream &s, Interval &i) { return i.read_bed(s); }
 
 
 struct NamedInterval : public Interval {
@@ -104,8 +105,8 @@ struct NamedInterval : public Interval {
 	//friend ostream &operator<<(ostream &o, const Interval &i) {
 	//	return o << i.ref << ':' << i.start << '-' << i.end;
 	//}
-	ostream &print_bed(ostream &s) const { return s << ref << '\t' << start << '\t' << end << '\t' << (name.empty() ? "." : name); }
-	istream &read_bed(istream &s) { return s >> ref >> start >> end >> name; }
+        std::ostream &print_bed(std::ostream &s) const { return s << ref << '\t' << start << '\t' << end << '\t' << (name.empty() ? "." : name); }
+        std::istream &read_bed(std::istream &s) { return s >> ref >> start >> end >> name; }
 };
 
 /*
@@ -114,14 +115,14 @@ ostream &operator<< (ostream &s, const I &i) { return i.print_bed(s); }
 template <class I>
 istream &operator>> (istream &s, I &i) { return i.read_bed(s); }
 */
-ostream &operator<< (ostream &s, const NamedInterval &i) { return i.print_bed(s); }
-istream &operator>> (istream &s, NamedInterval &i) { return i.read_bed(s); }
+inline std::ostream &operator<< (std::ostream &s, const NamedInterval &i) { return i.print_bed(s); }
+inline std::istream &operator>> (std::istream &s, NamedInterval &i) { return i.read_bed(s); }
 
 class Intervals {
 	public:
 		Intervals() {}
 
-		Intervals(istream &i) {
+                Intervals(std::istream &i) {
 			read_bed(i);
 			sort();
 		}
@@ -169,12 +170,12 @@ class Intervals {
 
 		bool has_names() const noexcept { return _has_names; }
 
-		size_t count() const noexcept {
-			size_t acc = 0;
-			for (const auto &[ref_name, intervals] : intervals_by_ref)
-				acc += intervals.size();
-			return acc;
-		}
+                std::size_t count() const noexcept {
+                        std::size_t acc = 0;
+                        for (const auto &[ref_name, intervals] : intervals_by_ref)
+                                acc += intervals.size();
+                        return acc;
+                }
 
 
 
@@ -219,7 +220,7 @@ class Intervals {
 
 				CoordinateInterval out_of_target_right = coverage_interval;
 				// advance target interval in the given ref until we do not hit coverage_interval anymore
-				for (size_t i = last_first_interval; i < intervals.size() && !(coverage_interval << intervals[i]); ++i) {
+                                for (std::size_t i = last_first_interval; i < intervals.size() && !(coverage_interval << intervals[i]); ++i) {
 					CoordinateInterval out_of_target_left;
 					// the left interval is sure to be outside the target since we are proceeding rightwards
 					debug_inter cerr << "intersecting interval " << last_ref << ":" << intervals[i] << endl;
@@ -245,10 +246,10 @@ class Intervals {
 		}
 		*/
 	private:
-		std::map<std::string, std::vector<CoordinateInterval> > intervals_by_ref;
-		std::string last_ref;
-		bool _has_names = false;
-		size_t last_first_interval = 0;
+                std::map<std::string, std::vector<CoordinateInterval>> intervals_by_ref;
+                std::string last_ref;
+                bool _has_names = false;
+                std::size_t last_first_interval = 0;
 };
 
 
@@ -288,19 +289,19 @@ class BEDOutput {
 		bool writable() const {
 			return use_stdout || file_out.is_open();
 		}
-		void write_bed(const NamedInterval &i, const string &cols="") {
-			ostream *out = use_stdout ? &cout : &file_out;
-			*out << i.ref << '\t' << i.start << '\t' << i.end;
-			if (!cols.empty())
-				*out << '\t' << (i.name.empty() ? "." : i.name) << '\t' << cols;
-			else if (!i.name.empty())
-				*out << '\t' << i.name;
-			*out << endl;
-		}
+                void write_bed(const NamedInterval &i, const std::string &cols="") {
+                        std::ostream *out = use_stdout ? &std::cout : &file_out;
+                        *out << i.ref << '\t' << i.start << '\t' << i.end;
+                        if (!cols.empty())
+                                *out << '\t' << (i.name.empty() ? "." : i.name) << '\t' << cols;
+                        else if (!i.name.empty())
+                                *out << '\t' << i.name;
+                        *out << std::endl;
+                }
 		
 		const std::string path;
 		const bool use_stdout;
-		std::ofstream file_out;
+                std::ofstream file_out;
 
 
 		NamedInterval last_interval;
@@ -309,31 +310,31 @@ class BEDOutput {
 
 class SimpleOutput {
 	public:
-		SimpleOutput(const char *p) : path(p), use_stdout(path == "-") {
-			if (!use_stdout)
-				file_out.open(p, ofstream::out);
-		}
+                SimpleOutput(const char *p) : path(p), use_stdout(path == "-") {
+                        if (!use_stdout)
+                                file_out.open(p, std::ofstream::out);
+                }
 		// write interval to bed
 		// checks if we can extend the last interval
 		// cols is appended after the interval name if not empty
 		void operator() (const NamedInterval &i, const std::string &cols="") {
-			if (writable()) {
-				ostream *out = use_stdout ? &cout : &file_out;
-				for (int b = i.start; b < i.end; ++b)
-					if (cols.empty())
-						*out << i.ref << '\t' << b << endl;
-					else
-						*out << i.ref << '\t' << b << '\t' << cols << endl;
-			}
-		}
-	private:
-		bool writable() const {
-			return use_stdout || file_out.is_open();
-		}
-		
-		const string path;
-		const bool use_stdout;
-		ofstream file_out;
+                        if (writable()) {
+                                std::ostream *out = use_stdout ? &std::cout : &file_out;
+                                for (int b = i.start; b < i.end; ++b)
+                                        if (cols.empty())
+                                                *out << i.ref << '\t' << b << std::endl;
+                                        else
+                                                *out << i.ref << '\t' << b << '\t' << cols << std::endl;
+                        }
+                }
+        private:
+                bool writable() const {
+                        return use_stdout || file_out.is_open();
+                }
+
+                const std::string path;
+                const bool use_stdout;
+                std::ofstream file_out;
 };
 
 #endif /*__INTERVAL_H__*/

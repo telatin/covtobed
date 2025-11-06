@@ -1,23 +1,24 @@
-#include <queue>
-#include <vector>
-#include <iostream>
-#include <map>
+#include <algorithm>
+#include <cstdint>
 #include <cstdlib>
 #include <cassert>
+#include <iostream>
+#include <map>
 #include <memory>
+#include <optional>
+#include <queue>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <vector>
 #include <api/BamMultiReader.h>
 #include <api/BamAlignment.h>
 #include "OptionParser.h"
 #include "interval.h"
+using DepthType = std::uint32_t; // type for depth of coverage, kept it small
+constexpr char ref_char = '>';  // reference prefix for "counts" output
 
-
-using namespace BamTools;
-using namespace std;
-
-typedef uint32_t DepthType; // type for depth of coverage, kept it small
-const char ref_char = '>';  // reference prefix for "counts" output
-
-const string VERSION = "%prog 1.4.0"
+constexpr std::string_view VERSION = "%prog 1.4.0"
 	"\nCopyright (C) 2014-2019 Giovanni Birolo and Andrea Telatin\n"
 	"https://github.com/telatin/covtobed - License MIT"
 	".\n"
@@ -38,23 +39,24 @@ struct CovEnd {
 
 // Class for input handling: reads and filters alignments from bams
 class Input {
-	public:
-		BamMultiReader input_bams;
-		const int min_mapq;
-		const int discard_invalid_alignments;
-		// open all files
-		Input(const std::vector<std::string> &paths, const int q, const int v) : min_mapq(q), discard_invalid_alignments(v) {
-			if (paths.empty()) {
-				// no input files, use standard input
-				// 1.3.0 - provide feedback unless $COVTOBED_QUIET is set to 1
-				// Check environment variable COVTOBED_QUIET
-				if (getenv("COVTOBED_QUIET") == NULL) {
-					cerr << "Reading from STDIN... [Ctrl+C to exit; 'covtobed -h' for help]" << endl;
-				}
-				
-				if (!input_bams.OpenFile("-"))
-					throw std::string("cannot read BAM from standard input, are you piping a BAM file?");
-					//throw input_bams.GetErrorString();
+        public:
+                BamTools::BamMultiReader input_bams;
+                const int min_mapq;
+                const int discard_invalid_alignments;
+                // open all files
+                Input(const std::vector<std::string> &paths, const int q, const int v)
+                        : min_mapq(q), discard_invalid_alignments(v) {
+                        if (paths.empty()) {
+                                // no input files, use standard input
+                                // 1.3.0 - provide feedback unless $COVTOBED_QUIET is set to 1
+                                // Check environment variable COVTOBED_QUIET
+                                if (std::getenv("COVTOBED_QUIET") == nullptr) {
+                                        std::cerr << "Reading from STDIN... [Ctrl+C to exit; 'covtobed -h' for help]\n";
+                                }
+
+                                if (!input_bams.OpenFile("-"))
+                                        throw std::string("cannot read BAM from standard input, are you piping a BAM file?");
+                                        //throw input_bams.GetErrorString();
 			} else {
 				for (const auto &path : paths)
 					if (!input_bams.OpenFile(path))
@@ -64,11 +66,11 @@ class Input {
 		}
 
 		// get next good alignment (if any)
-		bool get_next_alignment(BamAlignment & alignment) {
-			bool more_alignments, good_alignment;
-			do {
-				debug cerr << "[M] Read  on ref#" << alignment.RefID << " pos:" << alignment.Position << 
-				    "\n\t| Is mapped? " << alignment.IsMapped() << " | AlignmentFlag:" << alignment.AlignmentFlag << endl;
+                bool get_next_alignment(BamTools::BamAlignment & alignment) {
+                        bool more_alignments, good_alignment;
+                        do {
+                                debug std::cerr << "[M] Read  on ref#" << alignment.RefID << " pos:" << alignment.Position <<
+                                    "\n\t| Is mapped? " << alignment.IsMapped() << " | AlignmentFlag:" << alignment.AlignmentFlag << std::endl;
 				more_alignments = input_bams.GetNextAlignmentCore(alignment);
 				if (discard_invalid_alignments) {
 					good_alignment = alignment.IsMapped() && alignment.MapQuality >= min_mapq
@@ -84,8 +86,8 @@ class Input {
 			} while (more_alignments && !good_alignment);
 			return more_alignments;
 		}
-		std::vector<RefData> get_ref_data() const { return input_bams.GetReferenceData(); }
-		int get_ref_id(const std::string &ref) const { return input_bams.GetReferenceID(ref); }
+                std::vector<BamTools::RefData> get_ref_data() const { return input_bams.GetReferenceData(); }
+                int get_ref_id(const std::string &ref) const { return input_bams.GetReferenceID(ref); }
 };
 
 // Class that stores info about the current coverage
@@ -100,12 +102,13 @@ struct Coverage {
 		else
 			++f;
 	}
-	void dec(bool rev=false) noexcept {
-		if (rev)
-			--r;
-		else
-			--f;
-	}
+        void dec(bool rev=false) {
+                auto &counter = rev ? r : f;
+                if (counter == 0) {
+                        throw std::runtime_error("Coverage underflow detected while processing alignments");
+                }
+                --counter;
+        }
 	bool equal(const Coverage &o, bool stranded) const noexcept {
 	    	if (stranded)
 		    return f == o.f && r == o.r;
@@ -116,86 +119,94 @@ struct Coverage {
 
 // Class for output handling: writes coverage in the specified format
 class Output {
-	public:
-		enum Format {BED, COUNTS};
+        public:
+                enum class Format { Bed, Counts };
 
-		// class constructor
-		Output(std::ostream *o, const char *f, bool s=false, int m=0, int x=100000, int l=1) : out(o), format(parse_format(f)), strands(s), mincov(m), maxcov(x), minlen(l) {
-		}
+                // class constructor
+                Output(std::ostream &o, std::string_view f, bool s=false, int m=0, int x=100000, int l=1)
+                        : out(o), format(parse_format(f)), strands(s), mincov(m), maxcov(x), minlen(l) {
+                }
 
-		// write interval to bed
-		void operator() (const Interval &i, const Coverage &c) {
-			// can the last interval be extended with the same coverage?
-			if (i.ref == last_interval.ref && i.start == last_interval.end && last_coverage.equal(c, strands))
-				// extend previous interval
-				last_interval.end = i.end;
-			else {
-				// output previous interval
-				write(last_interval, last_coverage);
-				if (i.ref != last_interval.ref)
-					// new reference
-					switch(format) {
-						case BED:
-							break;
-						case COUNTS:
-							*out << ref_char << i.ref << endl;
-							break;
-					}
-				last_interval = i;
-				last_coverage = c;
-			}
-		}
-		~Output() {
-			write(last_interval, last_coverage);
-		}
-	private:
-		void write(const Interval &i, const Coverage &c) {
-			if (i and c >= mincov and c < maxcov and (i.end - i.start >= minlen) )  { // interval not empty plus user constraints
-				switch(format) {
-					case Format::BED:
-						*out << i.ref << '\t' << i.start << '\t' << i.end << '\t';
-						if (c >= 0) {
-							write_coverage(c);
-						}
-						break;
-					case Format::COUNTS:
-						write_coverage(c);
-						*out << '\t' << i.length();
-						break;
-				}
-				*out << endl;
-			}
-		}
-		void write_coverage(const Coverage &c) {
-			if (strands)
-				*out << c.f << '\t' << c.r;
-			else
-				*out  << static_cast<DepthType>(c);
-		}
-		static Format parse_format(const char *format_str) {
-			const std::string s = format_str;
-			if (s == "bed")
-				return Output::BED;
-			if (s == "counts")
-				return Output::COUNTS;
-			throw std::string("unknown format specification: \"") + format_str + "\"";
-		}
+                // write interval to bed
+                void operator() (const Interval &i, const Coverage &c) {
+                        // can the last interval be extended with the same coverage?
+                        if (last_interval && last_coverage && i.ref == last_interval->ref && i.start == last_interval->end && last_coverage->equal(c, strands))
+                                // extend previous interval
+                                last_interval->end = i.end;
+                        else {
+                                const bool ref_changed = !last_interval || i.ref != last_interval->ref;
+                                // output previous interval
+                                flush();
+                                if (ref_changed)
+                                        // new reference
+                                        switch(format) {
+                                                case Format::Bed:
+                                                        break;
+                                                case Format::Counts:
+                                                        out << ref_char << i.ref << '\n';
+                                                        break;
+                                        }
+                                last_interval = i;
+                                last_coverage = c;
+                        }
+                }
+                ~Output() {
+                        flush();
+                }
+        private:
+                void flush() {
+                        if (last_interval && last_coverage) {
+                                write(*last_interval, *last_coverage);
+                                last_interval.reset();
+                                last_coverage.reset();
+                        }
+                }
+                void write(const Interval &i, const Coverage &c) {
+                        if (i && c >= mincov && c < maxcov && (i.end - i.start >= minlen)) { // interval not empty plus user constraints
+                                switch(format) {
+                                        case Format::Bed:
+                                                out << i.ref << '\t' << i.start << '\t' << i.end << '\t';
+                                                if (c >= 0) {
+                                                        write_coverage(c);
+                                                }
+                                                break;
+                                        case Format::Counts:
+                                                write_coverage(c);
+                                                out << '\t' << i.length();
+                                                break;
+                                }
+                                out << '\n';
+                        }
+                }
+                void write_coverage(const Coverage &c) {
+                        if (strands)
+                                out << c.f << '\t' << c.r;
+                        else
+                                out  << static_cast<DepthType>(c);
+                }
+                static Format parse_format(std::string_view format_str) {
+                        if (format_str == "bed")
+                                return Format::Bed;
+                        if (format_str == "counts")
+                                return Format::Counts;
+                        throw std::invalid_argument("unknown format specification: \"" + std::string(format_str) + "\"");
+                }
 
 
-		std::ostream *out;
-		const Format format;
-		const bool strands;
-		const int mincov;
-		const int maxcov;
-		const int minlen;
-		Interval last_interval;
-		Coverage last_coverage;
+                std::ostream &out;
+                const Format format;
+                const bool strands;
+                const int mincov;
+                const int maxcov;
+                const int minlen;
+                std::optional<Interval> last_interval;
+                std::optional<Coverage> last_coverage;
 };
 
 int main(int argc, char *argv[]) {
 	// general options
 
-	optparse::OptionParser parser = optparse::OptionParser().description("Computes coverage from alignments").usage("%prog [options] [BAM]...").version(VERSION);
+        optparse::OptionParser parser = optparse::OptionParser().description("Computes coverage from alignments").usage("%prog [options] [BAM]...").version(std::string(VERSION));
 	//parser.add_option("-v") .action("version") .help("prints program version");
 
 	// input options
@@ -227,23 +238,22 @@ int main(int argc, char *argv[]) {
 
 	// As of version 1.4.0: --discard-invalid-alignments is now the default
 	// Check for conflicting flags
-	if (discard_explicit && keep_invalid) {
-		std::cerr << "ERROR: --discard-invalid-alignments and --keep-invalid-alignments are incompatible." << std::endl;
-		std::exit(1);
-	}
+        if (discard_explicit && keep_invalid) {
+                throw std::runtime_error("--discard-invalid-alignments and --keep-invalid-alignments are incompatible.");
+        }
 	
 	// Determine final only_valid setting
 	bool only_valid;
 	
-	if (keep_invalid) {
-		// Explicit request to keep invalid alignments (legacy behavior)
-		only_valid = false;
-		if (getenv("COVTOBED_QUIET") == NULL) {
-			std::cerr << "INFO: keeping invalid alignments in coverage calculation (--keep-invalid-alignments)." << std::endl;
-		}
-	} else {
-		// Default behavior: discard invalid alignments (whether explicit or default)
-		only_valid = true;
+        if (keep_invalid) {
+                // Explicit request to keep invalid alignments (legacy behavior)
+                only_valid = false;
+                if (std::getenv("COVTOBED_QUIET") == nullptr) {
+                        std::cerr << "INFO: keeping invalid alignments in coverage calculation (--keep-invalid-alignments)." << std::endl;
+                }
+        } else {
+                // Default behavior: discard invalid alignments (whether explicit or default)
+                only_valid = true;
 	}
 
 	// Set minimum mapping quality
@@ -255,38 +265,39 @@ int main(int argc, char *argv[]) {
 
 	try {
 		// open input and output
-		Input input(parser.args(), min_mapq, only_valid);
-		Output output(&cout,
-			static_cast<const char *>(options.get("format")), 
-			static_cast<bool>(options.get("output_strands")), 
-			minimum_coverage, maximum_coverage, minimum_length);
+                Input input(parser.args(), min_mapq, only_valid);
+                const std::string format = options["format"];
+                Output output(std::cout,
+                        format,
+                        static_cast<bool>(options.get("output_strands")),
+                        minimum_coverage, maximum_coverage, minimum_length);
 
 
-		// main alignment parsing loop
-		BamAlignment alignment;
+                // main alignment parsing loop
+                BamTools::BamAlignment alignment;
 		bool more_alignments = input.get_next_alignment(alignment);
 		for (const auto &ref : input.get_ref_data()) { // loop on reference
 			// init new reference data
 			const auto ref_id = input.get_ref_id(ref.RefName);
-			if (ref.RefLength <= minimum_contig_len) {
-				continue;
-			}
-			debug cerr << "[R] Reference: " << ref_id << endl;
-			PositionType last_pos = 0;
-			priority_queue<CovEnd> coverage_ends;
-			Coverage coverage;
+                        if (ref.RefLength < minimum_contig_len) {
+                                continue;
+                        }
+                        debug std::cerr << "[R] Reference: " << ref_id << std::endl;
+                        PositionType last_pos = 0;
+                        std::priority_queue<CovEnd> coverage_ends;
+                        Coverage coverage;
 			bool more_alignments_for_ref = more_alignments && alignment.RefID == ref_id;
 
 			// loop current reference
 			do {
 				// find next possible coverage change
 				const auto next_change = more_alignments_for_ref ? 
-					(coverage_ends.empty() ? alignment.Position : std::min(alignment.Position, coverage_ends.top().end)) :
-					(coverage_ends.empty() ? ref.RefLength : coverage_ends.top().end);
-				debug cerr << "[-] Coverage is " << coverage << " up to " << next_change << endl;
+                                        (coverage_ends.empty() ? alignment.Position : std::min(alignment.Position, coverage_ends.top().end)) :
+                                        (coverage_ends.empty() ? ref.RefLength : coverage_ends.top().end);
+                                debug std::cerr << "[-] Coverage is " << coverage << " up to " << next_change << std::endl;
 
-				// output coverage
-				assert(coverage_ends.size() == coverage);
+                                // output coverage
+                                assert(coverage_ends.size() == coverage);
 
 				// check unsorted 1.3.4
 				if  (  last_pos > next_change ) {
@@ -297,37 +308,37 @@ int main(int argc, char *argv[]) {
 				
 
 				// increment coverage with alignments that start here
-				while (more_alignments_for_ref && next_change == alignment.Position) {
-					if (physical_coverage) {
-						if (alignment.InsertSize > 0) {
-						        debug cerr << "   [phy] pos:" << alignment.Position << " size:" << alignment.InsertSize << endl;
-							coverage_ends.push({alignment.Position + alignment.InsertSize, alignment.IsReverseStrand()});
-							coverage.inc(alignment.IsReverseStrand());
-						}
-					} else {
-						coverage_ends.push({alignment.GetEndPosition(), alignment.IsReverseStrand()});
+                                while (more_alignments_for_ref && next_change == alignment.Position) {
+                                        if (physical_coverage) {
+                                                if (alignment.InsertSize > 0) {
+                                                        debug std::cerr << "   [phy] pos:" << alignment.Position << " size:" << alignment.InsertSize << std::endl;
+                                                        coverage_ends.push({alignment.Position + alignment.InsertSize, alignment.IsReverseStrand()});
+                                                        coverage.inc(alignment.IsReverseStrand());
+                                                }
+                                        } else {
+                                                coverage_ends.push({alignment.GetEndPosition(), alignment.IsReverseStrand()});
 						coverage.inc(alignment.IsReverseStrand());
 					}
 					more_alignments = input.get_next_alignment(alignment);
 					more_alignments_for_ref = more_alignments && alignment.RefID == ref_id;
 				}
 				// decrement coverage with alignments that end here
-				while (!coverage_ends.empty() && next_change == coverage_ends.top().end) {
-					coverage.dec(coverage_ends.top().rev);
-					coverage_ends.pop();
-				}
+                                while (!coverage_ends.empty() && next_change == coverage_ends.top().end) {
+                                        coverage.dec(coverage_ends.top().rev);
+                                        coverage_ends.pop();
+                                }
 
-				debug cerr << "[<] Coverage is " << coverage << " from " << next_change << endl;
-				last_pos = next_change;
-				
+                                debug std::cerr << "[<] Coverage is " << coverage << " from " << next_change << std::endl;
+                                last_pos = next_change;
 
-			} while (last_pos != ref.RefLength);
-			debug cerr << "[_] Completed at " << ref.RefName << ":" << last_pos << " [coverage:"  << coverage_ends.size() << "]" << endl;
-			// reference ended
-			if (!coverage_ends.empty()) {
-			    cerr << "Coverage is not zero at the end of " << ref.RefName << endl;
-			    cerr << "Try samtools fixmate on the input file" << endl;
-			}
+
+                        } while (last_pos != ref.RefLength);
+                        debug std::cerr << "[_] Completed at " << ref.RefName << ":" << last_pos << " [coverage:"  << coverage_ends.size() << "]" << std::endl;
+                        // reference ended
+                        if (!coverage_ends.empty()) {
+                            std::cerr << "Coverage is not zero at the end of " << ref.RefName << std::endl;
+                            std::cerr << "Try samtools fixmate on the input file" << std::endl;
+                        }
 			// 1.2.0 -- removed: assert(coverage_ends.empty());
 		
 		}
@@ -335,8 +346,10 @@ int main(int argc, char *argv[]) {
 		if (more_alignments) {
 			throw std::string("Unexpected alignment found, is the BAM sorted?");			
 		}
-	} catch (const string &msg) {
-		parser.error(msg);
-	}
-	return 0;
+        } catch (const std::exception &ex) {
+                parser.error(ex.what());
+        } catch (const std::string &msg) {
+                parser.error(msg);
+        }
+        return 0;
 }

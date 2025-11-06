@@ -19,9 +19,23 @@
 # define _(s) ((const char *) (s))
 #endif
 
-using namespace std;
-
 namespace optparse {
+
+using std::cerr;
+using std::complex;
+using std::cout;
+using std::endl;
+using std::istringstream;
+using std::list;
+using std::map;
+using std::ostringstream;
+using std::ostream;
+using std::pair;
+using std::set;
+using std::size_t;
+using std::string;
+using std::stringstream;
+using std::vector;
 
 ////////// auxiliary (string) functions { //////////
 class str_wrap {
