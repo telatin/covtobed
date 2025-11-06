@@ -539,7 +539,7 @@ string Option::format_help(unsigned int indent /* = 2 */) const {
   stringstream ss;
   string h = format_option_help(indent);
   unsigned int width = cols();
-  unsigned int opt_width = min(width*3/10, 36u);
+  unsigned int opt_width = std::min(width * 3 / 10, 36u);
   bool indent_first = false;
   ss << h;
   // if the option list is too long, start a new paragraph
